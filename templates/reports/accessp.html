@@ -1,0 +1,84 @@
+{% extends "base1.html" %}
+
+{% block title %}Reports{% endblock %}
+{% block head %}
+  <!-- Custom styles for this template -->
+  <link href="/static/form-validation.css" rel="stylesheet">
+{% endblock %}
+
+{% block main %}
+
+    <div class="container">
+  <div class="py-5 text-center">
+    <img class="d-block mx-auto mb-4" src="../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+    <h2>Checkout form</h2>
+    <p class="lead">Access point report</p>
+  </div>
+
+    <div class="text-left">
+        <form class="form-horizontal" method="post">
+          <label for="datetime">Time Range:</label>
+          <div class="form-group" name="datetime" id="datetime">
+            <label class="control-label" for="from">From:</label>
+            <div class="form-group" name="from">
+              <label class="control-label" for="date_start">Date</label>
+              <i class="far fa-calendar-alt"></i>
+              <input type="date" id="date_start" name="date_start" required>
+              <label class="control-label" for="time_start">Time</label>
+              <i class="far fa-clock"></i>
+              <input type="time" id="time_start" name="time_start" step = "1">
+            </div>
+            <label class="control-label" for="to">to:</label>
+            <div class="form-group" name="to">
+              <label class="control-label" for="date_end">Date</label>
+              <i class="far fa-calendar-alt"></i>
+              <input type="date" id="date_end" name="date_end" required>
+              <label class="control-label" for="time_end">Time</label>
+              <i class="far fa-clock"></i>
+              <input type="time" id="time_end" name="time_end" step = "1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ap">
+              <i class="fas fa-door-closed">Access points:</i>
+            </label>
+            <select multiple class="form-control" id="ap" name="ap" size="10">
+            {% for row in access_p %}
+                <option value="{{ row[2] }}" name="{{ row[0] }}">
+                  {{ "{} | DoorIndex: {}".format(row[0], row[1]) }}
+                </option>
+            {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="events">
+              <i class="fas fa-clipboard-list">Events:</i>
+            </label>
+            <ul>
+            {% for row in events %}
+              {% if row != events[0] %}
+                <li>
+                <label class="control-label" for="{{ row[1] }}">{{ row[1] }}</label>
+                <input type="checkbox" id="{{ row[0] }}" name="events" value="{{ row[0] }}">
+                </li>
+              {% endif %}
+            {% endfor %}
+            </ul>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Gennerate report</button>
+        </form>
+    </div>
+
+  <footer class="my-5 pt-5 text-muted text-center text-small">
+    <p class="mb-1">&copy; 2017-2020 Company Name</p>
+    <ul class="list-inline">
+      <li class="list-inline-item"><a href="#">Privacy</a></li>
+      <li class="list-inline-item"><a href="#">Terms</a></li>
+      <li class="list-inline-item"><a href="#">Support</a></li>
+    </ul>
+  </footer>
+</div>
+{% endblock %}
+{% block script %}
+  <script src="/static/reports.js"></script>
+{% endblock %}

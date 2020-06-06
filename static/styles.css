@@ -1,0 +1,55 @@
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+main
+{
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* center contents */
+    text-align: center;
+}
+.avatar
+{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.avatar:hover
+{
+    background-color:rgba(50,50,50,0.7);
+}
+#sidebar {
+    width: 240px;
+    height: 100%;
+    position: fixed;
+    background: #32323a;
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+}
+
+/* sidebar merge left */
+.merge-left {
+    margin-left: 0px !important;
+}
+
+#main-content {
+    margin-left: 240px;
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+}
+
+#pBar {
+  background-color: #4CAF50;
+  color: white;
+}

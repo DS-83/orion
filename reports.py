@@ -26,8 +26,8 @@ def accessp():
         time_start = request.form['time_start']
         date_end = request.form['date_end']
         time_end = request.form['time_end']
-        events = ", ".join(map(str, request.form.getlist('events')))
-        ap = ", ".join(map(str, request.form.getlist('ap')))
+        events = ", ".join(map(str, request.form.getlist('events[]')))
+        ap = ", ".join(map(str, request.form.getlist('ap[]')))
         date_start = date_start.replace('-', '') + time_start.replace(':', '')
         date_end = date_end.replace('-', '') + time_end.replace(':', '')
         if int(date_end) - int(date_start) <= 0:
@@ -38,5 +38,5 @@ def accessp():
         return render_template('reports/generatedreport.html', data=data)
 
     events = UnpackData(OrionQueryEvents())
-    access_p = OrionQueryAccessPoints()
+    access_p = UnpackData(OrionQueryAccessPoints())
     return render_template('reports/accessp.html', events=events, access_p=access_p)

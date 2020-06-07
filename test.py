@@ -123,6 +123,7 @@ def OrionQueryEvents():
                 WHERE Event IN (25,26,27,28,29,30,31,32,33,219,34)\
                 ORDER BY Event;"
                 )
+    return db
 
 def OrionQueryAccessPoints():
     db = get_mssql()
@@ -130,11 +131,7 @@ def OrionQueryAccessPoints():
                 FROM AcessPoint\
                 ORDER BY GIndex;"
                 )
-    row = db.fetchone()
-    while row:
-        print(row[0], row[1])
-        row = db.fetchone()
-    db.close()
+    return db
 
 def OrionReportAccessPoint():
     db = get_mssql()

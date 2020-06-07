@@ -10,8 +10,6 @@
 
     <div class="container">
   <div class="py-5 text-center">
-    <img class="d-block mx-auto mb-4" src="../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
-    <h2>Checkout form</h2>
     <p class="lead">Access point report</p>
   </div>
 
@@ -38,32 +36,61 @@
               <input type="time" id="time_end" name="time_end" step = "1">
             </div>
           </div>
+
           <div class="form-group">
-            <label for="ap">
-              <i class="fas fa-door-closed">Access points:</i>
-            </label>
-            <select multiple class="form-control" id="ap" name="ap" size="10">
-            {% for row in access_p %}
-                <option value="{{ row[2] }}" name="{{ row[0] }}">
-                  {{ "{} | DoorIndex: {}".format(row[0], row[1]) }}
-                </option>
-            {% endfor %}
-            </select>
+              <label for="From[]">
+                  <i class="fas fa-door-closed">Access points:</i>
+              </label>
+              <div class="row">
+                  <div class="col-sm-5">
+                      <select multiple="multiple" class="form-control" id="multiselect1" name="From[]" size="8">
+                      {% for row in access_p[1:] %}
+                          <option value="{{ row[1] }}" data-position="{{ loop.index }}">
+                              {{ "{} DoorId: {}".format(row[0], row[1]) }}
+                          </option>
+                      {% endfor %}
+                      </select>
+                  </div>
+
+                  <div class="col-sm-2 btn-group-vertical" role="group">
+                      <button type="button" id="multiselect1_rightAll" class="btn btn-secondary">ADD ALL</button>
+                      <button type="button" id="multiselect1_rightSelected" class="btn btn-secondary">ADD</button>
+                      <button type="button" id="multiselect1_leftSelected" class="btn btn-secondary">DEL</button>
+                      <button type="button" id="multiselect1_leftAll" class="btn btn-secondary">DEL ALL</button>
+                  </div>
+
+                  <div class="col-sm-5">
+                      <select multiple="multiple" name="ap[]" id="multiselect1_to" class="form-control" size="8" multiple></select>
+                  </div>
+              </div>
           </div>
+
           <div class="form-group">
             <label for="events">
               <i class="fas fa-clipboard-list">Events:</i>
             </label>
-            <ul>
-            {% for row in events %}
-              {% if row != events[0] %}
-                <li>
-                <label class="control-label" for="{{ row[1] }}">{{ row[1] }}</label>
-                <input type="checkbox" id="{{ row[0] }}" name="events" value="{{ row[0] }}">
-                </li>
-              {% endif %}
-            {% endfor %}
-            </ul>
+            <div class="row">
+                <div class="col-sm-5">
+                    <select multiple="multiple" class="form-control" id="multiselect2" name="From[]" size="8">
+                    {% for row in events[1:] %}
+                        <option value="{{ row[0] }}" data-position="{{ loop.index }}">
+                            {{ row[1] }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-sm-2 btn-group-vertical" role="group">
+                    <button type="button" id="multiselect2_rightAll" class="btn btn-secondary">ADD ALL</button>
+                    <button type="button" id="multiselect2_rightSelected" class="btn btn-secondary">ADD</button>
+                    <button type="button" id="multiselect2_leftSelected" class="btn btn-secondary">DEL</button>
+                    <button type="button" id="multiselect2_leftAll" class="btn btn-secondary">DEL ALL</button>
+                </div>
+
+                <div class="col-sm-5">
+                    <select multiple="multiple" name="events[]" id="multiselect2_to" class="form-control" size="8" multiple></select>
+                </div>
+            </div>
           </div>
           <button class="btn btn-lg btn-primary btn-block" type="submit">Gennerate report</button>
         </form>
@@ -80,5 +107,15 @@
 </div>
 {% endblock %}
 {% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename='multiselect.js') }}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $('#multiselect1').multiselect();
+    $('#multiselect2').multiselect();
+});
+</script>
+
   <script src="/static/reports.js"></script>
 {% endblock %}

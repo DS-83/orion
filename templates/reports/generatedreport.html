@@ -8,22 +8,22 @@
 
 {% block main %}
   <div class="container">
-    <table class="table table-responsive table-bordered">
-      <thead class="thead-dark">
-        {% for i in data[0] %}
-          <th>{{ i }}</th>
-        {% endfor %}
-      </thead>
-        <tbody>
-          {% for row in data[1:] %}
-            <tr>
-            {% for i in row %}
-              <td>{{ i }}</td>
-            {% endfor %}
-            </tr>
-          {% endfor %}
-        </tbody>
-    </table>
+      <table class="table table-responsive table-bordered">
+          <thead class="thead-dark">
+              {% for i in data[0] %}
+                  <th>{{ i }}</th>
+              {% endfor %}
+          </thead>
+          <tbody>
+              {% for row in data[1:] %}
+                  <tr>
+                    {% for i in row %}
+                        <td>{{ i }}</td>
+                    {% endfor %}
+                  </tr>
+              {% endfor %}
+          </tbody>
+      </table>
   </div>
 
   <footer class="my-5 pt-5 text-muted text-center text-small">

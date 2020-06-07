@@ -1,0 +1,38 @@
+{% extends "base1.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block main %}
+<div class="container">
+    <div class="py-5 text-center">
+      <p class="lead">Access point report</p>
+    </div>
+
+    <div class="text-left">
+        <form class="form-horizontal" method="post">
+          <label for="datetime">Time Range:</label>
+          <div class="form-group" name="datetime" id="datetime">
+            <label class="control-label" for="from">From:</label>
+            <div class="form-group" name="from">
+              <label class="control-label" for="date_start">Date</label>
+              <i class="far fa-calendar-alt"></i>
+              <input type="date" id="date_start" name="date_start" required>
+              <label class="control-label" for="time_start">Time</label>
+              <i class="far fa-clock"></i>
+              <input type="time" id="time_start" name="time_start" step = "1">
+            </div>
+            <label class="control-label" for="to">to:</label>
+            <div class="form-group" name="to">
+              <label class="control-label" for="date_end">Date</label>
+              <i class="far fa-calendar-alt"></i>
+              <input type="date" id="date_end" name="date_end" required>
+              <label class="control-label" for="time_end">Time</label>
+              <i class="far fa-clock"></i>
+              <input type="time" id="time_end" name="time_end" step = "1">
+            </div>
+          </div>
+          
+        </form>
+      </div>
+</div>
+{% endblock %}

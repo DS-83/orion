@@ -1,16 +1,19 @@
 import xlsxwriter
-# from flask import url_for
-from app.reports_sql import OrionReportAccessPoint, UnpackData
+from flask import g, current_app
+from datetime import datetime
 
-def SaveReport():
-    workbook = xlsxwriter.Workbook('xlsx/report.xlsx')
+def SaveReport(date_start, date_end, data):
+    filename = f"{current_app.config['DWNLD_FOLDER']}/{str(g.user['username'])}_{date_end}_{date_start}.xlsx"
+    workbook = xlsxwriter.Workbook(filename)
     worksheet = workbook.add_worksheet()
+    date_format = workbook.add_format({'num_format': 'dd-mm-yyyy hh:mm:ss', 'align': 'left'})
 
-    s = '20181022135500'
-    e = '20181022135700'
-    report = UnpackData(OrionReportAccessPoint(s, e))
-    for row in range(len(report)):
-        for col in range(len(report[row])):
-            worksheet.write(row, col, report[row][col])
+    for row in range(len(data)):
+        for col in range(len(data[row])):
+            if row != 0 and col == 7:
+                print(data[row][col])
+                worksheet.write_datetime(row, col, data[row][col], date_format)
+            else:
+                worksheet.write(row, col, data[row][col])
     workbook.close()
-    return 'Saved'
+    return f"{str(g.user['username'])}_{date_end}_{date_start}.xlsx"

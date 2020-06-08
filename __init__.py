@@ -11,7 +11,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY=b'^SD$%1D<<L^Ggn97d5c3@!b94',
         DATABASE=os.path.join(app.instance_path, 'app.sqlite'),
-        DWNLD_FOLDER=os.path.join(app.instance_path, '/xlsx')
+        DWNLD_FOLDER=os.path.join(app.instance_path, 'xlsx')
     )
 
     if test_config is None:

@@ -3,36 +3,99 @@
 {% block title %}Reports{% endblock %}
 
 {% block main %}
-<div class="container">
-    <div class="py-5 text-center">
-      <p class="lead">Access point report</p>
+    <div class="jumbotron">
+        <h1 class="header-h1-left">Walkways of Person(s)</h1>
     </div>
 
-    <div class="text-left">
-        <form class="form-horizontal" method="post">
-          <label for="datetime">Time Range:</label>
-          <div class="form-group" name="datetime" id="datetime">
-            <label class="control-label" for="from">From:</label>
-            <div class="form-group" name="from">
-              <label class="control-label" for="date_start">Date</label>
-              <i class="far fa-calendar-alt"></i>
-              <input type="date" id="date_start" name="date_start" required>
-              <label class="control-label" for="time_start">Time</label>
-              <i class="far fa-clock"></i>
-              <input type="time" id="time_start" name="time_start" step = "1">
+    <form class="" action="{{ url_for('.person', page='name') }}" method="post">
+        <div class="input-group mb-3">
+            <input type="text" name="LastName" class="form-control" placeholder="LastName" autocomplete="off" required>
+            <input type="text" name="FirstName" class="form-control" placeholder="FirstName" autocomplete="off">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
             </div>
-            <label class="control-label" for="to">to:</label>
-            <div class="form-group" name="to">
-              <label class="control-label" for="date_end">Date</label>
-              <i class="far fa-calendar-alt"></i>
-              <input type="date" id="date_end" name="date_end" required>
-              <label class="control-label" for="time_end">Time</label>
-              <i class="far fa-clock"></i>
-              <input type="time" id="time_end" name="time_end" step = "1">
+        </div>
+    </form>
+
+    <form class="" action="{{ url_for('.person', page='tn') }}" method="post">
+        <div class="input-group mb-3">
+            <input type="text" id="TabNumber" name="TabNumber" class="form-control" placeholder="Personnel number" autocomplete="off" required>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
             </div>
-          </div>
-          
-        </form>
-      </div>
+        </div>
+    </form>
+
+    {% if result == [] %}
+        <div class="alert alert-warning" role="alert">
+          Nothing Found
+        </div>
+    {% endif %}
+
+    {% if result != 0 and result != [] %}
+        <div class="input-group mb-3">
+            <form class="form-horizontal" action="{{ url_for('.person', page='display') }}" method="post">
+              <label for="datetime">Time Range:</label>
+              <div class="form-group" name="datetime" id="datetime">
+                <label class="control-label" for="from">From:</label>
+                <div class="form-group" name="from">
+                  <label class="control-label" for="date_start">Date</label>
+                  <i class="far fa-calendar-alt"></i>
+                  <input type="date" id="date_start" name="date_start" required>
+                  <label class="control-label" for="time_start">Time</label>
+                  <i class="far fa-clock"></i>
+                  <input type="time" id="time_start" name="time_start" step = "1">
+                </div>
+                <label class="control-label" for="to">to:</label>
+                <div class="form-group" name="to">
+                  <label class="control-label" for="date_end">Date</label>
+                  <i class="far fa-calendar-alt"></i>
+                  <input type="date" id="date_end" name="date_end" required>
+                  <label class="control-label" for="time_end">Time</label>
+                  <i class="far fa-clock"></i>
+                  <input type="time" id="time_end" name="time_end" step = "1">
+                </div>
+              </div>
+              <div class="container-fluid">
+                    <table class="table table-hover">
+                        <thead>
+                            <th>Selection</th>
+                            {% for i in result[0] %}
+                                <th>{{ i }}</th>
+                            {% endfor %}
+                        </thead>
+                        <tbody>
+                          {% for row in result[1:] %}
+                              <tr>
+                                <td>
+                                    <div class="input-group-text">
+                                        <input type="checkbox" value="{{ row[0] }}" name="personId" id="{{ loop.index }}">
+                                    </div>
+                                </td>
+                                {% for i in row %}
+                                    <td>{{ i }}</td>
+                                {% endfor %}
+                              </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>
+              </div>
+                  <div class="">
+                    <button class="btn btn-lg btn-secondary" type="submit" name="submit" value="display">Display</button>
+                    <button class="btn btn-lg btn-secondary" type="submit" name="submit" value="save">Save <img src="{{ url_for('static', filename='icon-xls-24.png') }}" alt="xls"></button>
+                  </div>
+            </form>
+        </div>
+    {% endif %}
 </div>
+
+<footer class="my-5 pt-5 text-muted text-center text-small">
+  <p class="mb-1">&copy; 2020 CNC Corp.</p>
+  <ul class="list-inline">
+    <li class="list-inline-item"><a href="#">Privacy</a></li>
+    <li class="list-inline-item"><a href="#">Terms</a></li>
+    <li class="list-inline-item"><a href="#">Support</a></li>
+  </ul>
+</footer>
+
 {% endblock %}

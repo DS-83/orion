@@ -26,6 +26,16 @@
         </div>
     </form>
 
+    <form class="" action="{{ url_for('.person', page='department') }}" method="post">
+        <div class="input-group mb-3">
+            <input type="text" id="department" name="department" class="form-control" placeholder="Department" autocomplete="off" required>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+            </div>
+        </div>
+    </form>
+
+
     {% if result == [] %}
         <div class="alert alert-warning" role="alert">
           Nothing Found

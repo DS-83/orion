@@ -67,6 +67,21 @@ def person(page):
             result.insert(0, persons[0])
         return render_template('reports/person.html', result=result)
 
+    # Department Search
+    if page == 'department':
+        dept = request.form.get('department')
+        if not dept:
+            flash('Field can not be blank')
+            return render_template('reports/person.html')
+        persons = UnpackData(OrionQueryPersons())
+        result = []
+        for person in persons[1:]:
+            if dept == person[6]:
+                result.append(person)
+        if result != []:
+            result.insert(0, persons[0])
+        return render_template('reports/person.html', result=result)
+
     # Name Search
     if page == 'name':
         lName = request.form.get('LastName')  # type <class 'str'>
@@ -118,7 +133,8 @@ def person(page):
         if action == 'display':
             return render_template('reports/generatedreport.html', data=data)
         if action == 'save':
-            filename = SaveReport(date_start, date_end, data)
+            report_name = 'Person walkways'
+            filename = SaveReport(date_start, date_end, data, report_name)
             folder =  current_app.config['DWNLD_FOLDER']
             return send_from_directory(folder, filename, as_attachment=True)
 

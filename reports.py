@@ -9,9 +9,26 @@ from app.reports_sql import (
 )
 from app.auth import login_required
 from app.xlsx_ import SaveReport
+from datetime import date, timedelta
 
 
 bp = Blueprint('reports', __name__, url_prefix='/reports')
+
+# Filter return monday or sunday of current week
+@bp.app_template_filter()
+def dt_tw(wday):
+    # Monday
+    today = date.today()
+    mon = today - timedelta(days = date.isoweekday(today)-1)
+    if wday == 'm':
+        return mon
+    # Sunday
+    if wday == 's':
+        sun = mon + timedelta(days = 6)
+        return sun
+    # Today
+    if wday == 't':
+        return today
 
 
 # Reports index

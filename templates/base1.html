@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v4.0.1">
     <title>{% block title %}{% endblock %}</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans">
@@ -38,7 +36,7 @@
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
   <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">
-    <img src="/static/logo.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+    <img src="/static/logo.png" width="50" height="30" class="d-inline-block align-top" alt="" loading="lazy">
     <b>ORIONng</b>
   </a>
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,7 +47,7 @@
     <thead>
       <tr>
         <th class="nav-item"><img src="https://eu.ui-avatars.com/api/?bold=true&name={{ g.user['username'] }}" width="30" height="30" class="rounded-circle avatar d-inline-block align-top"></th>
-        <th class="nav-item">{{ g.user['username'] }}</th>
+        <th class="nav-item">{{ g.user.username }}</th>
       </tr>
     </thead>
   </table>
@@ -73,20 +71,8 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">
-              <span data-feather="file"></span>
-              Orders
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Products
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="users"></span>
-              Customers
+              <span data-feather="user"></span>
+              {{ g.user.username }}
             </a>
           </li>
           <li class="nav-item">
@@ -95,12 +81,14 @@
               Reports
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="layers"></span>
-              Integrations
-            </a>
-          </li>
+          {% if g.user.IsAdmin %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin.index')}}">
+                  <span data-feather="database"></span>
+                  Administration
+                </a>
+              </li>
+          {% endif %}
         </ul>
 
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">

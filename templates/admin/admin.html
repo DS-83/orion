@@ -1,0 +1,13 @@
+{% extends "base_admin.html" %}
+
+{% block title %}R{% endblock %}
+
+{% block main %}
+  <div class="container">
+    <a class="" href="{{ url_for('reports.accessp') }}">Access Point Report</a>
+  </div>
+
+  <div class="container">
+    <a class="" href="{{ url_for('reports.person') }}">Person Report</a>
+  </div>
+{% endblock %}

@@ -13,33 +13,65 @@
           <p class="lead">Access point report</p>
         </div>
 
+    <b><label for="autofill">Enter time range or use presets</label></b>
+    <div class="container" id="autofill">
+        <div class="row row-cols-3">
+          <button type="button" id="tweek_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary" value="{{ 'm'|dt_tw }}">
+            <span data-feather="calendar"></span>
+            This week
+          </button>
+          <button type="button" id="tday_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+            <span data-feather="calendar"></span>
+            This day
+          </button>
+          <button type="button" id="thour_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+            <span data-feather="clock"></span>
+            This hour
+          </button>
+          <button type="button" id="pweek_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary" value="{{ 'm'|dt_tw }}">
+            <span data-feather="calendar"></span>
+            Previous week
+          </button>
+          <button type="button" id="pday_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+            <span data-feather="calendar"></span>
+            Previous day
+          </button>
+          <button type="button" id="phour_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+            <span data-feather="clock"></span>
+            Previous hour
+          </button>
+        </div>
+    </div>
+
     <div class="text-left">
         <form class="form-horizontal" method="post">
-          <label for="datetime">Time Range:</label>
-          <div class="form-group" name="datetime" id="datetime">
-            <label class="control-label" for="from">From:</label>
+        <div class="row row-cols-2">
+          <div class="col form-group">
+            <label class="control-label" for="from">Reference point:</label>
             <div class="form-group" name="from">
               <label class="control-label" for="date_start">Date</label>
-              <i class="far fa-calendar-alt"></i>
+              <span data-feather="calendar"></span>
               <input type="date" id="date_start" name="date_start" required>
               <label class="control-label" for="time_start">Time</label>
-              <i class="far fa-clock"></i>
+              <span data-feather="clock"></span>
               <input type="time" id="time_start" name="time_start" step = "1">
             </div>
-            <label class="control-label" for="to">to:</label>
+          </div>
+          <div class="col form-group">
+            <label class="control-label" for="to">End point:</label>
             <div class="form-group" name="to">
               <label class="control-label" for="date_end">Date</label>
-              <i class="far fa-calendar-alt"></i>
+              <span data-feather="calendar"></span>
               <input type="date" id="date_end" name="date_end" required>
               <label class="control-label" for="time_end">Time</label>
-              <i class="far fa-clock"></i>
+              <span data-feather="clock"></span>
               <input type="time" id="time_end" name="time_end" step = "1">
             </div>
           </div>
-
+          </div>
           <div class="form-group">
               <label for="From[]">
-                  <i class="fas fa-door-closed">Access points:</i>
+                  <b><span data-feather="home"></span> Access points</b>
               </label>
               <div class="row">
                   <div class="col-sm-5">
@@ -52,11 +84,21 @@
                       </select>
                   </div>
 
-                  <div class="col-sm-2 btn-group-vertical" role="group">
-                      <button type="button" id="multiselect1_rightAll" class="btn btn-secondary">ADD ALL</button>
-                      <button type="button" id="multiselect1_rightSelected" class="btn btn-secondary">ADD</button>
-                      <button type="button" id="multiselect1_leftSelected" class="btn btn-secondary">DEL</button>
-                      <button type="button" id="multiselect1_leftAll" class="btn btn-secondary">DEL ALL</button>
+                  <div class="col-sm-2 btn btn-group-vertical" role="group">
+                      <button type="button" id="multiselect1_rightAll" class="btn btn-secondary">
+                        <span data-feather="plus"></span>
+                        <span data-feather="layers"></span>
+                      </button>
+                      <button type="button" id="multiselect1_rightSelected" class="btn btn-secondary">
+                        <span data-feather="file-plus"></span>
+                      </button>
+                      <button type="button" id="multiselect1_leftSelected" class="btn btn-secondary">
+                        <span data-feather="file-minus"></span>
+                      </button>
+                      <button type="button" id="multiselect1_leftAll" class="btn btn-secondary">
+                        <span data-feather="minus"></span>
+                        <span data-feather="layers"></span>
+                      </button>
                   </div>
 
                   <div class="col-sm-5">
@@ -67,7 +109,7 @@
 
           <div class="form-group">
             <label for="events">
-              <i class="fas fa-clipboard-list">Events:</i>
+              <b><span data-feather="list"></span> Events</b>
             </label>
             <div class="row">
                 <div class="col-sm-5">
@@ -80,11 +122,21 @@
                     </select>
                 </div>
 
-                <div class="col-sm-2 btn-group-vertical" role="group">
-                    <button type="button" id="multiselect2_rightAll" class="btn btn-secondary">ADD ALL</button>
-                    <button type="button" id="multiselect2_rightSelected" class="btn btn-secondary">ADD</button>
-                    <button type="button" id="multiselect2_leftSelected" class="btn btn-secondary">DEL</button>
-                    <button type="button" id="multiselect2_leftAll" class="btn btn-secondary">DEL ALL</button>
+                <div class="col-sm-2 btn btn-group-vertical" role="group">
+                    <button type="button" id="multiselect2_rightAll" class="btn btn-secondary">
+                      <span data-feather="plus"></span>
+                      <span data-feather="layers"></span>
+                    </button>
+                    <button type="button" id="multiselect2_rightSelected" class="btn btn-secondary">
+                      <span data-feather="file-plus"></span>
+                    </button>
+                    <button type="button" id="multiselect2_leftSelected" class="btn btn-secondary">
+                      <span data-feather="file-minus"></span>
+                    </button>
+                    <button type="button" id="multiselect2_leftAll" class="btn btn-secondary">
+                      <span data-feather="minus"></span>
+                      <span data-feather="layers"></span>
+                    </button>
                 </div>
 
                 <div class="col-sm-5">
@@ -92,7 +144,12 @@
                 </div>
             </div>
           </div>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Gennerate report</button>
+
+          <div class="">
+            <button class="btn btn-lg btn-secondary" type="submit" name="submit" value="display">Display</button>
+            <button class="btn btn-lg btn-secondary" type="submit" name="submit" value="save">Save <img src="{{ url_for('static', filename='icon-xls-24.png') }}" alt="xls"></button>
+          </div>
+
         </form>
     </div>
 
@@ -117,5 +174,5 @@ $(document).ready(function() {
 });
 </script>
 
-  <script src="/static/reports.js"></script>
+  <script src="{{ url_for('static', filename='autofill.js') }}"></script>
 {% endblock %}

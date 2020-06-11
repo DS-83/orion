@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, redirect, render_template, request, session
-from . import db, auth, orion, reports, reports_sql, xlsx_
+from . import db, auth, orion, reports, reports_sql, xlsx_, admin
 
 
 
@@ -39,5 +39,8 @@ def create_app(test_config=None):
 
     # Register Reporsts Blueprint
     app.register_blueprint(reports.bp)
+
+    # Register Admin Blueprint
+    app.register_blueprint(admin.bp)
 
     return app

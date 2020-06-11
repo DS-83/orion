@@ -65,3 +65,15 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+# User role-based view
+def user_role(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if not g.user['IsAdmin']:
+            session.clear()
+            return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view

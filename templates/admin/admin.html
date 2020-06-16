@@ -1,10 +1,10 @@
 {% extends "base_admin.html" %}
 
-{% block title %}R{% endblock %}
+{% block title %}admin{% endblock %}
 
 {% block main %}
   <div class="container">
-    <a class="" href="{{ url_for('reports.accessp') }}">Access Point Report</a>
+    <a class="" href="{{ url_for('.smtpconf') }}">SMTP server configuration</a>
   </div>
 
   <div class="container">

@@ -4,7 +4,8 @@
 
 {% block main %}
     <div class="jumbotron">
-        <h1 class="header-h1-left">Walkways of Person(s)</h1>
+          <img src="{{ url_for('static', filename='text-146110.svg') }}" class="float-left mx-auto" style="width: 80px;" alt="text">
+        <h3 class="header-h1-left">Walkways of Persons</h3>
     </div>
 
     <form class="" action="{{ url_for('.person', page='name') }}" method="post">

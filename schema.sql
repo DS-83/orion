@@ -1,10 +1,19 @@
-DROP TABLE IF EXISTS user;
+-- DROP TABLE IF EXISTS user;
+--
+-- CREATE TABLE user (
+--   id INTEGER PRIMARY KEY AUTOINCREMENT,
+--   username TEXT UNIQUE NOT NULL,
+--   password TEXT NOT NULL,
+--   IsAdmin INT DEFAULT 0
+-- );
 
-CREATE TABLE user (
+CREATE TABLE smtp (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL,
-  IsAdmin INT DEFAULT 0
+  server TEXT UNIQUE NOT NULL,
+  port INT NOT NULL,
+  ssl INT NOT NULL DEFAULT 0,
+  username TEXT,
+  password TEXT
 );
 
 -- DROP TABLE IF EXISTS eventTypes;

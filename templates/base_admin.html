@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 
     <title>{% block title %}{% endblock %}</title>
   </head>
+
   <body>
     <nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary">
       <a class="navbar-brand" href="#">
@@ -48,14 +50,18 @@
           <div class="alert alert-danger border text-center {{ category }}" role="alert">{{ message }}</div>
         {% endfor %}
       </header>
+
+      {%block main %}{% endblock %}
     </section>
 
 
     <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-
     <!-- <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script> -->
-
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='autofill.js') }}"></script>
+    {% block script %}{% endblock %}
 
   </body>
 </html>

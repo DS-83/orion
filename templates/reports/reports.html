@@ -3,47 +3,46 @@
 {% block title %}Reports{% endblock %}
 
 {% block main %}
-
-  <div class="containe">
-    <img src="{{ url_for('static', filename='search-151037.svg')}}" class="float-left mx-auto" style="width: 200px;" alt="search">
-  </div>
-
-
-  <b><label for="autofill">Select the required report</label></b>
-  <div class="container" id="autofill">
-      <div class="row row-cols-3">
-        <a type="button" class="btn btn-sm btn-outline-secondary"
-          href="{{ url_for('reports.accessp') }}">
-          <span data-feather="file-text"></span>
-          Access Point Report
-        </a>
-        <a type="button" class="btn btn-sm btn-outline-secondary"
-          href="{{ url_for('reports.person') }}">
-          <span data-feather="file-text"></span>
-          Person Report
-        </a>
-        <a type="button" class="btn btn-sm btn-outline-secondary"
-          href="#">
-          <span data-feather="file-text"></span>
-          ...
-        </a>
-        <a type="button" class="btn btn-sm btn-outline-secondary"
-          href="#">
-          <span data-feather="file-text"></span>
-          ...
-        </a>
-        <a type="button" class="btn btn-sm btn-outline-secondary"
-          href="#">
-          <span data-feather="file-text"></span>
-          ...
-        </a>
-        <a type="button" class="btn btn-sm btn-outline-secondary"
-          href="#">
-          <span data-feather="file-text"></span>
-          ...
-        </a>
+    <div class="container">
+      <div class="container p-5">
+        <img src="{{ url_for('static', filename='search-151037.svg')}}" class="float-left mx-auto" style="width: 80px;" alt="search">
+        <h3 class="col">Reports</h3>
       </div>
-  </div>
 
-
+      <div class="container p-5" id="autofill">
+          <b><label for="autofill">Select the required report</label></b>
+          <div class="row row-cols-3">
+            <a type="button" class="btn btn-sm btn-outline-secondary"
+              href="{{ url_for('reports.accessp') }}">
+              <span data-feather="file-text"></span>
+              Access Point Report
+            </a>
+            <a type="button" class="btn btn-sm btn-outline-secondary"
+              href="{{ url_for('reports.person') }}">
+              <span data-feather="file-text"></span>
+              Person Report
+            </a>
+            <a type="button" class="btn btn-sm btn-outline-secondary"
+              href="#">
+              <span data-feather="file-text"></span>
+              ...
+            </a>
+            <a type="button" class="btn btn-sm btn-outline-secondary"
+              href="#">
+              <span data-feather="file-text"></span>
+              ...
+            </a>
+            <a type="button" class="btn btn-sm btn-outline-secondary"
+              href="#">
+              <span data-feather="file-text"></span>
+              ...
+            </a>
+            <a type="button" class="btn btn-sm btn-outline-secondary"
+              href="#">
+              <span data-feather="file-text"></span>
+              ...
+            </a>
+          </div>
+      </div>
+    </div>
 {% endblock %}

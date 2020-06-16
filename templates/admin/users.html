@@ -1,0 +1,90 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Users{% endblock %}
+
+{% block main %}
+<div class="container">
+
+  <table class="table" id="usersTable">
+    <thead>
+      {% for key in users[0][:6] %}
+        <th>{{ key }}</th>
+      {% endfor %}
+      <th></th>
+    </thead>
+    <tbody>
+      {% for row in users[1:] %}
+        <tr id="{{ row[6] }}">
+          {% for user in row[:6] %}
+            {% if not user %}
+              <td></td>
+            {% else %}
+              <td>{{ user }}</td>
+            {% endif %}
+          {% endfor %}
+          <td>
+            <button type="button" onclick="userEdit({{ row[6] }});" class="btn btn-outline-secondary btn-sm"
+                      data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false"
+                      aria-controls="collapseEdit">
+              Edit
+            </button>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+<div class="collapse" id="collapseEdit">
+  <div class="card card-body">
+      <form method="post">
+        <div class="row" id="collapseRow">
+          <div class="col-sm">
+            <input type="text" name="username" class="form-control" placeholder="User Name" required autocomplete="off">
+            <small class="form-text text-muted">Username</small>
+          </div>
+          <div class="col-sm">
+            <input type="text" name="Firstname" class="form-control" placeholder="Firstname">
+            <small class="form-text text-muted">First Name</small>
+          </div>
+          <div class="col-sm">
+            <input type="text" name="Lastname" class="form-control" placeholder="Lastname">
+            <small class="form-text text-muted">Last Name</small>
+          </div>
+          <div class="col-sm">
+            <input type="email" name="Email" class="form-control" placeholder="Email">
+            <small class="form-text text-muted">Email</small>
+          </div>
+          <div class="col-sm">
+            <input type="text" name="Company" class="form-control" placeholder="Company">
+            <small class="form-text text-muted">Company</small>
+          </div>
+          <div class="col-sm">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="Admin">Admin</label>
+              </div>
+              <select class="custom-select" name="Admin" id="Admin">
+                <option selected>Choose...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+              <small class="form-text text-muted">Admin (yes/no)</small>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm">
+            <button type="submit" name="submit" value="edit" class="btn btn-primary btn-sm" style="float:right">
+              save
+            </button>
+          </div>
+          <div class="col-sm hidden" hidden>
+            <input type="hidden" id="hidden_id" name="hidden_id">
+          </div>
+        </div>
+      </form>
+  </div>
+</div>
+{% endblock %}

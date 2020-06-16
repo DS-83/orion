@@ -99,3 +99,21 @@ function getSavedValue(v) {
     }
     return localStorage.getItem(v);
 };
+
+// User edit set values
+function userEdit(id) {
+    // Get row by id
+    var data = document.getElementById("usersTable").rows.namedItem(id);
+    // Loop for elements from 0 to 4
+    var l = 5;
+    var i;
+    for (i = 0; i < l; i++) {
+        var r = document.getElementById("collapseRow").children[i].children[0];
+        r.value = data.children[i].textContent;
+    }
+    // Element 5
+    r = document.getElementById("collapseRow").children[5].children[0].children[1];
+    r.value = data.children[5].textContent;
+    // Fill hidden id
+    document.getElementById('hidden_id').value = id;
+};

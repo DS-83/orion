@@ -183,3 +183,14 @@ def MailSend():
     s.send_message(msg)
     s.quit()
     return "ok"
+
+def users():
+    from flask import Flask
+    from db import get_db
+    db = get_db()
+    cursor = db.execute("SELECT username, IsAdmin FROM user;")
+    r = cursor.fetchone()
+    while r:
+        for i in r:
+            print(i)
+    return 'ok'

@@ -60,22 +60,22 @@
       </div>
       <div class="col-3">
         <h3>Current config:</h3>
+        {% if config == None %}
+          <p>Not configured</p>
+        {% else %}
         <table class="table">
           <thead>
             {% for key in config.keys() %}
               <th>{{ key }}</th>
-              {% else %}
-              <p>Not configured</p>
             {% endfor %}
           </thead>
           <tbody>
             {% for value in config %}
               <td>{{ value }}</td>
-              {% else %}
-              <p>Not configured</p>
             {% endfor %}
           </tbody>
         </table>
+        {% endif %}
       </div>
     </div>
   </div>

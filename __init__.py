@@ -1,8 +1,28 @@
 import os
+import logging
+import time
 
 from flask import Flask, redirect, render_template, request, session
-from . import db, auth, orion, reports, reports_sql, xlsx_, admin, sendemail
+from . import (db, auth, orion, reports, reports_sql, xlsx_, admin,
+                sendemail
+              )
+from celery import Celery
 
+def make_celery(app):
+    celery = Celery(
+        app.import_name,
+        backend=app.config['CELERY_RESULT_BACKEND'],
+        broker=app.config['CELERY_BROKER_URL']
+    )
+    celery.conf.update(app.config)
+
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
 
 
 def create_app(test_config=None):
@@ -11,7 +31,11 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY=b'^SD$%1D<<L^Ggn97d5c3@!b94',
         DATABASE=os.path.join(app.instance_path, 'app.sqlite'),
-        DWNLD_FOLDER=os.path.join(app.instance_path, 'xlsx')
+        DWNLD_FOLDER=os.path.join(app.instance_path, 'xlsx'),
+        LOGS_FOLDER=os.path.join(app.instance_path, 'logs'),
+        CELERY_BROKER_URL='redis://localhost:6379',
+        CELERY_RESULT_BACKEND='redis://localhost:6379'
+
     )
 
     if test_config is None:
@@ -42,5 +66,14 @@ def create_app(test_config=None):
 
     # Register Admin Blueprint
     app.register_blueprint(admin.bp)
+
+    celery = make_celery(app)
+
+
+    # Logging config
+    logger = logging.getLogger(__name__)
+    logfile = f"{app.config['LOGS_FOLDER']}/app-{time.strftime('%Y%m%d')}.log"
+    logging.basicConfig(filename=logfile, level=logging.INFO)
+    logging.info('Started')
 
     return app

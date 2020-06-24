@@ -3,6 +3,8 @@ from flask import (Blueprint, render_template, request,
 from app.auth import login_required, user_role
 from app.sendemail import Test
 from app.db import get_db
+from werkzeug.security import generate_password_hash
+
 
 
 # # set optional bootswatch theme
@@ -75,7 +77,7 @@ def users():
     db = get_db()
     cursor = db.execute(
         "SELECT username as 'Username', firstname, lastname,\
-        email, company, IsAdmin as 'Admin', id  FROM user;")
+        email, company, IsAdmin as 'Admin', status, id  FROM user;")
     row = cursor.fetchone()
     # Make list`
     users = []
@@ -96,7 +98,50 @@ def users():
 
         # Edit user
         if request.form['submit'] == 'edit':
-            username = request.form.get('username')
+            username = request.form['username']
+            if not username:
+                flash("<username> can not be blank")
+                return render_template('admin/users.html', users=users)
+            username = username[0].upper() + request.form['username'][1:].lower()
+            firstname = request.form.get('Firstname')
+            lastname = request.form.get('Lastname')
+            email = request.form.get('Email')
+            company = request.form.get('Company')
+            admin = request.form.get('Admin')
+            status = request.form['status']
+            if admin == "Yes":
+                admin = 1
+            else:
+                admin = 0
+            id = request.form.get('hidden_id')
+            try:
+                db.execute("UPDATE user SET username=?, firstname=?, lastname=?,\
+                    email=?, company=?, IsAdmin=?, status=? WHERE id = ?",
+                    (username, firstname, lastname, email, company, admin, status, id)
+                )
+                db.commit()
+                flash('saved', 'success')
+                return redirect(url_for('.users'))
+            except Exception as err:
+                flash(err)
+                return render_template('admin/users.html', users=users)
+
+        # New user
+        if request.form['submit'] == 'new':
+            username = request.form['username']
+            if not username:
+                flash("<username> can not be blank")
+                return render_template('admin/users.html', users=users)
+            username = username[0].upper() + request.form['username'][1:].lower()
+            for user in users:
+                if username == user[0]:
+                    flash(f"Username {username} already taken")
+                    return render_template('admin/users.html', users=users)
+            password = request.form['password']
+            if not password:
+                flash("<password> can not be blank")
+                return render_template('admin/users.html', users=users)
+            password = generate_password_hash(password)
             firstname = request.form.get('Firstname')
             lastname = request.form.get('Lastname')
             email = request.form.get('Email')
@@ -106,21 +151,19 @@ def users():
                 admin = 1
             else:
                 admin = 0
-            id = request.form.get('hidden_id')
-            if not username:
-                flash("<username> can not be blank")
-                return render_template('admin/users.html', users=users)
             try:
-                db.execute("UPDATE user SET username=?, firstname=?, lastname=?,\
-                    email=?, company=?, IsAdmin=? WHERE id = ?",
-                    (username, firstname, lastname, email, company, admin, id)
+                db.execute("INSERT INTO user\
+                    (username, password, firstname, lastname, email, company, IsAdmin)\
+                    VALUES (?,?,?,?,?,?,?);",\
+                    (username, password, firstname, lastname, email, company, admin)
                 )
                 db.commit()
-                flash('saved')
+                flash("User added")
                 return redirect(url_for('.users'))
             except Exception as err:
                 flash(err)
                 return render_template('admin/users.html', users=users)
+
 
 
     return render_template('admin/users.html', users=users)

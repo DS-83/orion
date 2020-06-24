@@ -1,9 +1,11 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for,
+    session
 )
 from werkzeug.exceptions import abort
 
 from app.auth import login_required
+from app.db import get_db
 
 bp = Blueprint('orion', __name__)
 
@@ -11,6 +13,25 @@ bp = Blueprint('orion', __name__)
 @login_required
 def index():
     return render_template('orion/index.html')
+
+
+@bp.route('/mailing', methods=('GET', 'POST'))
+@login_required
+def mailing():
+
+    db = get_db()
+    reports = db.execute("SELECT id, name FROM saved_reports WHERE user_id = ?",
+                        (session['user_id'],)
+                        )
+    if request.method == 'POST':
+        reportname = request.form['reportname']
+        recipient = request.form['recipient']
+        period = request.form['periodicity']
+        weekday = request.form.get('weekday')
+        date = request.form.get('date')
+        time = request.form['time']
+    return render_template('orion/mailing.html', reports=reports)
+
 
 # # Syncronising DB
 # @bp.route('/syncdb', methods=('GET', 'POST'))

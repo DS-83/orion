@@ -1,14 +1,34 @@
-DROP TABLE IF EXISTS user;
+-- DROP TABLE IF EXISTS user;
+--
+-- CREATE TABLE user (
+--   id INTEGER PRIMARY KEY AUTOINCREMENT,
+--   username TEXT UNIQUE NOT NULL,
+--   firstname TEXT,
+--   lastname TEXT,
+--   email TEXT,
+--   company TEXT,
+--   password TEXT NOT NULL,
+--   IsAdmin INT DEFAULT 0,
+--   status TEXT DEFAULT 'active'
+-- );
+--
+-- CREATE TABLE admin (
+--   id INTEGER PRIMARY KEY,
+--   username TEXT UNIQUE NOT NULL,
+--   password TEXT NOT NULL,
+--   IsAdmin INT DEFAULT 1,
+--   status TEXT DEFAULT 'active'
+-- );
+DROP TABLE IF EXISTS saved_reports;
 
-CREATE TABLE user (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE NOT NULL,
-  firstname TEXT,
-  lastname TEXT,
-  email TEXT,
-  company TEXT,
-  password TEXT NOT NULL,
-  IsAdmin INT DEFAULT 0
+CREATE TABLE saved_reports (
+  id INTEGER PRIMARY KEY,
+  report TEXT NOT NULL,
+  name TEXT UNIQUE NOT NULL,
+  user_id INTEGER NOT NULL,
+  period TEXT NOT NULL,
+  data TEXT NOT NULL,
+  FOREIGN KEY(user_id) REFERENCES user(id)
 );
 
 -- CREATE TABLE smtp (

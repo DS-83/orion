@@ -3,25 +3,63 @@
 {% block title %}SMTP{% endblock %}
 
 {% block main %}
+<div class="container">
+  <div class="container p-5">
+    <img src="{{ url_for('static', filename='email-156765.svg')}}" 
+          class="float-left mx-auto" style="width: 80px;" alt="email-server">
+    <h3 class="col">SMTP Config</h3>
+  </div>
+
   <div class="container">
+    <h3>Current config:</h3>
+    {% if config == None %}
+      <p>Not configured</p>
+    {% else %}
+    <table class="table table-bordered">
+      <thead>
+        {% for key in config.keys() %}
+          <th>{{ key }}</th>
+        {% endfor %}
+      </thead>
+      <tbody>
+        {% for value in config %}
+          <td>{{ value }}</td>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+
+  <div class="container">
+    <button type="button" class="btn btn-outline-secondary"
+              data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false"
+              aria-controls="collapseEdit">
+      Edit
+    </button>
+  </div>
+
+
+
+  <div class="collapse" id="collapseEdit">
+    <div class="card card-body">
     <div class="row">
-      <div class="col-sm">
+      <div class="col">
           <form method="post">
             <fieldset class="form-group">
               <div class="form-row">
-                <div class="form-group col-sm-3">
+                <div class="form-group col-md-6">
                   <label for="smtpserver">SMTP Server</label>
                   <input type="text" class="form-control" name="smtpserver" id="smtpserver" onkeyup="saveValue(this);" placeholder="mail.localhost" required>
                 </div>
-                <div class="form-group col-sm-1">
+                <div class="form-group col-2">
                   <label for="port">Port</label>
                   <input type="number" class="form-control" name="port" id="port" onkeyup="saveValue(this);" placeholder="25" required>
                 </div>
 
               </div>
               <div class="form-row">
-                  <div class="col-sm-2">SSL</div>
-                  <div class="form-check col-sm-2">
+                  <div class="col-md-5">SSL</div>
+                  <div class="form-check col-md-3">
                     <input class="form-check-input" type="checkbox" name="ssl" id="ssl">
                     <label class="form-check-label" for="ssl">
                       use secure connection
@@ -31,8 +69,8 @@
             </fieldset>
             <fieldset class="form-group" disabled>
               <div class="row">
-                <legend class="col-form-label col-sm-2 pt-0">Authentication</legend>
-                <div class="col-sm-2">
+                <legend class="col-form-label col-md-4 pt-0">Authentication</legend>
+                <div class="col-sm-4">
                     <input class="form-control" type="text" name="username" id="username">
                     <label class="form-check-label" for="username">
                       Username
@@ -46,36 +84,24 @@
             </fieldset>
 
             <div class="form-row">
-              <div class="col-3">
+              <div class="col-4">
                 <button type="submit" class="btn btn-secondary" name="submit" value="test">Test</button>
-                <small>connection</small>
               </div>
 
-              <div class="col-3">
-                <button type="submit" class="btn btn-primary" name="submit" value="save">Save</button>
-                <small>config</small>
+              <div class="col-4">
+                <button type="submit" class="btn btn-primary" style="float:right" name="submit" value="save">Save</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-4">
+                <small>connection</small>
+              </div>
+              <div class="col-4">
+                <small style="float:right">settings</small>
               </div>
             </div>
           </form>
-      </div>
-      <div class="col-3">
-        <h3>Current config:</h3>
-        {% if config == None %}
-          <p>Not configured</p>
-        {% else %}
-        <table class="table">
-          <thead>
-            {% for key in config.keys() %}
-              <th>{{ key }}</th>
-            {% endfor %}
-          </thead>
-          <tbody>
-            {% for value in config %}
-              <td>{{ value }}</td>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% endif %}
+        </div>
       </div>
     </div>
   </div>

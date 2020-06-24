@@ -108,12 +108,53 @@ function userEdit(id) {
     var l = 5;
     var i;
     for (i = 0; i < l; i++) {
-        var r = document.getElementById("collapseRow").children[i].children[0];
+        var r = document.getElementById("collapseRow1").children[i].children[0];
         r.value = data.children[i].textContent;
     }
     // Element 5
-    r = document.getElementById("collapseRow").children[5].children[0].children[1];
+    r = document.getElementById("collapseRow2").children[0].children[0].children[1];
     r.value = data.children[5].textContent;
+    // Element 6
+    r = document.getElementById("collapseRow2").children[1].children[0].children[1];
+    r.value = data.children[6].textContent;
+
     // Fill hidden id
     document.getElementById('hidden_id').value = id;
 };
+
+// Save reports
+function saveReport() {
+    var table = document.getElementById("personTable")
+    var mtable = document.getElementById("modalTable")
+    // Clear table
+    for (var i = 0, row; row = mtable.rows[i]; i++) {
+      mtable.deleteRow(i);
+    }
+    // Iterate each row in table
+    for (var i = 1, row; row = table.rows[i]; i++) {
+        if (row.cells[0].children[0].children[0].checked === true) {
+          let clone = row.cloneNode(true);
+          mtable.appendChild(clone);
+        }
+    }
+};
+
+// Fill hidden_id
+function fillHidden(id) {
+    document.getElementById('hidden_id').value = id;
+};
+
+// Display div
+function displayDiv(id) {
+    let date = document.getElementById('date');
+    let time = document.getElementById('time');
+    let weekday = document.getElementById('weekday');
+    let period = document.getElementById(id)
+    if (period.value == 'weekly' || period.value == 'daily') {
+        weekday.style.display = 'block';
+        time.style.display = 'block';
+    };
+    if (period.value == 'monthly') {
+        date.style.display = 'block';
+    };
+}

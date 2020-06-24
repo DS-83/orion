@@ -33,7 +33,18 @@
     <!-- Custom styles for this template -->
     <link href="/static/signin.css" rel="stylesheet">
   </head>
+
   <body class="text-center">
+    <div class="container">
+      <section class="content">
+        <header>
+          {% block header %}{% endblock %}
+          {% for category, message in get_flashed_messages(True) %}
+            <div class="alert alert-{{ category }} border text-center" role="alert">{{ message }}</div>
+          {% endfor %}
+        </header>
+      </section>
+    </div>
     <form class="form-signin" method="post">
       <img class="mb-4" src="/static/logo.png" alt="logo" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
@@ -44,5 +55,6 @@
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       <p class="mt-5 mb-3 text-muted">&copy; CNC Corp. 2020</p>
     </form>
+
   </body>
 </html>

@@ -1,6 +1,6 @@
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for,
-    send_from_directory, current_app
+    send_from_directory, current_app, session
 )
 from app.db import get_db
 from app.reports_sql import (
@@ -56,6 +56,7 @@ def accessp():
             return redirect(url_for('reports.accessp'))
 
         data = UnpackData(OrionReportAccessPoint(date_start, date_end, ap, events))
+        print(data)
         return render_template('reports/generatedreport.html', data=data)
 
     events = UnpackData(OrionQueryEvents())
@@ -163,5 +164,68 @@ def person(page):
     if page == 'display' and request.form['submit'] == 'save':
         return report('save')
 
+    # Save Report
+    if page == 'savereport':
+        db = get_db()
+        report = "Person"
+        name = request.form["reportname"]
+        period = request.form["period"]
+        data = ", ".join(map(str, request.form.getlist('personId')))
+        try:
+            db.execute("INSERT INTO saved_reports (report, name, user_id, period, data)\
+                        VALUES (?,?,?,?,?);", (report, name, session['user_id'], period, data))
+            db.commit()
+            flash('saved', 'success')
+        except Exception as err:
+            flash(err, 'warning')
+        return render_template('reports/person.html', result=0)
+
     # Default route
     return render_template('reports/person.html', result=0)
+
+
+# Saved reports
+@bp.route('/savedreports')
+@login_required
+def savedreports():
+    db = get_db()
+    cursor = db.execute("SELECT id AS 'N', report AS 'Report type',\
+                        name AS 'Report name', period AS 'Time interval',\
+                        data FROM saved_reports WHERE user_id = ?", (session['user_id'],))
+    row = cursor.fetchone()
+    data = []
+    if row:
+        data.append(row.keys())
+        while row:
+            # For person
+            if row['Report type'] == 'Person':
+                persons_id = row['data'].split(',')
+                data_orion = UnpackData(OrionQueryPersons())
+                report_data = []
+                for r in data_orion:
+                    for person in persons_id:
+                        if int(person) == r[0]:
+                            report_data.append(r)
+            l = list(row)
+            l[4] = report_data
+            data.append(l)
+
+            row = cursor.fetchone()
+
+
+    return render_template('reports/savedreports.html', data=data)
+
+# Delete report
+@bp.route('/savedreports', methods=['POST'])
+@login_required
+def delete():
+    db = get_db()
+    id = request.form['hidden_id']
+    try:
+        db.execute("DELETE FROM saved_reports WHERE id = ?", (id,))
+        db.commit()
+        flash('success', 'success')
+    except Exception as err:
+        flash(err, 'warning')
+
+    return redirect(url_for('reports.savedreports'))

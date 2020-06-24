@@ -10,8 +10,8 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary">
-      <a class="navbar-brand" href="#">
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-primary p-0">
+      <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">
         <img src="{{ url_for('static', filename='logo.png') }}" width="50" height="30" class="d-inline-block align-top" alt="CNC Corp." loading="lazy">
         ORIONng
       </a>
@@ -43,20 +43,63 @@
       </div>
     </nav>
 
-    <section class="content">
-      <header>
-        {% block header %}{% endblock %}
-        {% for message in get_flashed_messages() %}
-          <div class="alert alert-danger border text-center {{ category }}" role="alert">{{ message }}</div>
-        {% endfor %}
-      </header>
+    <!-- sidebar -->
+    <div class="container-fluid">
+      <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+          <div class="sidebar-sticky pt-3">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('orion.index') }}">
+                  <span data-feather="home"></span>
+                  Dashboard <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="user"></span>
+                  {{ g.user.username }}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('reports.index') }}">
+                  <span data-feather="bar-chart-2"></span>
+                  Reports
+                </a>
+              </li>
+              {% if g.user.IsAdmin %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.index')}}">
+                      <span data-feather="database"></span>
+                      Administration
+                    </a>
+                  </li>
+              {% endif %}
+            </ul>
+
+          </div>
+        </nav>
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+      <section class="content">
+        <header>
+          {% block header %}{% endblock %}
+          {% for category, message in get_flashed_messages(True) %}
+            <div class="alert alert-{{ category }} border text-center" role="alert">{{ message }}</div>
+          {% endfor %}
+        </header>
+      </section>
 
       {%block main %}{% endblock %}
-    </section>
+
+    </main>
+  </div>
+</div>
+
 
 
     <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-    <!-- <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script> -->
     <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
     <script src="{{ url_for('static', filename='dashboard.js') }}"></script>

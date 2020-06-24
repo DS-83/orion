@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
     <title>{% block title %}{% endblock %}</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 
     {% block style %}{% endblock %}
     <style>
@@ -30,8 +30,6 @@
     </style>
     {% block head %}{% endblock %}
 
-    <!-- Custom styles for this template -->
-    <link href="/static/dashboard.css" rel="stylesheet">
   </head>
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
@@ -81,6 +79,13 @@
               Reports
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('orion.mailing') }}">
+              <span data-feather="mail"></span>
+              Mail lists
+            </a>
+          </li>
+
           {% if g.user.IsAdmin %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('admin.index')}}">
@@ -93,7 +98,7 @@
 
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Saved reports</span>
-          <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
+          <a class="d-flex align-items-center text-muted" href="{{ url_for('reports.savedreports') }}" aria-label="Add a new report">
             <span data-feather="plus-circle"></span>
           </a>
         </h6>
@@ -130,8 +135,8 @@
           <section class="content">
             <header>
               {% block header %}{% endblock %}
-              {% for message in get_flashed_messages() %}
-                <div class="alert alert-danger border text-center {{ category }}" role="alert">{{ message }}</div>
+              {% for category, message in get_flashed_messages(True) %}
+                <div class="alert alert-{{ category }} border text-center" role="alert">{{ message }}</div>
               {% endfor %}
             </header>
           </section>
@@ -144,10 +149,10 @@
 
 
         <script type="text/javascript" src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
         <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
-        <!-- <script src="https://kit.fontawesome.com/2689635e40.js" crossorigin="anonymous"></script> -->
         {% block script %}{% endblock %}
         </body>
 </html>

@@ -7,8 +7,9 @@
 {% endblock %}
 
 {% block main %}
-  {% if data %}
+
     <div class="container">
+      {% if data|length > 1 %}
         <table class="table table-responsive table-bordered">
             <thead class="thead-dark">
                 {% for i in data[0] %}
@@ -25,15 +26,15 @@
                 {% endfor %}
             </tbody>
         </table>
+      {% else %}
+        <div class="alert alert-warning" role="alert" style="text-align: center">
+          <strong>Not found</strong>
+        </div>
+      {% endif %}
     </div>
-  {% endif %}
-  {% if filename %}
-      <div class="container">
-        {{ filename }}
-      </div>
-  {% endif %}
+
   <footer class="my-5 pt-5 text-muted text-center text-small">
-    <p class="mb-1">&copy; 2017-2020 Company Name</p>
+    <p class="mb-1">&copy; 2020 CNC Corp.</p>
     <ul class="list-inline">
       <li class="list-inline-item"><a href="#">Privacy</a></li>
       <li class="list-inline-item"><a href="#">Terms</a></li>

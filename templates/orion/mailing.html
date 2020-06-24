@@ -1,0 +1,100 @@
+{% extends 'base1.html' %}
+
+{% block title %}Mailing{% endblock %}
+
+{% block main %}
+<div class="container">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap
+              align-items-center pt-3 pb-2 mb-3">
+    <div class="col">
+      <img src="{{ url_for('static', filename='alphabet-word-images-1295488.svg')}}"
+          class="float-left mx-auto" style="width: 80px;" alt="email">
+      <h3 style="text-align: center;">Mailing Lists</h3>
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-outline-secondary" style="float:right"
+                data-toggle="collapse" data-target="#collapseNewMail" aria-expanded="false"
+                aria-controls="collapseNewMail">
+        New
+        <span data-feather="mail"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="collapse" id="collapseNewMail">
+  <div class="card card-body">
+      <form method="post">
+        <div class="row" id="collapseRow1">
+          <div class="col-sm">
+            <label class="control-label" for="reportname">Report name</label>
+              <select class="custom-select" name="reportname" id="reportname"
+                      autocomplete="off" required>
+                  <option selected>Choose...</option>
+                  {% for report in reports %}
+                    <option value="{{ report[0] }}">{{ report[1] }}</option>
+                  {% endfor %}
+              </select>
+            <small class="form-text text-muted"></small>
+          </div>
+          <div class="col-md">
+            <label class="control-label" for="reportname">Recipient</label>
+            <input type="email" name="recipient" class="form-control" placeholder="@"
+                    required autocomplete="off">
+            <small class="form-text text-muted"></small>
+          </div>
+          <div class="col-md">
+            <label class="control-label" for="reportname">Periodicity</label>
+            <select class="custom-select" name="periodicity" id="periodicity"
+                    onchange="displayDiv(this.id)" autocomplete="off">
+                <option selected>Choose...</option>
+                <option value="daily">daily</option>
+                <option value="weekly">weekly</option>
+                <option value="monthly">monthly</option>
+            </select>
+            <small class="form-text text-muted"></small>
+          </div>
+        </div>
+        <div class="row" id="collapseRow2">
+          <div class="col-md" id="weekday" style="display:none">
+            <select class="custom-select" name="weekday"  autocomplete="off">
+                <option selected>Choose...</option>
+                <option value="monday">monday</option>
+                <option value="tuesday">tuesday</option>
+                <option value="wednesday">wednesday</option>
+                <option value="thursday">thursday</option>
+                <option value="friday">friday</option>
+                <option value="saturday">saturday</option>
+                <option value="sunday">sunday</option>
+            </select>
+            <small class="form-text text-muted">Weekday</small>
+          </div>
+
+          <div class="col-md" id="date" style="display:none">
+              <span data-feather="calendar"></span>
+              <input type="number" id="date" name="date" max=29>
+              <small class="form-text text-muted">Date</small>
+          </div>
+          <div class="col-md" id="time" style="display:none">
+              <span data-feather="clock"></span>
+              <input type="time" id="time" name="time" step = "1" required>
+              <small class="form-text text-muted">Time</small>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <button type="submit" name="submit" value="edit" class="btn btn-primary btn-sm" style="float:right">
+              <span data-feather="save"></span>
+            </button>
+          </div>
+        </div>
+      </form>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='autofill.js') }}"></script>
+{% endblock %}

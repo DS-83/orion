@@ -59,3 +59,14 @@ def get_mssql():
         g.odbcConn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
         g.cursor = g.odbcConn.cursor()
     return g.cursor
+
+
+def get_mssql_no_g():
+    server = '192.168.0.55'
+    database = 'Orionnew'
+    username = 'sa'
+    password = '123456'
+
+    odbcConn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
+    cursor = odbcConn.cursor()
+    return cursor

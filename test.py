@@ -87,21 +87,42 @@
 #         error = "Error in IntGetEntryPointsList func."
 #         return error
 #     return ser
-# import pyodbc
+import pyodbc
+from json import dumps
+
+class MailTask:
+    def __init__(self, id, report_id, recipient, periodicity, time, weekday=None, date=None):
+        self.id = id
+        self.report_id = report_id
+        self.recipient = recipient
+        self.periodicity = periodicity
+        self.weekday = weekday
+        self.date = date
+        self.time = time
+
+    def toJSON(self):
+        return dumps(self, default=lambda o: o.__dict__,
+            sort_keys=True, indent=4)
+
+
+
+
+
+
 from datetime import datetime
-
-def get_mssql():
-    server = '192.168.0.55'
-    database = 'Orionnew'
-    username = 'sa'
-    password = '123456'
-
-    conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};\
-                           SERVER='+server+';DATABASE='+database+';\
-                           UID='+username+';PWD='+ password
-                           )
-    cursor = conn.cursor()
-    return cursor
+#
+# def get_mssql():
+#     server = '192.168.0.55'
+#     database = 'Orionnew'
+#     username = 'sa'
+#     password = '123456'
+#
+#     conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};\
+#                            SERVER='+server+';DATABASE='+database+';\
+#                            UID='+username+';PWD='+ password
+#                            )
+#     cursor = conn.cursor()
+#     return cursor
 
 # Unpack Data
 def UnpackData(data):
@@ -196,89 +217,138 @@ def MailSend():
 #         r = cursor.fetchone()
 #     return 'ok'
 
-import xlsxwriter
-from datetime import datetime
-import os
-from reports_sql import dt
-
-def xlsxReport(date_start, date_end, data, report_name):
-    filename = os.path.join(os.path.abspath('../instance/xlsx'), f"{report_name}_{date_end}_{date_start}.xlsx")
-    workbook = xlsxwriter.Workbook(filename)
-    worksheet = workbook.add_worksheet()
-    # Protect worksheet
-    worksheet.protect()
-    # Sheet heading
-    # Merge format
-    merge_format = workbook.add_format({'align': 'left', 'bold': True, 'font_size': 12})
-    heading = f"Report name: {report_name}\nTime range: from: {dt(date_start)} to: {dt(date_end)}"
-    worksheet.merge_range(1, 4, 2, 8, heading, merge_format)
-    # Insert logo
-    # Merge format
-    merge_format = workbook.add_format({'align': 'center'})
-    image = worksheet.insert_image(0, 0, os.path.join(os.path.abspath('static'), 'logo.png'),
-                            {'x_scale': 0.6, 'y_scale': 0.6,
-                             })
-    worksheet.merge_range(0, 0, 5, 1, image, merge_format)
-    # Keep track columns width
-    col_width = list(range(len(data[0])))
-    # Write data
-    indent = 6
-    old = None
-    for row in range(indent, len(data) + indent):
-        # Head format
-        if row == indent:
-            cell_format = workbook.add_format({'bold': True, 'font_size': 11,
-                            'border': True, 'align': 'center', 'bg_color': '#3b3a30',
-                            'font_color': 'white'})
-        # Highlight every new record in first column
-        elif data[row - indent][0] != old:
-            cell_format = workbook.add_format({'top': True,
-                          'bg_color': '#b2b2b2', 'bold': True,
-                          'num_format': 'dd-mm-yyyy hh:mm:ss',
-                          'align': 'left'})
-            old = data[row - indent][0]
-        # cell
-        else:
-            cell_format = workbook.add_format({'num_format': 'dd-mm-yyyy hh:mm:ss',
-                            'align': 'left', 'right': True,
-                            'left': True, 'bg_color': '#e0e2e4'})
-        for col in range(len(data[row - indent])):
-            if col_width[col] < len(str(data[row - indent][col])):
-                col_width[col] = len(str(data[row - indent][col]))
-            worksheet.write(row, col, data[row - indent][col], cell_format)
-
-    # Set columns width
-    for col in range(len(col_width)):
-        worksheet.set_column(col, col, col_width[col])
-
-    workbook.close()
-    return f"{report_name}_{date_end}_{date_start}.xlsx"
-
-
-
-import asyncio
-
-timelist = [5, 5, 5]
+# import xlsxwriter
+# from datetime import datetime
+# import os
+# from reports_sql import dt
+#
+# def xlsxReport(date_start, date_end, data, report_name):
+#     filename = os.path.join(os.path.abspath('../instance/xlsx'), f"{report_name}_{date_end}_{date_start}.xlsx")
+#     workbook = xlsxwriter.Workbook(filename)
+#     worksheet = workbook.add_worksheet()
+#     # Protect worksheet
+#     worksheet.protect()
+#     # Sheet heading
+#     # Merge format
+#     merge_format = workbook.add_format({'align': 'left', 'bold': True, 'font_size': 12})
+#     heading = f"Report name: {report_name}\nTime range: from: {dt(date_start)} to: {dt(date_end)}"
+#     worksheet.merge_range(1, 4, 2, 8, heading, merge_format)
+#     # Insert logo
+#     # Merge format
+#     merge_format = workbook.add_format({'align': 'center'})
+#     image = worksheet.insert_image(0, 0, os.path.join(os.path.abspath('static'), 'logo.png'),
+#                             {'x_scale': 0.6, 'y_scale': 0.6,
+#                              })
+#     worksheet.merge_range(0, 0, 5, 1, image, merge_format)
+#     # Keep track columns width
+#     col_width = list(range(len(data[0])))
+#     # Write data
+#     indent = 6
+#     old = None
+#     for row in range(indent, len(data) + indent):
+#         # Head format
+#         if row == indent:
+#             cell_format = workbook.add_format({'bold': True, 'font_size': 11,
+#                             'border': True, 'align': 'center', 'bg_color': '#3b3a30',
+#                             'font_color': 'white'})
+#         # Highlight every new record in first column
+#         elif data[row - indent][0] != old:
+#             cell_format = workbook.add_format({'top': True,
+#                           'bg_color': '#b2b2b2', 'bold': True,
+#                           'num_format': 'dd-mm-yyyy hh:mm:ss',
+#                           'align': 'left'})
+#             old = data[row - indent][0]
+#         # cell
+#         else:
+#             cell_format = workbook.add_format({'num_format': 'dd-mm-yyyy hh:mm:ss',
+#                             'align': 'left', 'right': True,
+#                             'left': True, 'bg_color': '#e0e2e4'})
+#         for col in range(len(data[row - indent])):
+#             if col_width[col] < len(str(data[row - indent][col])):
+#                 col_width[col] = len(str(data[row - indent][col]))
+#             worksheet.write(row, col, data[row - indent][col], cell_format)
+#
+#     # Set columns width
+#     for col in range(len(col_width)):
+#         worksheet.set_column(col, col, col_width[col])
+#
+#     workbook.close()
+#     return f"{report_name}_{date_end}_{date_start}.xlsx"
 
 
-async def func(delay):
-     await asyncio.sleep(delay)
-     print(f"time: {delay}")
-     timelist.remove(delay)
-     timelist.append(timelist[-1] + 5)
-     print(timelist)
 
-async def main():
-    while timelist:
-        timelist.sort()
-        new_tl = []
-        new_tl.append(timelist[0])
-        for i in range(len(timelist) - 1):
-            if timelist[i] == timelist[i + 1]:
-                new_tl.append(timelist[i + 1])
+# import asyncio
+#
+# timelist = [5, 5, 5]
+#
+#
+# async def func(delay):
+#      await asyncio.sleep(delay)
+#      print(f"time: {delay}")
+#      timelist.remove(delay)
+#      timelist.append(timelist[-1] + 5)
+#      print(timelist)
+#
+# async def main():
+#     while timelist:
+#         timelist.sort()
+#         new_tl = []
+#         new_tl.append(timelist[0])
+#         for i in range(len(timelist) - 1):
+#             if timelist[i] == timelist[i + 1]:
+#                 new_tl.append(timelist[i + 1])
+#
+#         tasks = [asyncio.create_task(func(i)) for i in new_tl]
+#         for i in range(len(tasks)):
+#             await tasks[i]
+#
+# asyncio.run(main())
 
-        tasks = [asyncio.create_task(func(i)) for i in new_tl]
-        for i in range(len(tasks)):
-            await tasks[i]
 
-asyncio.run(main())
+
+        # def create_mail_task():
+        #     from datetime import datetime, timedelta
+        #     from calendar import day_name
+        #
+        #
+        #     class MailTask:
+        #         def __init__(self, id, report_id, recipient, periodicity, time, weekday=None, date=None):
+        #             self.id = id
+        #             self.report_id = report_id
+        #             self.recipient = recipient
+        #             self.periodicity = periodicity
+        #             self.weekday = weekday
+        #             self.date = date
+        #             self.time = time
+        #
+        #     db = get_db()
+        #     cursor = db.execute("SELECT id, report_id, recipient, periodicity, time,\
+        #                         weekday, date FROM mail_task;")
+        #     row = cursor.fetchone()
+        #     week_days = list(day_name)
+        #     now = datetime.now()
+        #     while row:
+        #         tuple(row)
+        #         print(row)
+        #         print(row.keys())
+        #         mail_task = MailTask(row['id'], row['report_id'], row['recipient'],
+        #                         row['periodicity'], row['time'], row['weekday'],
+        #                         row['date'])
+        #         print (mail_task.periodicity)
+        #         # if mail_task.periodicity == 'daily':
+        #         #     pass
+        #         if mail_task.periodicity == 'weekly':
+        #             print('Y')
+        #             # To datetime format
+        #             t = datetime.strptime(mail_task.time, '%H:%M:%S').time()
+        #             # Count days
+        #             days = (week_days.index(mail_task.weekday) - datetime.weekday(now) + 7) % 7
+        #             # Count timedelta
+        #             countdown = timedelta(days=days, hours=t.hour, minutes=t.minute, seconds=t.second)
+        #         # elif mail_task.periodicity == 'monthly':
+        #         #     pass
+        #         send_mail_task.apply_async(mail_task, countdown=countdown)
+        #
+        #         row = cursor.fetchone()
+        #         print(row)
+        #     return

@@ -37,27 +37,67 @@ def dt_tw(wday):
 def index():
     return render_template('reports/reports.html')
 
+@bp.route('/accessp', defaults={'page': 'accessp.html'})
 # Report "Access points"
-@bp.route('/accessp', methods=('GET', 'POST'))
+@bp.route('/accessp/<page>', methods=(['POST']))
 @login_required
-def accessp():
+def accessp(page):
     if request.method == 'POST':
-        date_start = request.form['date_start']
-        time_start = request.form['time_start']
-        date_end = request.form['date_end']
-        time_end = request.form['time_end']
-        events = ", ".join(map(str, request.form.getlist('events[]')))
-        ap = ", ".join(map(str, request.form.getlist('ap[]')))
-        #  check time range
-        date_start = date_start.replace('-', '') + time_start.replace(':', '')
-        date_end = date_end.replace('-', '') + time_end.replace(':', '')
-        if int(date_end) - int(date_start) <= 0:
-            flash('Не пытайся обмануть меня, кожаный ублюдок')
-            return redirect(url_for('reports.accessp'))
 
-        data = UnpackData(OrionReportAccessPoint(date_start, date_end, ap, events))
-        print(data)
-        return render_template('reports/generatedreport.html', data=data)
+        def report(action):
+
+            date_start = request.form['date_start']
+            time_start = request.form['time_start']
+            date_end = request.form['date_end']
+            time_end = request.form['time_end']
+            events = ", ".join(map(str, request.form.getlist('events[]')))
+            ap = ", ".join(map(str, request.form.getlist('ap[]')))
+            #  check time range
+            date_start = date_start.replace('-', '') + time_start.replace(':', '')
+            date_end = date_end.replace('-', '') + time_end.replace(':', '')
+            if int(date_end) - int(date_start) <= 0:
+                flash('Не пытайся обмануть меня, кожаный ублюдок', 'warning')
+                return redirect(url_for('reports.accessp'))
+
+            data = UnpackData(OrionReportAccessPoint(date_start, date_end, ap, events))
+
+            if action == 'display':
+                return render_template('reports/generatedreport.html', data=data)
+            if action == 'save':
+                report_name = 'Access point'
+                filename = SaveReport(date_start, date_end, data, report_name)
+                folder =  current_app.config['DWNLD_FOLDER']
+                return send_from_directory(folder, filename, as_attachment=True)
+
+
+        # Report display
+        if page == 'display' and request.form['submit'] == 'display':
+            return report('display')
+
+        # Save to file
+        if page == 'display' and request.form['submit'] == 'save':
+            return report('save')
+
+        # Save Report to DB
+        if page == 'savereport':
+            db = get_db()
+            report = "Access point"
+            name = request.form["reportname"]
+            period = request.form["period"]
+            events = ", ".join(map(str, request.form.getlist('events[]')))
+            ap = ", ".join(map(str, request.form.getlist('ap[]')))
+            data = {}
+            data['ap'] = ap
+            data['events'] = events
+            data = str(data)
+            try:
+                db.execute("INSERT INTO saved_reports (report, name, user_id, period, data)\
+                            VALUES (?,?,?,?,?);", (report, name, session['user_id'], period, data))
+                db.commit()
+                flash('Saved', 'success')
+                return redirect(url_for('reports.savedreports'))
+            except Exception as err:
+                flash(err, 'warning')
 
     events = UnpackData(OrionQueryEvents())
     access_p = UnpackData(OrionQueryAccessPoints())
@@ -74,7 +114,7 @@ def person(page):
     if page == 'tn':
         tNum = request.form.get('TabNumber')  # type <class 'str'>
         if not tNum:
-            flash('Field can not be blank')
+            flash('Field can not be blank', 'warning')
             return render_template('reports/person.html')
         persons = UnpackData(OrionQueryPersons())
         result = []
@@ -135,7 +175,7 @@ def person(page):
     def report(action):
         personId = ", ".join(map(str, request.form.getlist('personId')))
         if personId == "":
-            flash('Should select one or several names')
+            flash('Should select one or several names', 'warning')
             return render_template('reports/person.html', result=0)
         date_start = request.form['date_start']
         time_start = request.form['time_start']
@@ -145,7 +185,7 @@ def person(page):
         date_start = date_start.replace('-', '') + time_start.replace(':', '')
         date_end = date_end.replace('-', '') + time_end.replace(':', '')
         if int(date_end) - int(date_start) <= 0:
-            flash('Не пытайся обмануть меня, кожаный ублюдок')
+            flash('Не пытайся обмануть меня, кожаный ублюдок', 'warning')
             return redirect(url_for('.person'))
         data = UnpackData(OrionReportWalkwaysPerson(date_start, date_end, personId))
         if action == 'display':
@@ -175,7 +215,7 @@ def person(page):
             db.execute("INSERT INTO saved_reports (report, name, user_id, period, data)\
                         VALUES (?,?,?,?,?);", (report, name, session['user_id'], period, data))
             db.commit()
-            flash('saved', 'success')
+            flash('Saved', 'success')
         except Exception as err:
             flash(err, 'warning')
         return render_template('reports/person.html', result=0)
@@ -197,6 +237,7 @@ def savedreports():
     if row:
         data.append(row.keys())
         while row:
+
             # For person
             if row['Report type'] == 'Person':
                 persons_id = row['data'].split(',')
@@ -205,7 +246,29 @@ def savedreports():
                 for r in data_orion:
                     for person in persons_id:
                         if int(person) == r[0]:
-                            report_data.append(r)
+                            report_data.append(r[1:])
+
+            # For access point
+            elif row['Report type'] == 'Access point':
+                d = eval(row['data'])
+                aps_id = d['ap'].split(',')
+                data_orion = UnpackData(OrionQueryAccessPoints())
+                report_data = []
+                l = []
+                for r in data_orion:
+                    for ap in aps_id:
+                        if int(ap) == r[1]:
+                            l.append(r[0])
+                report_data.append(l)
+                events_id = d['events'].split(',')
+                data_orion = UnpackData(OrionQueryEvents())
+                l = []
+                for r in data_orion:
+                    for event in events_id:
+                        if int(event) == r[0]:
+                            l.append(r[1])
+                report_data.append(l)
+
             l = list(row)
             l[4] = report_data
             data.append(l)

@@ -122,22 +122,36 @@ function userEdit(id) {
     document.getElementById('hidden_id').value = id;
 };
 
-// Save reports
-function saveReport() {
-    var table = document.getElementById("personTable")
-    var mtable = document.getElementById("modalTable")
-    // Clear table
-    for (var i = 0, row; row = mtable.rows[i]; i++) {
-      mtable.deleteRow(i);
-    }
-    // Iterate each row in table
-    for (var i = 1, row; row = table.rows[i]; i++) {
-        if (row.cells[0].children[0].children[0].checked === true) {
-          let clone = row.cloneNode(true);
-          mtable.appendChild(clone);
-        }
-    }
-};
+
+// Fill person report save form
+$('input[name = "personId"]').click(function() {
+    var mtable = $('#modalTable');
+    var input = $(this)
+    // Add table row
+    if (input.is(':checked')) {
+        let clone = input.closest('tr').get(0).cloneNode(true);
+        mtable.append(clone);
+    // Delete table row
+    } else {
+        let rm_id = input[0].id;
+        if (mtable.find(`#${rm_id}`).closest('tr').get(0)) {
+            mtable.find(`#${rm_id}`).closest('tr').get(0).remove();
+        };
+    };
+});
+
+// Add selected to collapse access point report
+$('#btn-save').click(function() {
+    $('#multiselect1_to option').clone().appendTo('#modalSelect1').attr("selected","selected");
+    $('#multiselect2_to option').clone().appendTo('#modalSelect2').attr("selected","selected");
+});
+
+// Clear collapse table
+$('#collapseSaveRep_ap').on('hidden.bs.collapse', function () {
+    $('#modalSelect1 option').remove();
+    $('#modalSelect2 option').remove();
+});
+
 
 // Fill hidden_id
 function fillHidden(id) {
@@ -150,11 +164,20 @@ function displayDiv(id) {
     let time = document.getElementById('time');
     let weekday = document.getElementById('weekday');
     let period = document.getElementById(id)
-    if (period.value == 'weekly' || period.value == 'daily') {
+    if (period.value == 'daily') {
+        date.style.display = 'none';
+        time.style.display = 'block';
+        weekday.style.display = 'none';
+    }
+    if (period.value == 'weekly') {
         weekday.style.display = 'block';
         time.style.display = 'block';
     };
     if (period.value == 'monthly') {
         date.style.display = 'block';
+        time.style.display = 'block';
+        weekday.style.display = 'none';
+    } else {
+      date.style.display = 'none';
     };
-}
+};

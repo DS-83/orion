@@ -1,28 +1,12 @@
+from __future__ import absolute_import, unicode_literals
 import os
 import logging
 import time
 
 from flask import Flask, redirect, render_template, request, session
 from . import (db, auth, orion, reports, reports_sql, xlsx_, admin,
-                sendemail
+                sendemail, celery_utils, tasks
               )
-from celery import Celery
-
-def make_celery(app):
-    celery = Celery(
-        app.import_name,
-        backend=app.config['CELERY_RESULT_BACKEND'],
-        broker=app.config['CELERY_BROKER_URL']
-    )
-    celery.conf.update(app.config)
-
-    class ContextTask(celery.Task):
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return self.run(*args, **kwargs)
-
-    celery.Task = ContextTask
-    return celery
 
 
 def create_app(test_config=None):
@@ -33,6 +17,7 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'app.sqlite'),
         DWNLD_FOLDER=os.path.join(app.instance_path, 'xlsx'),
         LOGS_FOLDER=os.path.join(app.instance_path, 'logs'),
+        TEXTFILE_FOLDER=os.path.join(app.instance_path, 'textmsg'),
         CELERY_BROKER_URL='redis://localhost:6379',
         CELERY_RESULT_BACKEND='redis://localhost:6379'
 
@@ -66,8 +51,6 @@ def create_app(test_config=None):
 
     # Register Admin Blueprint
     app.register_blueprint(admin.bp)
-
-    celery = make_celery(app)
 
 
     # Logging config

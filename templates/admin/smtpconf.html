@@ -3,42 +3,24 @@
 {% block title %}SMTP{% endblock %}
 
 {% block main %}
-<div class="container">
-  <div class="container p-5">
-    <img src="{{ url_for('static', filename='email-156765.svg')}}" 
-          class="float-left mx-auto" style="width: 80px;" alt="email-server">
-    <h3 class="col">SMTP Config</h3>
-  </div>
 
   <div class="container">
-    <h3>Current config:</h3>
-    {% if config == None %}
-      <p>Not configured</p>
-    {% else %}
-    <table class="table table-bordered">
-      <thead>
-        {% for key in config.keys() %}
-          <th>{{ key }}</th>
-        {% endfor %}
-      </thead>
-      <tbody>
-        {% for value in config %}
-          <td>{{ value }}</td>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% endif %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap
+                align-items-center pt-3 pb-2 mb-3">
+      <div class="col">
+        <img src="{{ url_for('static', filename='email-156765.svg')}}"
+              class="float-left mx-auto" style="width: 80px;" alt="email-server">
+        <h3 class="col">SMTP Config</h3>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-outline-secondary" style="float:right"
+                  data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false"
+                  aria-controls="collapseEdit">
+          Edit
+        </button>
+      </div>
+    </div>
   </div>
-
-  <div class="container">
-    <button type="button" class="btn btn-outline-secondary"
-              data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false"
-              aria-controls="collapseEdit">
-      Edit
-    </button>
-  </div>
-
-
 
   <div class="collapse" id="collapseEdit">
     <div class="card card-body">
@@ -106,6 +88,25 @@
     </div>
   </div>
 
+  <div class="container">
+    <h3>Current config:</h3>
+    {% if config == None %}
+      <p>Not configured</p>
+    {% else %}
+    <table class="table table-bordered">
+      <thead>
+        {% for key in config.keys() %}
+          <th>{{ key }}</th>
+        {% endfor %}
+      </thead>
+      <tbody>
+        {% for value in config %}
+          <td>{{ value }}</td>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
 
 {% endblock %}
 

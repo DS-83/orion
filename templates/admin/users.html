@@ -22,6 +22,73 @@
   </div>
 </div>
 
+<div class="collapse" id="collapseNewUser">
+  <div class="card card-body">
+  <div class="row">
+    <div class="col">
+        <form method="post">
+          <fieldset class="form-group">
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <input type="text" name="username" class="form-control" placeholder="User Name" required autocomplete="off">
+                <small class="form-text text-muted">Username</small>
+              </div>
+              <div class="form-group col-md-3">
+                <input type="password" name="password" class="form-control" placeholder="Password" required autocomplete="off">
+                <small class="form-text text-muted">Password</small>
+              </div>
+
+            </div>
+            <div class="form-row">
+              <div class="form-group col-3">
+                <input type="text" name="Firstname" class="form-control" placeholder="Firstname">
+                <small class="form-text text-muted">First Name</small>
+              </div>
+
+              <div class="form-group col-3">
+                  <input type="text" name="Lastname" class="form-control" placeholder="Lastname">
+                  <small class="form-text text-muted">Last Name</small>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="col-3">
+                <input type="email" name="Email" class="form-control" placeholder="Email">
+                <small class="form-text text-muted">Email</small>
+              </div>
+              <div class="col-3">
+                <input type="text" name="Company" class="form-control" placeholder="Company">
+                <small class="form-text text-muted">Company</small>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="col-3 input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="Admin">Admin</label>
+                </div>
+                <select class="custom-select" name="Admin" id="Admin">
+                  <option value="No">No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
+            </div>
+
+          <div class="form-row">
+            <div class="col-6">
+              <button type="submit" class="btn btn-outline-primary" name="submit"
+                      value="new" style="float:right">
+                <span data-feather="user-plus"></span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="container">
 
   <table class="table" id="usersTable">
@@ -124,70 +191,5 @@
   </div>
 </div>
 
-<div class="collapse" id="collapseNewUser">
-  <div class="card card-body">
-  <div class="row">
-    <div class="col">
-        <form method="post">
-          <fieldset class="form-group">
-            <div class="form-row">
-              <div class="form-group col-md-3">
-                <input type="text" name="username" class="form-control" placeholder="User Name" required autocomplete="off">
-                <small class="form-text text-muted">Username</small>
-              </div>
-              <div class="form-group col-md-3">
-                <input type="password" name="password" class="form-control" placeholder="Password" required autocomplete="off">
-                <small class="form-text text-muted">Password</small>
-              </div>
-
-            </div>
-            <div class="form-row">
-              <div class="form-group col-3">
-                <input type="text" name="Firstname" class="form-control" placeholder="Firstname">
-                <small class="form-text text-muted">First Name</small>
-              </div>
-
-              <div class="form-group col-3">
-                  <input type="text" name="Lastname" class="form-control" placeholder="Lastname">
-                  <small class="form-text text-muted">Last Name</small>
-                </div>
-            </div>
-
-            <div class="form-row">
-              <div class="col-3">
-                <input type="email" name="Email" class="form-control" placeholder="Email">
-                <small class="form-text text-muted">Email</small>
-              </div>
-              <div class="col-3">
-                <input type="text" name="Company" class="form-control" placeholder="Company">
-                <small class="form-text text-muted">Company</small>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="col-3 input-group mb-3">
-                <div class="input-group-prepend">
-                  <label class="input-group-text" for="Admin">Admin</label>
-                </div>
-                <select class="custom-select" name="Admin" id="Admin">
-                  <option value="No">No</option>
-                  <option value="Yes">Yes</option>
-                </select>
-              </div>
-            </div>
-
-          <div class="form-row">
-            <div class="col-6">
-              <button type="submit" class="btn btn-outline-primary" name="submit"
-                      value="new" style="float:right">
-                <span data-feather="user-plus"></span>
-              </button>
-            </div>
-
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 
 {% endblock %}

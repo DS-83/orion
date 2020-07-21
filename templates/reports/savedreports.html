@@ -6,7 +6,8 @@
 
 <div class="container">
   {% if data|length > 1 %}
-    <table class="table table-responsive">
+  <div class="table-responsive-sm">
+    <table class="table">
         <thead class="thead-light">
             {% for i in data[0] %}
                 <th>{{ i }}</th>
@@ -19,15 +20,30 @@
                   {% for i in row %}
                     {% if loop.index == 5 %}
                       <td>
-                      <table class="table table-responsive">
-                        {% for j in i %}
-                          <tr>
-                            {% for k in j %}
-                              <td>{{ k }}</td>
+                        <button class="btn  btn-outline-secondary" type="button" id="btn-save"
+                                data-toggle="collapse" data-target="#collapse_data_{{ row[0] }}" aria-expanded="false"
+                                aria-controls="collapse_data_{{ row[0] }}">
+                          <span data-feather="more-vertical"></span>
+                        </button>
+                      <div class="collapse" style="max-width:600px" id="collapse_data_{{ row[0] }}">
+                        <div class="card card-body">
+                          <div class="table-responsive">
+                          <table class="table table-sm">
+                            {% for j in i %}
+                              <tr>
+                                {% for k in j %}
+                                  {% if k == None %}
+                                    <td></td>
+                                  {% else %}
+                                    <td>{{ k }}</td>
+                                  {% endif %}
+                                {% endfor %}
+                              </tr>
                             {% endfor %}
-                          </tr>
-                        {% endfor %}
-                      </table>
+                          </table>
+                        </div>
+                        </div>
+                      </div>
                       </td>
                     {% else %}
                       <td>{{ i }}</td>
@@ -44,6 +60,7 @@
             {% endfor %}
         </tbody>
     </table>
+  </div>
   {% else %}
     <div class="alert alert-warning" role="alert" style="text-align: center">
       <strong>Not found</strong>

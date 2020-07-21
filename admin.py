@@ -1,7 +1,7 @@
 from flask import (Blueprint, render_template, request,
         flash, redirect, url_for)
 from app.auth import login_required, user_role
-from app.sendemail import Test
+from app.sendemail import test_smtp
 from app.db import get_db
 from werkzeug.security import generate_password_hash
 
@@ -31,8 +31,8 @@ def smtpconf():
         if request.form['submit'] == 'test':
             server = request.form.get('smtpserver')
             port = request.form.get('port')
-            r = Test(server, port)
-            flash(f"Success {r[1]}")
+            r = test_smtp(server, port)
+            flash(f"Success {r[1]}", 'success')
             return render_template('admin/smtpconf.html', config=config)
 
         # Save smtp config to DB
@@ -54,7 +54,7 @@ def smtpconf():
                     db.execute("UPDATE smtp SET server=?, port=?, ssl=?, username=?,\
                                 password=? WHERE id = 1;", (server, port, ssl, username, password))
                 db.commit()
-                flash('Saved')
+                flash('Saved', 'success')
                 config = db.execute("SELECT server, port, ssl FROM smtp;").fetchone()
                 return render_template('admin/smtpconf.html', config=config)
 
@@ -123,23 +123,23 @@ def users():
                 flash('saved', 'success')
                 return redirect(url_for('.users'))
             except Exception as err:
-                flash(err)
+                flash(err, 'warning')
                 return render_template('admin/users.html', users=users)
 
         # New user
         if request.form['submit'] == 'new':
             username = request.form['username']
             if not username:
-                flash("<username> can not be blank")
+                flash('<username> can not be blank', 'warning')
                 return render_template('admin/users.html', users=users)
             username = username[0].upper() + request.form['username'][1:].lower()
             for user in users:
                 if username == user[0]:
-                    flash(f"Username {username} already taken")
+                    flash(f'Username {username} already taken', 'warning')
                     return render_template('admin/users.html', users=users)
             password = request.form['password']
             if not password:
-                flash("<password> can not be blank")
+                flash('<password> can not be blank', 'warning')
                 return render_template('admin/users.html', users=users)
             password = generate_password_hash(password)
             firstname = request.form.get('Firstname')
@@ -158,7 +158,7 @@ def users():
                     (username, password, firstname, lastname, email, company, admin)
                 )
                 db.commit()
-                flash("User added")
+                flash('User added', 'success')
                 return redirect(url_for('.users'))
             except Exception as err:
                 flash(err)

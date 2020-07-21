@@ -47,8 +47,8 @@
         </div>
     </div>
 
-    <div class="text-left">
-        <form class="form-horizontal" method="post">
+    <div class="container text-left">
+        <form class="form-horizontal" action="{{ url_for('.accessp', page='display') }}" method="post">
         <div class="row row-cols-2">
           <div class="col form-group">
             <label class="control-label" for="from">Reference point:</label>
@@ -149,13 +149,63 @@
             </div>
           </div>
 
-          <div class="">
-            <button class="btn btn-lg btn-secondary" type="submit" name="submit" value="display">Display</button>
-            <button class="btn btn-lg btn-secondary" type="submit" name="submit" value="save">Save <img src="{{ url_for('static', filename='icon-xls-24.png') }}" alt="xls"></button>
+          <div class="btn-group" role="group" style="float:right">
+            <button class="btn  btn-outline-secondary" type="submit" name="submit" value="display">
+              <span data-feather="monitor"></span>
+            </button>
+            <button class="btn  btn-outline-secondary" type="submit" name="submit" value="save">
+              <img src="{{ url_for('static', filename='icon-xls-24.png') }}" alt="xls">
+            </button>
+            <button class="btn  btn-outline-secondary" type="button" id="btn-save"
+                    data-toggle="collapse" data-target="#collapseSaveRep_ap" aria-expanded="false"
+                    aria-controls="collapseSaveRep_ap">
+              <span data-feather="plus"></span>
+            </button>
           </div>
 
         </form>
     </div>
+
+    <div class="collapse" id="collapseSaveRep_ap">
+      <div class="card card-body">
+            <form action="{{ url_for('.accessp', page='savereport') }}" method="post">
+              <div class="form-group">
+                <label for="reportname" class="col-form-label">Report name:</label>
+                <input type="text" class="form-control" name="reportname" id="reportname">
+              </div>
+              <div class="form-group">
+                <label for="period" class="col-form-label">Period:</label>
+                <select class="custom-select" name="period" id="period">
+                    <option selected>Choose...</option>
+                    <option value="Previous day">Previous day</option>
+                    <option value="Previous week">Previous week</option>
+                    <option value="Previous month">Previous month</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ap" class="col-form-label">Access points:</label>
+                <select multiple="multiple" class="form-control" id="modalSelect1"
+                        name="ap[]" size="8">
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ap" class="col-form-label">Events:</label>
+                <select multiple="multiple" class="form-control" id="modalSelect2"
+                        name="events[]" size="8">
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-toggle="collapse" data-target="#collapseSaveRep_ap" aria-expanded="false"
+                        aria-controls="collapseSaveRep_ap">
+                      Close
+                </button>
+                <button type="submit" class="btn btn-primary">Save report</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
 
   <footer class="my-5 pt-5 text-muted text-center text-small">
     <p class="mb-1">&copy; 2017-2020 Company Name</p>

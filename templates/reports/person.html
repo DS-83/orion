@@ -3,10 +3,18 @@
 {% block title %}Reports{% endblock %}
 
 {% block main %}
-    <div class="jumbotron">
-          <img src="{{ url_for('static', filename='text-146110.svg') }}" class="float-left mx-auto" style="width: 80px;" alt="text">
-        <h3 class="header-h1-left">Walkways of Persons</h3>
+
+    <div class="container">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap
+                  align-items-center pt-3 pb-2 mb-3">
+        <div class="col">
+          <img src="{{ url_for('static', filename='text-146110.svg') }}"
+              class="float-left mx-auto" style="width: 80px;" alt="report">
+          <h3 style="text-align: center;">Person walkways</h3>
+        </div>
+      </div>
     </div>
+
 
     <form class="" action="{{ url_for('.person', page='name') }}" method="post">
         <div class="input-group mb-3">
@@ -103,7 +111,7 @@
                     <table id="personTable" class="table table-hover">
                         <thead>
                             <th>Selection</th>
-                            {% for i in result[0] %}
+                            {% for i in result[0][1:] %}
                                 <th>{{ i }}</th>
                             {% endfor %}
                         </thead>
@@ -111,12 +119,16 @@
                           {% for row in result[1:] %}
                               <tr>
                                 <td>
-                                    <div class="input-group-text">
+                                    <div class="input-group-checkbox">
                                         <input type="checkbox" value="{{ row[0] }}" name="personId" id="{{ loop.index }}">
                                     </div>
                                 </td>
-                                {% for i in row %}
-                                    <td>{{ i }}</td>
+                                {% for i in row[1:] %}
+                                    {% if i == None %}
+                                      <td></td>
+                                    {% else %}
+                                      <td>{{ i }}</td>
+                                    {% endif %}
                                 {% endfor %}
                               </tr>
                           {% endfor %}
@@ -130,7 +142,7 @@
                     <button class="btn  btn-outline-secondary" type="submit" name="submit" value="save">
                       <img src="{{ url_for('static', filename='icon-xls-24.png') }}" alt="xls">
                     </button>
-                    <button class="btn  btn-outline-secondary" type="button" onclick="saveReport();"
+                    <button class="btn  btn-outline-secondary" type="button"
                             data-toggle="collapse" data-target="#collapseSaveRep" aria-expanded="false"
                             aria-controls="collapseSaveRep">
                       <span data-feather="plus"></span>

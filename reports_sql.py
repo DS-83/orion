@@ -1,6 +1,7 @@
 import pyodbc
 from datetime import datetime
-from app.db import get_mssql
+from app.db import get_mssql, get_mssql_no_g
+from flask import g
 
 # Unpack Data
 def UnpackData(data):
@@ -39,8 +40,9 @@ def dt(date):
 
 # Report access point
 def OrionReportAccessPoint(date_start, date_end, ap=0, event=0):
-    date_start = dt(date_start)
-    date_end = dt(date_end)
+    if isinstance(date_start, str):
+        date_start = dt(date_start)
+        date_end = dt(date_end)
     if not ap:
         apId = []
         ap = OrionQueryAccessPoints()
@@ -78,8 +80,7 @@ def OrionQueryPersons():
     db = get_mssql()
     db.execute("SELECT pList.ID, pList.Name as 'LastName', pList.FirstName,\
                 	   pList.MidName, pList.TabNumber, PCompany.Name as 'Company',\
-                	   pDivision.Name as 'Department',  pPost.Name as 'Position',\
-                	   pList.status\
+                	   pDivision.Name as 'Department',  pPost.Name as 'Position'\
                 FROM pList\
                 LEFT JOIN PPost ON PPost.ID = pList.Post\
                 LEFT JOIN pDivision ON pList.Section = pDivision.ID\
@@ -109,8 +110,12 @@ def OrionReportWalkwaysPerson(date_start, date_end, persons):
               AND\
                     Plogdata.Event IN (26,28,29,32)\
               ORDER BY plist.Name, Plogdata.HozOrgan, Plogdata.TimeVal;"
-    date_start = dt(date_start)
-    date_end = dt(date_end)
-    db = get_mssql()
+    if isinstance(date_start, str):
+        date_start = dt(date_start)
+        date_end = dt(date_end)
+    if not g:
+        db = get_mssql_no_g()
+    else:
+        db = get_mssql()
     db.execute(query, (date_start, date_end))
     return db

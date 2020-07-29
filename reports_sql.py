@@ -71,7 +71,12 @@ def OrionReportAccessPoint(date_start, date_end, ap=0, event=0):
         	  AND pLogData.Event IN ({event})\
         	  AND tpIndex IN (8,12)\
         ORDER BY pLogData.DoorIndex, Plogdata.TimeVal;"
-    db = get_mssql()
+        
+    if not g:
+        db = get_mssql_no_g()
+    else:
+        db = get_mssql()
+
     db.execute(query, (date_start, date_end))
     return db
 

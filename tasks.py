@@ -8,6 +8,7 @@ from app.reports_sql import (
 )
 
 from datetime import datetime, timedelta
+from calendar import monthrange
 
 from app.xlsx_ import SaveReport
 
@@ -31,11 +32,20 @@ def dt_tw(wday):
 
 
 
-
-# @celery.task
-# def add_together(a, b):
-#     return a + b
 celery_app = init_celery()
+
+
+# Connect to DB
+def get_db():
+    db = sqlite3.connect(
+        os.path.join('./instance', 'app.sqlite'),
+        detect_types=sqlite3.PARSE_DECLTYPES
+    )
+    db.row_factory = sqlite3.Row
+
+    return db
+
+
 
 @celery_app.task
 def send_mail_task(id, report_id, recipient, periodicity, time, filename,
@@ -58,114 +68,89 @@ def send_mail_task(id, report_id, recipient, periodicity, time, filename,
                     filename, weekday, date)
 
 
-    def get_db():
-        db = sqlite3.connect(
-            os.path.join('./instance', 'app.sqlite'),
-            detect_types=sqlite3.PARSE_DECLTYPES
-        )
-        db.row_factory = sqlite3.Row
-
-        return db
-
-
     db = get_db()
 
-    print(report_id)
-    # print(type(mail_task))
-    # print(mail_task[0])
-
-    row = db.execute("SELECT id, report, name, period,\
+    row = db.execute("SELECT id, report_type, name, period,\
                         data FROM saved_reports WHERE id = ?",
                          (mail_task.report_id,)).fetchone()
     if row:
+
+        # Calculate time intervals
+        if row['period'] == 'Previous week':
+            date_start = (dt_tw('m') - timedelta(days = 7)).replace(hour=0, minute=0, second=0)
+            date_end = (date_start + timedelta(days = 6)).replace(hour=23, minute=59, second=59)
+        elif row['period'] == 'Previous day':
+            date_start = dt_tw('t').replace(hour=0, minute=0, second=0)
+            date_end = date_start.replace(hour=23, minute=59, second=59)
+        elif row['period'] == 'Previous month':
+            date_start = dt_tw('t').replace(day=1, hour=0, minute=0, second=0) - timedelta(month = 1)
+            # Last day of current month
+            last_day = monthrange(date_start.year, date_start.month)[1]
+            date_end = date_start.replace(day=last_day, hour=23, minute=59, second=59)
+
         # For person
-        if row['report'] == 'Person':
-            print(row['data'])
+        if row['report_type'] == 'Person':
             persons_id = row['data']
-            print(type(persons_id))
-            if row['period'] == 'Previous week':
-                date_start = (dt_tw('m') - timedelta(days = 7)).replace(hour=0, minute=0, second=0)
-                date_end = (date_start + timedelta(days = 6)).replace(hour=23, minute=59, second=59)
-
             data = UnpackData(OrionReportWalkwaysPerson(date_start, date_end, persons_id))
-            xlsxfile = SaveReport(date_start, date_end, data, row['report'])
-            subj = f"Automatic report system. Report {row['report']}, generated at {datetime.now().isoformat()}"
-    #     # For access point
-    # elif row['report'] == 'Access point':
-    #         d = eval(row['data'])
-    #         aps_id = d['ap'].split(',')
-    #         data_orion = UnpackData(OrionQueryAccessPoints())
-    #         report_data = []
-    #         l = []
-    #         for r in data_orion:
-    #             for ap in aps_id:
-    #                 if int(ap) == r[1]:
-    #                     l.append(r[0])
-    #         report_data.append(l)
-    #         events_id = d['events'].split(',')
-    #         data_orion = UnpackData(OrionQueryEvents())
-    #         l = []
-    #         for r in data_orion:
-    #             for event in events_id:
-    #                 if int(event) == r[0]:
-    #                     l.append(r[1])
-    #         report_data.append(l)
 
+        # For access point
+        elif row['report_type'] == 'Access point':
+            ap = eval(row['data'])['ap']
+            events = eval(row['data'])['events']
+            data = UnpackData(OrionReportAccessPoint(date_start, date_end, ap, events))
+
+    xlsxfile = SaveReport(date_start, date_end, data, row['report_type'])
+    subj = f"Automatic report system. Report: \"{row['name']}\", generated at {datetime.now().isoformat()}"
 
     mail_obj = SendMail(mail_task.textfile, xlsxfile, 'orion@localhost', mail_task.recipient, subj)
     mail_obj.start()
     return
 
+@celery_app.task
 def create_mail_task():
-    from datetime import datetime, timedelta
     from calendar import day_name
-    from json import dumps
-
-
-    class MailTask:
-        def __init__(self, id, report_id, recipient, periodicity, time, weekday=None, date=None):
-            self.id = id
-            self.report_id = report_id
-            self.recipient = recipient
-            self.periodicity = periodicity
-            self.weekday = weekday
-            self.date = date
-            self.time = time
-
-        def toJSON(self):
-            return dumps(self, default=lambda o: o.__dict__,
-                sort_keys=True, indent=4)
 
     db = get_db()
-    cursor = db.execute("SELECT id, report_id, recipient, periodicity, time,\
-                        weekday, date FROM mail_task;"
+    cursor = db.execute("SELECT id, user_id, report_id, recipient,\
+                         periodicity, time, weekday, date FROM mail_task;"
                         )
     row = cursor.fetchone()
     week_days = list(day_name)
     while row:
         now = datetime.now()
-        countdown = 0
-        mail_task = MailTask(row['id'], row['report_id'], row['recipient'],
-                        row['periodicity'], row['time'], row['weekday'],
-                        row['date'])
-        # if mail_task.periodicity == 'daily':
-        #     pass
-        if mail_task.periodicity == 'weekly':
-            # To datetime format
-            t = datetime.strptime(mail_task.time, '%H:%M:%S').time()
+        countdown = now - now
+
+        # To datetime format
+        t = datetime.strptime(row['time'], '%H:%M:%S').time()
+
+        if row['periodicity'] == 'daily':
+            days = timedelta(days=0)
+        if row['periodicity'] == 'weekly':
             # Count days
-            days = (week_days.index(mail_task.weekday) - datetime.weekday(now) + 7) % 7
+            days = (week_days.index(row['weekday']) - datetime.weekday(now) + 7) % 7
             days = timedelta(days=days)
-            # Count timedelta
-            countdown = ((now + days).replace(hour=t.hour, minute=t.minute, second=t.second)
-                            - now)
-            # Do not create task if timedelta more than 86400 sec(24 hour)
         # elif mail_task.periodicity == 'monthly':
         #     pass
-            if countdown > 86400:
-                continue
-            args = [mail_task.toJSON()]
-            send_mail_task.apply_async(args, countdown=countdown.total_seconds())
+
+        # Count timedelta
+        countdown = ((now + days).replace(hour=t.hour, minute=t.minute, second=t.second)
+                            - now)
+
+
+        # Do not create task if timedelta more than 86400 sec(24 hour)
+        countdown = countdown.total_seconds()
+        if countdown > 0 and countdown < 86400:
+
+            username = 'Admin'
+            if row['user_id'] != 10000000000:
+                crsr = db.execute("SELECT username FROM user WHERE id=?",
+                    (row['user_id'],)).fetchone()
+                username = list(crsr).pop(0)
+            filename = f"{os.path.join('./instance', 'textmsg')}/{username}_{row['id']}.txt"
+            args = list(row)
+            args.pop(1)
+            args.insert(5, filename)
+            send_mail_task.apply_async(args, countdown=countdown)
 
         row = cursor.fetchone()
     return

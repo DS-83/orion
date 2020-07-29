@@ -91,7 +91,7 @@ def accessp(page):
             data['events'] = events
             data = str(data)
             try:
-                db.execute("INSERT INTO saved_reports (report, name, user_id, period, data)\
+                db.execute("INSERT INTO saved_reports (report_type, name, user_id, period, data)\
                             VALUES (?,?,?,?,?);", (report, name, session['user_id'], period, data))
                 db.commit()
                 flash('Saved', 'success')
@@ -212,7 +212,7 @@ def person(page):
         period = request.form["period"]
         data = ", ".join(map(str, request.form.getlist('personId')))
         try:
-            db.execute("INSERT INTO saved_reports (report, name, user_id, period, data)\
+            db.execute("INSERT INTO saved_reports (report_type, name, user_id, period, data)\
                         VALUES (?,?,?,?,?);", (report, name, session['user_id'], period, data))
             db.commit()
             flash('Saved', 'success')
@@ -229,7 +229,7 @@ def person(page):
 @login_required
 def savedreports():
     db = get_db()
-    cursor = db.execute("SELECT id AS 'N', report AS 'Report type',\
+    cursor = db.execute("SELECT id AS 'N', report_type AS 'Report type',\
                         name AS 'Report name', period AS 'Time interval',\
                         data FROM saved_reports WHERE user_id = ?", (session['user_id'],))
     row = cursor.fetchone()

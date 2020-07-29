@@ -114,24 +114,6 @@ def delete():
 def create_mail_task(id):
     from datetime import datetime, timedelta
     from calendar import day_name
-    from json import dumps
-
-
-    class MailTask:
-        def __init__(self, id, report_id, recipient, periodicity, time,
-                        textfile, weekday=None, date=None):
-            self.id = id
-            self.report_id = report_id
-            self.recipient = recipient
-            self.periodicity = periodicity
-            self.weekday = weekday
-            self.date = date
-            self.time = time
-            self.textfile = textfile
-
-        def toJSON(self):
-            return dumps(self, default=lambda o: o.__dict__,
-                sort_keys=True, indent=4)
 
     db = get_db()
     cursor = db.execute("SELECT id, report_id, recipient, periodicity, time,\
@@ -144,9 +126,6 @@ def create_mail_task(id):
         now = datetime.now()
         countdown = 0
         filename = f"{current_app.config['TEXTFILE_FOLDER']}/{str(g.user['username'])}_{id}.txt"
-        mail_task = MailTask(row['id'], row['report_id'], row['recipient'],
-                        row['periodicity'], row['time'], filename, row['weekday'],
-                        row['date'])
 
         # To datetime format
         t = datetime.strptime(row['time'], '%H:%M:%S').time()
@@ -169,29 +148,6 @@ def create_mail_task(id):
         if countdown > 0 and countdown < 86400 - now.hour * 3600 - now.minute * 60 - now.second:
             args = list(row)
             args.insert(5, filename)
-            print(args)
             send_mail_task.apply_async(args, countdown=countdown)
 
     return
-
-
-# # Syncronising DB
-# @bp.route('/syncdb', methods=('GET', 'POST'))
-# @login_required
-# def syncdb():
-#     # This dic for render names and sync status of sync function
-#     status = dict.fromkeys(SYNC_LIST, 0)
-#     if request.method == 'POST':
-#         error = None
-#         # Take each method of Sync_obj class
-#         for method in SYNC_LIST:
-#             error = Sync_obj()
-#             f = getattr(error, method)
-#             f()
-#             if error.success != True:
-#                 return render_template('orion/syncdb.html', status=status)
-#             # If successful sync
-#             status[method] = 1
-#         flash("DataBase sync was successful!")
-#         return render_template('orion/syncdb.html', status=status)
-#     return render_template('orion/syncdb.html', status=status)

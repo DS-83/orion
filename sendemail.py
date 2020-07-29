@@ -89,6 +89,7 @@ class SendMail:
             msg.set_content(fp.read())
         msg['From'] = self.sender
         msg['To'] = self.to
+        msg['Subject'] = self.subj
         # Create xlsx attach
         with open(self.xlsxfile, 'rb') as fp:
             xlsx_data = fp.read()
@@ -109,5 +110,5 @@ class SendMail:
             logging.info(f'msg to {self.to} successfuly send. mail-server: {SERVER}:{PORT}')
             return True
 
-        logging.error(f'error sending mail msg {self.to}, server: {SERVER}:{PORT}')
+        logging.error(f'error sending mail msg to {self.to}, server: {SERVER}:{PORT}')
         return False

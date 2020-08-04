@@ -5,8 +5,8 @@ from email.message import EmailMessage
 import logging
 import os
 from time import strftime
-import sqlite3
 
+from app.db import get_db_no_g
 
 SERVER = "localhost"
 PORT = 25
@@ -18,24 +18,17 @@ logfile = os.path.join(os.path.abspath('instance/logs'), f"mail-{strftime('%Y%m%
 logging.basicConfig(filename=logfile, level=logging.INFO)
 
 
-# DB
-def get_db():
-    db = sqlite3.connect(
-        os.path.join('./instance', 'app.sqlite'),
-        detect_types=sqlite3.PARSE_DECLTYPES
-    )
-    db.row_factory = sqlite3.Row
-
-    return db
-
 
 # Function for testing connection
 def test_smtp(server, port):
-    with smtplib.SMTP(server, port) as s:
-        r = s.noop()
+    try:
+        with smtplib.SMTP(server, port) as s:
+            r = s.noop()
         if r[0] == 250 and r[1].lower() == b'2.0.0 ok':
             return True, (250, b'2.0.0 Ok')
-    return False
+    except Exception as err:
+        return False, err
+
 
 def send_mail():
     textfile = "textfile"
@@ -62,7 +55,7 @@ def send_mail():
         filename = xlsxfile)
 
     # Get config from DB
-    db = get_db()
+    db = get_db_no_g()
     config = db.execute("SELECT server, port FROM smtp;").fetchone()
     if config:
         SERVER = config[0]
@@ -99,7 +92,7 @@ class SendMail:
             filename = self.xlsxfile)
 
         # Get config from DB
-        db = get_db()
+        db = get_db_no_g()
         config = db.execute("SELECT server, port FROM smtp;").fetchone()
         if config:
             SERVER = config[0]

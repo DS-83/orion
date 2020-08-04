@@ -1,19 +1,5 @@
-from __future__ import absolute_import, unicode_literals
-
 from celery import Celery
-
-# celery_app = Celery('app',
-#              broker='redis://localhost:6379',
-#              backend='redis://localhost:6379',
-#              include=['app.tasks'])
-#
-#
-# class ContextTask(celery_app.Task):
-#     def __call__(self, *args, **kwargs):
-#         with current_app.app_context():
-#             return self.run(*args, **kwargs)
-#
-# celery_app.Task = ContextTask
+from celery.schedules import crontab
 
 
 def init_celery():
@@ -31,43 +17,18 @@ def init_celery():
 
 celery_app = init_celery()
 
-# Optional configuration, see the application user guide.
-celery_app.conf.update(
-    result_expires=3600,
-    timezone = 'Europe/Moscow',
-)
-
-# Celery scheduler start every day at 00:00
-from celery.schedules import crontab
+# # Optional configuration, see the application user guide.
+# celery_app.conf.update(
+#     result_expires=3600,
+#     timezone = 'Europe/Moscow',
+# )
+# Default visibility_timeout 3600
+celery_app.conf.broker_transport_options = {'visibility_timeout': 86400}  # 1 day
 
 celery_app.conf.beat_schedule = {
     # Executes dayly at 0:00
     'add-dayly-at-0': {
         'task': 'app.tasks.create_mail_task',
-        'schedule': crontab(minute=0, hour=0),
+        'schedule': crontab(hour=0, minute=0),
     },
 }
-
-
-if __name__ == '__main__':
-    celery_app.start()
-
-
-# def init_celery():
-#     celery_app = Celery('app',
-#          broker='redis://localhost:6379',
-#          backend='redis://localhost:6379',
-#          include=['app.tasks']
-#     )
-#     celery_app.conf.update(
-#         result_expires=3600,
-#         timezone = 'Europe/Moscow',
-#     )
-#
-#     class ContextTask(celery_app.Task):
-#         def __call__(self, *args, **kwargs):
-#             with current_app.app_context():
-#                 return self.run(*args, **kwargs)
-#
-#     celery_app.Task = ContextTask
-#     return celery_app

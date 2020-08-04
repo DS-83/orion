@@ -21,26 +21,28 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Administration <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Features</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Pricing</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown link
+            <a class="nav-link" href="{{ url_for('admin.index') }}">Administration
+              <span class="sr-only">(current)</span>
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
           </li>
+
+          <li class="nav-item active">
+            <a class="nav-link" href="{{ url_for('reports.index') }}">
+              <span data-feather="bar-chart-2"></span>
+              Reports
+            </a>
+          </li>
+
         </ul>
+
       </div>
+
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="{{ url_for('auth.logout') }}">Sign out</a>
+        </li>
+      </ul>
+
     </nav>
 
     <!-- sidebar -->
@@ -62,19 +64,17 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('reports.index') }}">
-                  <span data-feather="bar-chart-2"></span>
-                  Reports
+                <a class="nav-link" href="{{ url_for('.smtpconf') }}">
+                  <span data-feather="mail"></span>
+                  SMTP config
                 </a>
               </li>
-              {% if g.user.IsAdmin %}
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin.index')}}">
-                      <span data-feather="database"></span>
-                      Administration
-                    </a>
-                  </li>
-              {% endif %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('.users') }}">
+                    <span data-feather="users"></span>
+                    Users
+                  </a>
+                </li>
             </ul>
 
           </div>
@@ -86,7 +86,11 @@
         <header>
           {% block header %}{% endblock %}
           {% for category, message in get_flashed_messages(True) %}
-            <div class="alert alert-{{ category }} border text-center" role="alert">{{ message }}</div>
+            <div class="alert alert-{{ category }} border text-center" role="alert">{{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
           {% endfor %}
         </header>
       </section>

@@ -30,7 +30,7 @@
                 <label class="control-label" for="reportname">Report name</label>
                   <select class="custom-select" name="reportname" id="reportname"
                           autocomplete="off" required>
-                      <option selected>Choose...</option>
+                      <option selected disabled>Choose...</option>
                       {% for report in reports %}
                         <option value="{{ report[0] }}">{{ report[1] }}</option>
                       {% endfor %}
@@ -47,7 +47,7 @@
                 <label class="control-label" for="reportname">Periodicity</label>
                 <select class="custom-select" name="periodicity" id="periodicity"
                         onchange="displayDiv(this.id)" autocomplete="off">
-                    <option selected>Choose...</option>
+                    <option selected disabled>Choose...</option>
                     <option value="daily">daily</option>
                     <option value="weekly">weekly</option>
                     <option value="monthly">monthly</option>
@@ -58,7 +58,7 @@
             <div class="row" id="collapseRow2">
               <div class="col-md" id="weekday" style="display:none">
                 <select class="custom-select" name="weekday"  autocomplete="off">
-                    <option selected>Choose...</option>
+                    <option selected disabled>Choose...</option>
                     <option value="Monday">Monday</option>
                     <option value="Tuesday">Tuesday</option>
                     <option value="Wednesday">Wednesday</option>
@@ -72,7 +72,7 @@
 
               <div class="col-md" id="date" style="display:none">
                   <span data-feather="calendar"></span>
-                  <input type="number" id="date" name="date" max=29>
+                  <input type="number" id="date" name="date" min=1 max=29>
                   <small class="form-text text-muted">Date</small>
               </div>
               <div class="col-md" id="time" style="display:none">

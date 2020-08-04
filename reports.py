@@ -64,7 +64,7 @@ def accessp(page):
             if action == 'display':
                 return render_template('reports/generatedreport.html', data=data)
             if action == 'save':
-                report_name = 'Access point'
+                report_name = f'Access point: {ap}'
                 filename = SaveReport(date_start, date_end, data, report_name)
                 folder =  current_app.config['DWNLD_FOLDER']
                 return send_from_directory(folder, filename, as_attachment=True)
@@ -286,6 +286,8 @@ def delete():
     id = request.form['hidden_id']
     try:
         db.execute("DELETE FROM saved_reports WHERE id = ?", (id,))
+        # Delete related mail tasks
+        db.execute("DELETE FROM mail_task WHERE report_id = ?", (id))
         db.commit()
         flash('success', 'success')
     except Exception as err:

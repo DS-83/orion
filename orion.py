@@ -76,7 +76,6 @@ def mailing():
                            (session['user_id'], report_id, recipient,
                            periodicity, weekday, date, time)
                            )
-                db.commit()
                 task_id = cursor.lastrowid
 
                 filename = f"{current_app.config['TEXTFILE_FOLDER']}/{str(g.user['username'])}_{task_id}.txt"
@@ -84,7 +83,17 @@ def mailing():
                     f.write(textmsg)
 
                 # Create mail task
-                create_mail_task(task_id)
+                celery_id = create_mail_task(task_id)
+
+                db.commit()
+
+                # Write celery task id to DB
+                if celery_id:
+                    cursor = db.execute("UPDATE mail_task\
+                               SET celery_id = ? WHERE id = ?;",
+                               (celery_id, task_id)
+                               )
+                    db.commit()
 
                 flash('Success', 'success')
                 return redirect(url_for('orion.mailing'))
@@ -99,11 +108,26 @@ def mailing():
 @bp.route('/mailing/delete', methods=['POST'])
 @login_required
 def delete():
+
+    from .celery_utils import celery_app
+
     db = get_db()
     id = request.form['hidden_id']
     try:
+        row = db.execute("SELECT celery_id\
+                          FROM mail_task\
+                          WHERE id = ?", (id,)
+                          ).fetchone()
+
+        # # Revoke celery task
+        if row['celery_id']:
+            celery_app.control.revoke(row['celery_id'])
+            celery_app.control.terminate(row['celery_id'])
+
+        # Delete task from DB
         db.execute("DELETE FROM mail_task WHERE id = ?", (id,))
         db.commit()
+
         flash('Success', 'success')
     except Exception as err:
         flash(err, 'warning')
@@ -114,6 +138,8 @@ def delete():
 def create_mail_task(id):
     from datetime import datetime, timedelta
     from calendar import day_name
+
+    celery_id = None
 
     db = get_db()
     cursor = db.execute("SELECT id, report_id, recipient, periodicity, time,\
@@ -148,6 +174,6 @@ def create_mail_task(id):
         if countdown > 0 and countdown < 86400 - now.hour * 3600 - now.minute * 60 - now.second:
             args = list(row)
             args.insert(5, filename)
-            send_mail_task.apply_async(args, countdown=countdown)
+            celery_id = send_mail_task.apply_async(args, countdown=countdown).id
 
-    return
+    return celery_id

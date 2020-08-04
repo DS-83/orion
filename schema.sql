@@ -19,30 +19,31 @@
 --   IsAdmin INT DEFAULT 1,
 --   status TEXT DEFAULT 'active'
 -- );
-DROP TABLE IF EXISTS saved_reports;
-CREATE TABLE saved_reports (
-  id INTEGER PRIMARY KEY,
-  report_type TEXT NOT NULL,
-  name TEXT NOT NULL,
-  user_id INTEGER NOT NULL,
-  period TEXT NOT NULL,
-  data TEXT NOT NULL,
-  FOREIGN KEY(user_id) REFERENCES user(id)
-);
-
--- DROP TABLE IF EXISTS mail_reports;
--- CREATE TABLE mail_task (
+-- DROP TABLE IF EXISTS saved_reports;
+-- CREATE TABLE saved_reports (
 --   id INTEGER PRIMARY KEY,
+--   report_type TEXT NOT NULL,
+--   name TEXT NOT NULL,
 --   user_id INTEGER NOT NULL,
---   report_id INTEGER NOT NULL,
---   recipient TEXT NOT NULL,
---   periodicity TEXT NOT NULL,
---   weekday TEXT,
---   date INTEGER,
---   time TEXT NOT NULL,
---   FOREIGN KEY(user_id) REFERENCES user(id),
---   FOREIGN KEY(report_id) REFERENCES saved_reports(id)
+--   period TEXT NOT NULL,
+--   data TEXT NOT NULL,
+--   FOREIGN KEY(user_id) REFERENCES user(id)
 -- );
+
+DROP TABLE IF EXISTS mail_task;
+CREATE TABLE mail_task (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  report_id INTEGER NOT NULL,
+  recipient TEXT NOT NULL,
+  periodicity TEXT NOT NULL,
+  weekday TEXT,
+  date INTEGER,
+  time TEXT NOT NULL,
+  celery_id TEXT,
+  FOREIGN KEY(user_id) REFERENCES user(id),
+  FOREIGN KEY(report_id) REFERENCES saved_reports(id)
+);
 
 -- CREATE TABLE smtp (
 --   id INTEGER PRIMARY KEY AUTOINCREMENT,

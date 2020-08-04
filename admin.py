@@ -32,7 +32,10 @@ def smtpconf():
             server = request.form.get('smtpserver')
             port = request.form.get('port')
             r = test_smtp(server, port)
-            flash(f"Success {r[1]}", 'success')
+            if r[0]:
+                flash(f"Success {r[1]}", 'success')
+            else:
+                flash(f"Faled. {r[1]}", 'danger')
             return render_template('admin/smtpconf.html', config=config)
 
         # Save smtp config to DB

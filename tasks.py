@@ -1,5 +1,4 @@
-from __future__ import absolute_import, unicode_literals
-from .celery_utils import init_celery
+from .celery_utils import celery_app
 from .sendemail import SendMail
 
 from app.reports_sql import (
@@ -9,11 +8,13 @@ from app.reports_sql import (
 
 from datetime import datetime, timedelta
 from calendar import monthrange
+from dateutil.relativedelta import relativedelta
 
 from app.xlsx_ import SaveReport
 
+from app.db import get_db_no_g
+
 import os
-import sqlite3
 
 
 def dt_tw(wday):
@@ -32,58 +33,29 @@ def dt_tw(wday):
 
 
 
-celery_app = init_celery()
-
-
-# Connect to DB
-def get_db():
-    db = sqlite3.connect(
-        os.path.join('./instance', 'app.sqlite'),
-        detect_types=sqlite3.PARSE_DECLTYPES
-    )
-    db.row_factory = sqlite3.Row
-
-    return db
-
-
-
 @celery_app.task
 def send_mail_task(id, report_id, recipient, periodicity, time, filename,
                             weekday=None, date=None):
 
-    class MailTask:
-        def __init__(self, id, report_id, recipient, periodicity, time,
-                        textfile, weekday=None, date=None):
-            self.id = id
-            self.report_id = report_id
-            self.recipient = recipient
-            self.periodicity = periodicity
-            self.weekday = weekday
-            self.date = date
-            self.time = time
-            self.textfile = textfile
 
-
-    mail_task = MailTask(id, report_id, recipient, periodicity, time,
-                    filename, weekday, date)
-
-
-    db = get_db()
+    db = get_db_no_g()
 
     row = db.execute("SELECT id, report_type, name, period,\
                         data FROM saved_reports WHERE id = ?",
-                         (mail_task.report_id,)).fetchone()
+                         (report_id,)).fetchone()
     if row:
 
         # Calculate time intervals
         if row['period'] == 'Previous week':
             date_start = (dt_tw('m') - timedelta(days = 7)).replace(hour=0, minute=0, second=0)
             date_end = (date_start + timedelta(days = 6)).replace(hour=23, minute=59, second=59)
+
         elif row['period'] == 'Previous day':
-            date_start = dt_tw('t').replace(hour=0, minute=0, second=0)
+            date_start = dt_tw('t').replace(hour=0, minute=0, second=0) - timedelta(days=1)
             date_end = date_start.replace(hour=23, minute=59, second=59)
+
         elif row['period'] == 'Previous month':
-            date_start = dt_tw('t').replace(day=1, hour=0, minute=0, second=0) - timedelta(month = 1)
+            date_start = dt_tw('t').replace(day=1, hour=0, minute=0, second=0) - relativedelta(months = 1)
             # Last day of current month
             last_day = monthrange(date_start.year, date_start.month)[1]
             date_end = date_start.replace(day=last_day, hour=23, minute=59, second=59)
@@ -99,10 +71,10 @@ def send_mail_task(id, report_id, recipient, periodicity, time, filename,
             events = eval(row['data'])['events']
             data = UnpackData(OrionReportAccessPoint(date_start, date_end, ap, events))
 
-    xlsxfile = SaveReport(date_start, date_end, data, row['report_type'])
+    xlsxfile = SaveReport(date_start, date_end, data, row['name'])
     subj = f"Automatic report system. Report: \"{row['name']}\", generated at {datetime.now().isoformat()}"
 
-    mail_obj = SendMail(mail_task.textfile, xlsxfile, 'orion@localhost', mail_task.recipient, subj)
+    mail_obj = SendMail(filename, xlsxfile, 'orion@localhost', recipient, subj)
     mail_obj.start()
     return
 
@@ -110,7 +82,9 @@ def send_mail_task(id, report_id, recipient, periodicity, time, filename,
 def create_mail_task():
     from calendar import day_name
 
-    db = get_db()
+    celery_id = None
+
+    db = get_db_no_g()
     cursor = db.execute("SELECT id, user_id, report_id, recipient,\
                          periodicity, time, weekday, date FROM mail_task;"
                         )
@@ -150,7 +124,16 @@ def create_mail_task():
             args = list(row)
             args.pop(1)
             args.insert(5, filename)
-            send_mail_task.apply_async(args, countdown=countdown)
+            celery_id = send_mail_task.s().apply_async(args, countdown=countdown).id
+
+            # Write celery task id to DB
+            if celery_id:
+                db.execute("UPDATE mail_task\
+                           SET celery_id = ? WHERE id = ?;",
+                           (celery_id, row['id'])
+                           )
+                db.commit()
+
 
         row = cursor.fetchone()
     return

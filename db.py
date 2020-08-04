@@ -6,6 +6,8 @@ from flask.cli import with_appcontext
 
 import pyodbc
 
+import os
+
 def init_db():
     db = get_db()
 
@@ -40,6 +42,17 @@ def close_db(e=None):
 
     if db is not None:
         db.close()
+
+
+# Without context
+def get_db_no_g():
+    db = sqlite3.connect(
+        os.path.join('./instance', 'app.sqlite'),
+        detect_types=sqlite3.PARSE_DECLTYPES
+    )
+    db.row_factory = sqlite3.Row
+
+    return db
 
 # MS SQL Server connection
 

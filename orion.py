@@ -10,6 +10,7 @@ from app.auth import login_required
 from app.db import get_db
 from app.tasks import send_mail_task
 
+from werkzeug.security import check_password_hash, generate_password_hash
 
 bp = Blueprint('orion', __name__)
 
@@ -177,3 +178,50 @@ def create_mail_task(id):
             celery_id = send_mail_task.apply_async(args, countdown=countdown).id
 
     return celery_id
+
+
+@bp.route('/changepass', methods=('GET', 'POST'))
+@login_required
+def changepass():
+    if request.method == 'POST':
+        db = get_db()
+        error = None
+
+        current_pass = request.form['CurrentPassword']
+
+        if not check_password_hash(g.user['password'], current_pass):
+            error = 'Incorrect current password.'
+
+        # Check new password and re-enter password
+        if error is None:
+            new_pass = request.form['NewPassword']
+            print(new_pass, type(new_pass))
+            re_new_pass = request.form['ReNewPassword']
+            print(re_new_pass, type(re_new_pass))
+            print(new_pass != re_new_pass)
+            if new_pass != re_new_pass:
+                error = 'Password mismatch'
+                print(error)
+            else:
+                if g.user['username'] == 'Admin':
+                    table_name = 'admin'
+                else:
+                    table_name = 'user'
+
+                new_pass = generate_password_hash(new_pass)
+
+                try:
+                    db.execute(f"UPDATE {table_name} SET password = ? WHERE id = ?",
+                                (new_pass, g.user['id']))
+                    db.commit()
+
+                    session.clear()
+                    flash('Password successfuly changed', 'success')
+                    return redirect(url_for('auth.login'))
+                except Exception as error:
+                    flash(error, 'warning')
+
+        flash(error, 'warning')
+
+
+    return render_template('orion/changepass.html')

@@ -1,0 +1,209 @@
+{% extends "base1.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block main %}
+
+    <div class="container">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap
+                  align-items-center pt-3 pb-2 mb-3">
+        <div class="col">
+          <img src="{{ url_for('static', filename='text-146110.svg') }}"
+              class="float-left mx-auto" style="width: 80px;" alt="report">
+          <h3 style="text-align: center;">First enter, last exit</h3>
+        </div>
+      </div>
+    </div>
+
+
+    <form class="" action="{{ url_for('.firstlast', page='name') }}" method="post">
+        <div class="input-group mb-3">
+            <input type="text" name="LastName" class="form-control" placeholder="LastName" autocomplete="off" required>
+            <input type="text" name="FirstName" class="form-control" placeholder="FirstName" autocomplete="off">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <form class="" action="{{ url_for('.firstlast', page='tn') }}" method="post">
+        <div class="input-group mb-3">
+            <input type="text" id="TabNumber" name="TabNumber" class="form-control" placeholder="Personnel number" autocomplete="off" required>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <form class="" action="{{ url_for('.firstlast', page='department') }}" method="post">
+        <div class="input-group mb-3">
+            <input type="text" id="department" name="department" class="form-control" placeholder="Department" autocomplete="off" required>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+            </div>
+        </div>
+    </form>
+
+
+    {% if result == [] %}
+        <div class="alert alert-warning" role="alert">
+          Nothing Found
+        </div>
+    {% endif %}
+
+    {% if result != 0 and result != [] %}
+
+        <b><label for="autofill">Enter time range or use presets</label></b>
+        <div class="container" id="autofill">
+            <div class="row row-cols-3">
+              <button type="button" id="tweek_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary" value="{{ 'm'|dt_tw }}">
+                <span data-feather="calendar"></span>
+                This week
+              </button>
+              <button type="button" id="tday_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+                <span data-feather="calendar"></span>
+                This day
+              </button>
+              <!-- <button type="button" id="thour_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+                <span data-feather="clock"></span>
+                This hour
+              </button> -->
+              <button type="button" id="pweek_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary" value="{{ 'm'|dt_tw }}">
+                <span data-feather="calendar"></span>
+                Previous week
+              </button>
+              <button type="button" id="pday_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+                <span data-feather="calendar"></span>
+                Previous day
+              </button>
+              <button type="button" id="pmonth_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+                <span data-feather="clock"></span>
+                Previous month
+              </button>
+            </div>
+        </div>
+
+
+        <div class="input-group mb-3">
+            <form class="form-horizontal" action="{{ url_for('.firstlast', page='display') }}" method="post">
+              <label for="datetime">Time Range:</label>
+              <div class="form-group" name="datetime" id="datetime">
+                <label class="control-label" for="from">From:</label>
+                <div class="form-group" name="from">
+                  <label class="control-label" for="date_start">Date</label>
+                  <span data-feather="calendar"></span>
+                  <input type="date" id="date_start" name="date_start" required>
+                  <label class="control-label" for="time_start">Time</label>
+                  <span data-feather="clock"></span>
+                  <input type="time" id="time_start" name="time_start" step = "1"
+                          value="00:00:00" disabled>
+                </div>
+                <label class="control-label" for="to">to:</label>
+                <div class="form-group" name="to">
+                  <label class="control-label" for="date_end">Date</label>
+                  <span data-feather="calendar"></span>
+                  <input type="date" id="date_end" name="date_end" required>
+                  <label class="control-label" for="time_end">Time</label>
+                  <span data-feather="clock"></span>
+                  <input type="time" id="time_end" name="time_end" step = "1"
+                          value="23:59:59" disabled>
+                </div>
+              </div>
+              <div class="container-fluid">
+                    <table id="personTable" class="table table-hover">
+                        <thead>
+                            <th>Selection</th>
+                            {% for i in result[0][1:] %}
+                                <th>{{ i }}</th>
+                            {% endfor %}
+                        </thead>
+                        <tbody>
+                          {% for row in result[1:] %}
+                              <tr>
+                                <td>
+                                    <div class="input-group-checkbox">
+                                        <input type="checkbox" value="{{ row[0] }}" name="personId" id="{{ loop.index }}">
+                                    </div>
+                                </td>
+                                {% for i in row[1:] %}
+                                    {% if i == None %}
+                                      <td></td>
+                                    {% else %}
+                                      <td>{{ i }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                              </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>
+              </div>
+                  <div class="btn-group" role="group" style="float:right">
+                    <button class="btn  btn-outline-secondary" type="submit" name="submit" value="display">
+                      <span data-feather="monitor"></span>
+                    </button>
+                    <button class="btn  btn-outline-secondary" type="submit" name="submit" value="save">
+                      <img src="{{ url_for('static', filename='icon-xls-24.png') }}" alt="xls">
+                    </button>
+                    <button class="btn  btn-outline-secondary" type="button"
+                            data-toggle="collapse" data-target="#collapseSaveRep" aria-expanded="false"
+                            aria-controls="collapseSaveRep">
+                      <span data-feather="plus"></span>
+                    </button>
+                  </div>
+
+            </form>
+        </div>
+    {% endif %}
+
+    <div class="collapse" id="collapseSaveRep">
+      <div class="card card-body">
+            <form action="{{ url_for('.firstlast', page='savereport') }}" method="post">
+              <div class="form-group">
+                <label for="reportname" class="col-form-label">Report name:</label>
+                <input type="text" class="form-control" name="reportname" id="reportname">
+              </div>
+              <div class="form-group">
+                <label for="period" class="col-form-label">Period:</label>
+                <select class="custom-select" name="period" id="period">
+                    <option selected disabled>Choose...</option>
+                    <option value="Previous day">Previous day</option>
+                    <option value="Previous week">Previous week</option>
+                    <option value="Previous month">Previous month</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="person" class="col-form-label">Person:</label>
+                <table class="table">
+                  <tbody id="modalTable">
+                    <tr>
+                      <td> </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-toggle="collapse" data-target="#collapseSaveRep" aria-expanded="false"
+                        aria-controls="collapseSaveRep">
+                      Close
+                </button>
+                <button type="submit" class="btn btn-primary">Save report</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+<footer class="my-5 pt-5 text-muted text-center text-small">
+  <p class="mb-1">&copy; 2020 CNC Corp.</p>
+  <ul class="list-inline">
+    <li class="list-inline-item"><a href="#">Privacy</a></li>
+    <li class="list-inline-item"><a href="#">Terms</a></li>
+    <li class="list-inline-item"><a href="#">Support</a></li>
+  </ul>
+</footer>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='autofill.js') }}"></script>
+{% endblock %}

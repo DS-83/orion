@@ -64,7 +64,15 @@ function autoDate(button_id) {
           document.getElementById("time_end").value = now.this_h_hhmmss();
           document.getElementById("time_end").stepDown();
           break;
-
+      // Previous month
+      case "pmonth_btn" :
+          var pmonth_s = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+          var pmonth_e = new Date(now.getFullYear(), now.getMonth(), 0)
+          document.getElementById("date_start").value = pmonth_s.yyyymmdd();
+          document.getElementById("date_end").value = pmonth_e.yyyymmdd();
+          document.getElementById("time_start").value = "00:00:00";
+          document.getElementById("time_end").value = "23:59:59";
+          break;
   }
 }
 // Date prototype yyyy-mm-dd

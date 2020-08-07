@@ -17,11 +17,11 @@ def init_celery():
 
 celery_app = init_celery()
 
-# # Optional configuration, see the application user guide.
-# celery_app.conf.update(
-#     result_expires=3600,
-#     timezone = 'Europe/Moscow',
-# )
+# Optional configuration, see the application user guide.
+celery_app.conf.update(
+    result_expires=3600,
+    timezone = 'Europe/Moscow',
+)
 # Default visibility_timeout 3600
 celery_app.conf.broker_transport_options = {'visibility_timeout': 86400}  # 1 day
 

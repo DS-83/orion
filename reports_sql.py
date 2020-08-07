@@ -1,5 +1,5 @@
 import pyodbc
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.db import get_mssql, get_mssql_no_g
 from flask import g
 
@@ -71,7 +71,7 @@ def OrionReportAccessPoint(date_start, date_end, ap=0, event=0):
         	  AND pLogData.Event IN ({event})\
         	  AND tpIndex IN (8,12)\
         ORDER BY pLogData.DoorIndex, Plogdata.TimeVal;"
-        
+
     if not g:
         db = get_mssql_no_g()
     else:
@@ -124,3 +124,74 @@ def OrionReportWalkwaysPerson(date_start, date_end, persons):
         db = get_mssql()
     db.execute(query, (date_start, date_end))
     return db
+
+# Report "first enter - last exit"
+def OrionReportFirtsLast(date_start, date_end, persons):
+
+    if isinstance(date_start, str):
+        date_start = dt(date_start)
+        date_end = dt(date_end)
+
+    if not g:
+        db = get_mssql_no_g()
+    else:
+        db = get_mssql()
+
+    result = []
+
+    for index, person in enumerate(persons):
+        # Date Generator
+        for n in range(int((date_end - date_start).days)):
+            date_start_new = date_start + timedelta(n)
+            date_end_new = date_start_new.replace(hour=23, minute=59, second=59)
+            query = f"SELECT * FROM (SELECT TOP 1 pList.Name as 'LastName', pList.FirstName,\
+                                	   pList.MidName, pList.TabNumber, PCompany.Name as 'Company',\
+                                	   pDivision.Name as 'Department',  pPost.Name as 'Position',\
+                                	   Plogdata.TimeVal as 'Time', pLogData.Remark as 'Direction', AccessZone.Name as 'ZoneName',\
+                                	   Events.Contents + DBO.AddState(tpRzdIndex)as 'Events'\
+                                     FROM Plogdata\
+                                     LEFT JOIN plist ON (plogdata.hozorgan=plist.id)\
+                                     LEFT JOIN  AccessZone ON  (pLogData.ZoneIndex = AccessZone.GIndex)\
+                                     LEFT JOIN Events ON Plogdata.Event = Events.Event\
+                                     LEFT JOIN PCompany ON PCompany.ID = pList.Company\
+                                     LEFT JOIN PPost ON PPost.ID = pList.Post\
+                                     LEFT JOIN pDivision ON pList.Section = pDivision.ID\
+                                     LEFT JOIN pmark ON (plogdata.ZReserv=pmark.id)\
+                                     WHERE plogdata.hozorgan IN ({person})\
+                                     AND\
+                                        Plogdata.TimeVal BETWEEN ? AND ?\
+                                     AND\
+                        	            Plogdata.Event IN (28)\
+                                     ORDER BY Plogdata.TimeVal ASC) as a\
+                    UNION\
+                    SELECT * FROM (SELECT TOP 1 pList.Name as 'LastName', pList.FirstName,\
+                                	   pList.MidName, pList.TabNumber, PCompany.Name as 'Company',\
+                                	   pDivision.Name as 'Department',  pPost.Name as 'Position',\
+                                	   Plogdata.TimeVal as 'Time', pLogData.Remark as 'Direction', AccessZone.Name as 'ZoneName',\
+                                	   Events.Contents + DBO.AddState(tpRzdIndex)as 'Events'\
+                                    FROM Plogdata\
+                                    LEFT JOIN plist ON (plogdata.hozorgan=plist.id)\
+                                    LEFT JOIN  AccessZone ON  (pLogData.ZoneIndex = AccessZone.GIndex)\
+                                    LEFT JOIN Events ON Plogdata.Event = Events.Event\
+                                    LEFT JOIN PCompany ON PCompany.ID = pList.Company\
+                                    LEFT JOIN PPost ON PPost.ID = pList.Post\
+                                    LEFT JOIN pDivision ON pList.Section = pDivision.ID\
+                                    LEFT JOIN pmark ON (plogdata.ZReserv=pmark.id)\
+                                    WHERE plogdata.hozorgan IN ({person})\
+                                    AND\
+                                    	Plogdata.TimeVal BETWEEN ? AND ?\
+                                    AND\
+                                    	Plogdata.Event IN (28)\
+                                    ORDER BY Plogdata.TimeVal DESC) as b"
+            db.execute(query, (date_start_new, date_end_new, date_start_new, date_end_new))
+            #Unpack data and append to result
+            row = db.fetchone()
+            while row:
+                result.append(row)
+                row = db.fetchone()
+
+    columns = [column[0] for column in db.description]
+    result.insert(0, columns)
+
+
+    return result

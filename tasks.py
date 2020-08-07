@@ -99,12 +99,15 @@ def create_mail_task():
 
         if row['periodicity'] == 'daily':
             days = timedelta(days=0)
-        if row['periodicity'] == 'weekly':
+        elif row['periodicity'] == 'weekly':
             # Count days
             days = (week_days.index(row['weekday']) - datetime.weekday(now) + 7) % 7
             days = timedelta(days=days)
-        # elif mail_task.periodicity == 'monthly':
-        #     pass
+        elif row['periodicity'] == 'monthly':
+            if row['date'] == now.day:
+                days = timedelta(days=0)
+            else:
+                days = timedelta(days=-1)
 
         # Count timedelta
         countdown = ((now + days).replace(hour=t.hour, minute=t.minute, second=t.second)
@@ -124,7 +127,7 @@ def create_mail_task():
             args = list(row)
             args.pop(1)
             args.insert(5, filename)
-            celery_id = send_mail_task.s().apply_async(args, countdown=countdown).id
+            celery_id = send_mail_task.apply_async(args, countdown=countdown).id
 
             # Write celery task id to DB
             if celery_id:
@@ -133,7 +136,6 @@ def create_mail_task():
                            (celery_id, row['id'])
                            )
                 db.commit()
-
 
         row = cursor.fetchone()
     return

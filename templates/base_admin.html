@@ -39,7 +39,10 @@
 
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-          <a class="nav-link" href="{{ url_for('auth.logout') }}">Sign out</a>
+          <a class="nav-link" href="{{ url_for('auth.logout') }}">
+            Sign out
+            <span data-feather="log-out"></span>
+          </a>
         </li>
       </ul>
 

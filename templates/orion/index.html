@@ -6,14 +6,31 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <h1 class="h2">Dashboard</h1>
   <div class="btn-toolbar mb-2 mb-md-0">
-    <div class="btn-group mr-2">
-      <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-      <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-    </div>
-    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
+            id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
       <span data-feather="calendar"></span>
-      This week
+      {{ period }}
     </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+      {% if period != 'This week' %}
+        <a class="dropdown-item"
+           href="{{ url_for('.index') }}"
+           role="button">This week</a>
+      {% endif %}
+
+      {% if period != 'This month' %}
+        <a class="dropdown-item"
+           href="{{ url_for('.index', page='month') }}"
+           role="button">This month</a>
+      {% endif %}
+
+      {% if period != 'This day' %}
+        <a class="dropdown-item"
+           href="{{ url_for('.index', page='day') }}"
+           role="button">This day</a>
+      {% endif %}
+    </div>
   </div>
 </div>
 
@@ -147,5 +164,46 @@
     </tbody>
   </table>
 </div>
+
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+
+  // Graphs
+  var ctx = document.getElementById('myChart')
+
+  // Define the chart data
+  var chartData = {
+    labels : [{% for item in data[1:] %}
+                "{{ item[0] }}",
+              {% endfor %}],
+    datasets : [{
+        label: 'Violations {{ str_date }}',
+        data : [{% for item in data[1:] %}
+                  {{ item[1] }},
+                {% endfor %}],
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+    }]
+  }
+
+    // eslint-disable-next-line no-unused-vars
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: chartData,
+    options: {
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true,
+                  stepSize: 1
+              }
+          }]
+      }
+  }
+
+  });
+  </script>
 
 {% endblock %}

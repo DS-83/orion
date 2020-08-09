@@ -8,16 +8,43 @@ from werkzeug.exceptions import abort
 
 from app.auth import login_required
 from app.db import get_db
-from app.tasks import send_mail_task
+from app.tasks import send_mail_task, dt_tw
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from app.reports_sql import OrionQueryDashboard, UnpackData
+
+from datetime import datetime
+
 bp = Blueprint('orion', __name__)
 
+
 @bp.route('/')
+@bp.route('/<page>')
 @login_required
-def index():
-    return render_template('orion/index.html')
+def index(page=None):
+
+    #Calculate date and time
+    date_end = datetime.now()
+
+    if page is None :
+        period = 'This week'
+        date_start = (dt_tw('m')).replace(hour=0, minute=0, second=0)
+    elif page == 'day':
+        period = 'This day'
+        date_start = date_end.replace(hour=0, minute=0, second=0)
+    else:
+        period = 'This month'
+        date_start = date_end.replace(day=1, hour=0, minute=0, second=0)
+        print(date_end, date_start)
+
+
+    # Data for Chart
+    data = UnpackData(OrionQueryDashboard(date_start, date_end))
+    print(data)
+    str_date = f"from: {date_start} to: {date_end}"
+    return render_template('orion/index.html', data=data, str_date=str_date,
+                            period=period)
 
 
 @bp.route('/mailing', methods=('GET', 'POST'))

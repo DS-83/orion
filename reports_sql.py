@@ -56,8 +56,8 @@ def OrionReportAccessPoint(date_start, date_end, ap=0, event=0):
         event = "25, 26, 27, 28, 29, 30, 31, 32, 33, 219, 34"
     # SQL string
     query = f"SELECT DoorIndex as 'DoorId', AcessPoint.Name as 'AcessPointName',\
-        	    TimeVal as 'Time', pLogData.Event as 'EventId', Events.Contents as 'EventName',\
-        	    Hozorgan as 'UserId', pList.Name as 'LastName', pList.FirstName,\
+        	    TimeVal as 'Time', Events.Contents as 'EventName',\
+        	    pList.Name as 'LastName', pList.FirstName,\
         	    pList.MidName, pList.TabNumber, pPost.Name as 'Position',\
         	    pDivision.Name as 'Department'\
         FROM pLogData\
@@ -193,5 +193,20 @@ def OrionReportFirtsLast(date_start, date_end, persons):
     columns = [column[0] for column in db.description]
     result.insert(0, columns)
 
-
     return result
+
+
+def OrionQueryDashboard(date_start, date_end):
+
+    query = f"SELECT Events.Contents as 'EventName',\
+                     COUNT(pLogData.Event) as 'Count'\
+	          FROM pLogData\
+              LEFT JOIN Events ON pLogData.Event = Events.Event\
+              WHERE TimeVal BETWEEN ?  AND ?\
+	          AND pLogData.Event IN (26, 27, 29, 34)\
+	          AND tpIndex IN (8,12)\
+              GROUP BY pLogData.Event, Events.Contents"
+              
+    db = get_mssql()
+    db.execute(query, (date_start, date_end))
+    return db

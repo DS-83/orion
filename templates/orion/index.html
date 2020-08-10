@@ -179,7 +179,7 @@
                 "{{ item }}",
               {% endfor %}],
     datasets : [{
-        label: 'Violations {{ str_date }}',
+        label: '{{ str_date }}',
         data : [{% for item in data %}
                   {{ item }},
                 {% endfor %}],

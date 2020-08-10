@@ -36,26 +36,33 @@ def index(page=None):
     else:
         period = 'This month'
         date_start = date_end.replace(day=1, hour=0, minute=0, second=0)
-        print(date_end, date_start)
 
 
     # Data for Chart
-    data = UnpackData(OrionQueryDashboard(date_start, date_end))
-
-    # Chart labels
-    labels = [l[0] for l in data[1:]]
-
-    # Chart data
-    data_l = [d[1] for d in data[1:]]
-
-    #Label for chart
-    str_date = f"from: {date_start} to: {date_end}"
-
-    # Tick display step
-    max_val = max(data_l)
     tick_step = 1
-    if max_val > 18:
-        tick_step = round(max_val / 12)
+
+    try:
+        data = UnpackData(OrionQueryDashboard(date_start, date_end))
+
+        # Chart labels
+        labels = [l[0] for l in data[1:]]
+
+        # Chart data
+        data_l = [d[1] for d in data[1:]]
+
+        #Label for chart
+        str_date = f"Violations from: {date_start} to: {date_end}"
+
+        # Tick display step
+        max_val = max(data_l)
+        if max_val > 18:
+            tick_step = round(max_val / 12)
+
+    except:
+        str_date = f"To display chart, administrator must configure connection to MSSQL server"
+        labels = []
+        data_l = []
+
 
     return render_template('orion/index.html', labels=labels, data=data_l,
                             str_date=str_date, period=period, tick_step=tick_step)

@@ -175,13 +175,13 @@
 
   // Define the chart data
   var chartData = {
-    labels : [{% for item in data[1:] %}
-                "{{ item[0] }}",
+    labels : [{% for item in labels %}
+                "{{ item }}",
               {% endfor %}],
     datasets : [{
         label: 'Violations {{ str_date }}',
-        data : [{% for item in data[1:] %}
-                  {{ item[1] }},
+        data : [{% for item in data %}
+                  {{ item }},
                 {% endfor %}],
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',
@@ -195,10 +195,14 @@
     options: {
       scales: {
           yAxes: [{
+            {% if not tick_step %}
+              display: false
+            {% else %}
               ticks: {
                   beginAtZero: true,
-                  stepSize: 1
+                  stepSize: {{ tick_step }}
               }
+            {% endif %}
           }]
       }
   }

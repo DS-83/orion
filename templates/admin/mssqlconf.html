@@ -1,0 +1,117 @@
+{% extends "base_admin.html" %}
+
+{% block title %}MSSQL server{% endblock %}
+
+{% block main %}
+
+  <div class="container">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap
+                align-items-center pt-3 pb-2 mb-3">
+      <div class="col">
+        <!-- <img src="{{ url_for('static', filename='email-156765.svg')}}"
+              class="float-left mx-auto" style="width: 80px;" alt="email-server"> -->
+        <h3 class="col">MSSQL Server connection settings</h3>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-outline-secondary" style="float:right"
+                  data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false"
+                  aria-controls="collapseEdit">
+          Edit
+          <span data-feather="edit"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapse" id="collapseEdit">
+    <div class="card card-body">
+    <div class="row">
+      <div class="col">
+          <form method="post">
+            <fieldset class="form-group">
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                  <label for="MSSQLserver">MSSQL Server</label>
+                  <input type="text" class="form-control" name="MSSQLserver" id="MSSQLserver" onkeyup="saveValue(this);" placeholder="db.localhost,[port]" required>
+                </div>
+                <div class="form-group col-4">
+                  <label for="database">Database</label>
+                  <input type="text" class="form-control" name="database" id="database" onkeyup="saveValue(this);" required>
+                </div>
+
+              </div>
+            </fieldset>
+            <fieldset class="form-group">
+              <div class="row">
+                <legend class="col-form-label col-md-4 pt-0">Authentication</legend>
+                <div class="col-sm-4">
+                    <input class="form-control" type="text" name="username" id="username" onkeyup="saveValue(this);" required>
+                    <label class="form-check-label" for="username">
+                      Username
+                    </label>
+                    <input class="form-control" type="password" name="password" id="password" required>
+                    <label class="form-check-label" for="password">
+                      Password
+                    </label>
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="form-row">
+              <div class="col-4">
+                <button type="submit" class="btn btn-secondary" name="submit" value="test">Test</button>
+              </div>
+
+              <div class="col-4">
+                <button type="submit" class="btn btn-primary" style="float:right" name="submit" value="save">Save</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-4">
+                <small>connection</small>
+              </div>
+              <div class="col-4">
+                <small style="float:right">settings</small>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-4">
+            <h5>Current config:</h5>
+            {% if config == None %}
+              <p>Not configured</p>
+            {% else %}
+                  <table class="table table-borderless table-small">
+                    <thead>
+                      {% for key in config.keys() %}
+                        <th>{{ key }}</th>
+                      {% endfor %}
+                    </thead>
+                    <tbody>
+                      {% for value in config %}
+                        <td>{{ value }}</td>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+            {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block script %}
+
+<script type="text/javascript">
+        document.getElementById("MSSQLserver").value = getSavedValue("MSSQLserver");
+        document.getElementById("database").value = getSavedValue("database");
+        document.getElementById("username").value = getSavedValue("username");
+        $('#collapseEdit').collapse({
+          toggle: true
+        })
+</script>
+
+{% endblock %}

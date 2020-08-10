@@ -41,10 +41,24 @@ def index(page=None):
 
     # Data for Chart
     data = UnpackData(OrionQueryDashboard(date_start, date_end))
-    print(data)
+
+    # Chart labels
+    labels = [l[0] for l in data[1:]]
+
+    # Chart data
+    data_l = [d[1] for d in data[1:]]
+
+    #Label for chart
     str_date = f"from: {date_start} to: {date_end}"
-    return render_template('orion/index.html', data=data, str_date=str_date,
-                            period=period)
+
+    # Tick display step
+    max_val = max(data_l)
+    tick_step = 1
+    if max_val > 18:
+        tick_step = round(max_val / 12)
+
+    return render_template('orion/index.html', labels=labels, data=data_l,
+                            str_date=str_date, period=period, tick_step=tick_step)
 
 
 @bp.route('/mailing', methods=('GET', 'POST'))

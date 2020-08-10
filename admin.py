@@ -2,7 +2,7 @@ from flask import (Blueprint, render_template, request,
         flash, redirect, url_for)
 from app.auth import login_required, user_role
 from app.sendemail import test_smtp
-from app.db import get_db
+from app.db import get_db, test_mssql
 from werkzeug.security import generate_password_hash
 
 
@@ -24,9 +24,11 @@ def index():
 @login_required
 @user_role
 def smtpconf():
+
+    db = get_db()
+    config = db.execute("SELECT server, port, ssl FROM smtp;").fetchone()
+
     if request.method == 'POST':
-        db = get_db()
-        config = db.execute("SELECT server, port, ssl FROM smtp;").fetchone()
         # Test connection to smtp server
         if request.form['submit'] == 'test':
             server = request.form.get('smtpserver')
@@ -66,8 +68,6 @@ def smtpconf():
                 return render_template('admin/smtpconf.html', config=config)
 
 
-    db = get_db()
-    config = db.execute("SELECT server, port, ssl FROM smtp;").fetchone()
     return render_template('admin/smtpconf.html', config=config)
 
 # Route Users
@@ -170,3 +170,49 @@ def users():
 
 
     return render_template('admin/users.html', users=users)
+
+
+# Route MSSQL server connection configure
+@bp.route('/mssqlconf', methods=('GET', 'POST'))
+@login_required
+@user_role
+def mssqlconf():
+
+    db = get_db()
+    config = db.execute("SELECT server, database, username FROM mssql").fetchone()
+
+    if request.method == 'POST':
+
+        server = request.form['MSSQLserver']
+        database = request.form['database']
+        username = request.form['username']
+        password = request.form['password']
+
+        # Test connection to mssql server
+        if request.form['submit'] == 'test':
+            r = test_mssql(server, database, username, password)
+            if r[0]:
+                flash(f"Success. {r[1]}", 'success')
+            else:
+                flash(f"Faled. {r[1]}", 'danger')
+            return render_template('admin/mssqlconf.html', config=config)
+
+        # Save mssql config to DB
+        if request.form['submit'] == 'save':
+
+            try:
+                if config is None:
+                    db.execute("INSERT INTO mssql (server, database, username, password)\
+                                VALUES (?,?,?,?);", (server, database, username, password))
+                else:
+                    db.execute("UPDATE mssql SET server=?, database=?, username=?,\
+                                password=? WHERE id = 1;", (server, database, username, password))
+                db.commit()
+                flash('Saved', 'success')
+                config = db.execute("SELECT server, database, username FROM mssql;").fetchone()
+
+            except Exception as err:
+                flash(err)
+
+
+    return render_template('admin/mssqlconf.html', config=config)

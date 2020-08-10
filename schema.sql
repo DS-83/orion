@@ -30,20 +30,30 @@
 --   FOREIGN KEY(user_id) REFERENCES user(id)
 -- );
 
-DROP TABLE IF EXISTS mail_task;
-CREATE TABLE mail_task (
-  id INTEGER PRIMARY KEY,
-  user_id INTEGER NOT NULL,
-  report_id INTEGER NOT NULL,
-  recipient TEXT NOT NULL,
-  periodicity TEXT NOT NULL,
-  weekday TEXT,
-  date INTEGER,
-  time TEXT NOT NULL,
-  celery_id TEXT,
-  FOREIGN KEY(user_id) REFERENCES user(id),
-  FOREIGN KEY(report_id) REFERENCES saved_reports(id)
+-- DROP TABLE IF EXISTS mail_task;
+-- CREATE TABLE mail_task (
+--   id INTEGER PRIMARY KEY,
+--   user_id INTEGER NOT NULL,
+--   report_id INTEGER NOT NULL,
+--   recipient TEXT NOT NULL,
+--   periodicity TEXT NOT NULL,
+--   weekday TEXT,
+--   date INTEGER,
+--   time TEXT NOT NULL,
+--   celery_id TEXT,
+--   FOREIGN KEY(user_id) REFERENCES user(id),
+--   FOREIGN KEY(report_id) REFERENCES saved_reports(id)
+-- );
+
+DROP TABLE IF EXISTS mssql;
+CREATE TABLE mssql (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  server TEXT UNIQUE NOT NULL,
+  database TEXT NOT NULL,
+  username TEXT NOT NULL,
+  password TEXT NOT NULL
 );
+
 
 -- CREATE TABLE smtp (
 --   id INTEGER PRIMARY KEY AUTOINCREMENT,

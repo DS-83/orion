@@ -189,9 +189,9 @@ def OrionReportFirtsLast(date_start, date_end, persons):
             while row:
                 result.append(row)
                 row = db.fetchone()
-
-    columns = [column[0] for column in db.description]
-    result.insert(0, columns)
+    if db.description:
+        columns = [column[0] for column in db.description]
+        result.insert(0, columns)
 
     return result
 
@@ -206,7 +206,7 @@ def OrionQueryDashboard(date_start, date_end):
 	          AND pLogData.Event IN (26, 27, 29, 34)\
 	          AND tpIndex IN (8,12)\
               GROUP BY pLogData.Event, Events.Contents"
-              
+
     db = get_mssql()
     db.execute(query, (date_start, date_end))
     return db

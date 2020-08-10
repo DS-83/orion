@@ -8,6 +8,7 @@ from time import strftime
 
 from app.db import get_db_no_g
 
+# Default configuration
 SERVER = "localhost"
 PORT = 25
 

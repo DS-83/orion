@@ -1,6 +1,6 @@
 {% extends "base1.html" %}
 
-{% block title %}Reports{% endblock %}
+{% block title %}Violations{% endblock %}
 {% block head %}
   <!-- Custom styles for this template -->
   <link href="/static/form-validation.css" rel="stylesheet">
@@ -14,7 +14,7 @@
       </div>
 
         <div class="py-5 text-center">
-          <p class="lead">Access point report</p>
+          <p class="lead">Violations report</p>
         </div>
 
     <b><label for="autofill">Enter time range or use presets</label></b>
@@ -48,8 +48,8 @@
     </div>
 
     <div class="container text-left">
-        <form class="form-horizontal" action="{{ url_for('.accessp', page='display') }}" method="post">
-        <div class="row row-cols-2">
+        <form class="form-horizontal" action="{{ url_for('.violations', page='display') }}" method="post">
+        <div class="row row-cols-2 p-2">
           <div class="col form-group">
             <label class="control-label" for="from">Reference point:</label>
             <div class="form-group" name="from">
@@ -73,6 +73,7 @@
             </div>
           </div>
           </div>
+
           <div class="form-group">
               <label for="From[]">
                   <b><span data-feather="home"></span> Access points</b>
@@ -111,44 +112,6 @@
               </div>
           </div>
 
-          <div class="form-group">
-            <label for="events">
-              <b><span data-feather="list"></span> Events</b>
-            </label>
-            <div class="row">
-                <div class="col-sm-5">
-                    <select multiple="multiple" class="form-control" id="multiselect2" name="From[]" size="8">
-                    {% for row in events[1:] %}
-                        <option value="{{ row[0] }}" data-position="{{ loop.index }}">
-                            {{ row[1] }}
-                        </option>
-                    {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-sm-2 btn btn-group-vertical" role="group">
-                    <button type="button" id="multiselect2_rightAll" class="btn btn-secondary">
-                      <span data-feather="plus"></span>
-                      <span data-feather="layers"></span>
-                    </button>
-                    <button type="button" id="multiselect2_rightSelected" class="btn btn-secondary">
-                      <span data-feather="file-plus"></span>
-                    </button>
-                    <button type="button" id="multiselect2_leftSelected" class="btn btn-secondary">
-                      <span data-feather="file-minus"></span>
-                    </button>
-                    <button type="button" id="multiselect2_leftAll" class="btn btn-secondary">
-                      <span data-feather="minus"></span>
-                      <span data-feather="layers"></span>
-                    </button>
-                </div>
-
-                <div class="col-sm-5">
-                    <select multiple="multiple" name="events[]" id="multiselect2_to" class="form-control" size="8" multiple></select>
-                </div>
-            </div>
-          </div>
-
           <div class="btn-group" role="group" style="float:right">
             <button class="btn  btn-outline-secondary" type="submit" name="submit" value="display">
               <span data-feather="monitor"></span>
@@ -168,7 +131,7 @@
 
     <div class="collapse" id="collapseSaveRep_ap">
       <div class="card card-body">
-            <form action="{{ url_for('.accessp', page='savereport') }}" method="post">
+            <form action="{{ url_for('.violations', page='savereport') }}" method="post">
               <div class="form-group">
                 <label for="reportname" class="col-form-label">Report name:</label>
                 <input type="text" class="form-control" name="reportname" id="reportname">
@@ -186,12 +149,6 @@
                 <label for="ap" class="col-form-label">Access points:</label>
                 <select multiple="multiple" class="form-control" id="modalSelect1"
                         name="ap[]" size="8">
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="ap" class="col-form-label">Events:</label>
-                <select multiple="multiple" class="form-control" id="modalSelect2"
-                        name="events[]" size="8">
                 </select>
               </div>
               <div class="modal-footer">

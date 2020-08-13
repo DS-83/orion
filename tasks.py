@@ -3,7 +3,7 @@ from .sendemail import SendMail
 
 from app.reports_sql import (
     OrionReportAccessPoint,
-    UnpackData, OrionReportWalkwaysPerson
+    UnpackData, OrionReportWalkwaysPerson, OrionReportViolations
 )
 
 from datetime import datetime, timedelta
@@ -70,6 +70,11 @@ def send_mail_task(id, report_id, recipient, periodicity, time, filename,
             ap = eval(row['data'])['ap']
             events = eval(row['data'])['events']
             data = UnpackData(OrionReportAccessPoint(date_start, date_end, ap, events))
+
+        # For violations
+        elif row['report_type'] == 'Violations':
+            ap = row['data']
+            data = UnpackData(OrionReportViolations(date_start, date_end), ap)
 
     xlsxfile = SaveReport(date_start, date_end, data, row['name'])
     subj = f"Automatic report system. Report: \"{row['name']}\", generated at {datetime.now().isoformat()}"

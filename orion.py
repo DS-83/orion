@@ -59,7 +59,7 @@ def index(page=None):
             tick_step = round(max_val / 12)
 
     except:
-        str_date = f"To display chart, administrator must configure connection to MSSQL server"
+        str_date = "To display chart, administrator must configure connection to MSSQL server"
         labels = []
         data_l = []
 
@@ -165,7 +165,7 @@ def delete():
     try:
         row = db.execute("SELECT celery_id\
                           FROM mail_task\
-                          WHERE id = ?", (id,)
+                          WHERE id = ? AND user_id = ?", (id, session['user_id'])
                           ).fetchone()
 
         # # Revoke celery task
@@ -174,7 +174,8 @@ def delete():
             celery_app.control.terminate(row['celery_id'])
 
         # Delete task from DB
-        db.execute("DELETE FROM mail_task WHERE id = ?", (id,))
+        db.execute("DELETE FROM mail_task\
+                    WHERE id = ? AND user_id = ?", (id, session['user_id']))
         db.commit()
 
         flash('Success', 'success')
@@ -243,13 +244,9 @@ def changepass():
         # Check new password and re-enter password
         if error is None:
             new_pass = request.form['NewPassword']
-            print(new_pass, type(new_pass))
             re_new_pass = request.form['ReNewPassword']
-            print(re_new_pass, type(re_new_pass))
-            print(new_pass != re_new_pass)
             if new_pass != re_new_pass:
                 error = 'Password mismatch'
-                print(error)
             else:
                 if g.user['username'] == 'Admin':
                     table_name = 'admin'

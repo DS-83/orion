@@ -50,9 +50,16 @@
                     {% endif %}
                   {% endfor %}
                   <td>
-                    <button type="button" onclick="fillHidden({{ row[0] }});" class="btn btn-outline-secondary btn-sm"
-                              data-toggle="modal" data-target="#modalDelete">
-
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-outline-secondary btn-sm" type="button"
+                              onclick="fillHidden_disp({{ row[0] }});"
+                              data-toggle="modal" data-target="#modalDisplay">
+                        <span data-feather="monitor"></span>
+                      </button>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm" type="button"
+                            onclick="fillHidden_del({{ row[0] }});"
+                            data-toggle="modal" data-target="#modalDelete">
                       <span data-feather="trash-2"></span>
                     </button>
                   </td>
@@ -68,8 +75,9 @@
   {% endif %}
 </div>
 
-<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDelete" aria-hidden="true">
-  <div class="modal-dialog">
+<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog"
+     aria-labelledby="modalDelete" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Delete</h5>
@@ -77,11 +85,11 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="{{ url_for('reports.delete')}}" method="post">
+      <form action="{{ url_for('reports.delete') }}" method="post">
         <div class="modal-body">
             <p>Are you sure you want to delete?</p>
             <div class="col-sm hidden" hidden>
-              <input type="hidden" id="hidden_id" name="hidden_id">
+              <input type="hidden" id="hidden_id_del" name="hidden_id_del">
             </div>
         </div>
         <div class="modal-footer">
@@ -92,6 +100,39 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="modalDisplay" tabindex="-2" role="dialog"
+     aria-labelledby="modalDisplay" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="{{ url_for('.savedreports', page='display') }}" method="post">
+        <div class="modal-body">
+            <p>Show on screen or save report to a file?</p>
+            <div class="col-sm hidden" hidden>
+              <input type="hidden" id="hidden_id_disp" name="hidden_id_disp">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn  btn-outline-secondary" type="submit" name="submit" value="display">
+            <span data-feather="monitor"></span>
+            Display
+          </button>
+          <button class="btn  btn-outline-secondary btn-sm" type="submit" name="submit" value="save">
+            <img src="{{ url_for('static', filename='icon-xls-24.png') }}" alt="xls">
+            Save file
+          </button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
+
 
 {% endblock %}
 

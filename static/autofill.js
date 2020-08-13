@@ -162,8 +162,11 @@ $('#collapseSaveRep_ap').on('hidden.bs.collapse', function () {
 
 
 // Fill hidden_id
-function fillHidden(id) {
-    document.getElementById('hidden_id').value = id;
+function fillHidden_disp(id) {
+    document.getElementById('hidden_id_disp').value = id;
+};
+function fillHidden_del(id) {
+    document.getElementById('hidden_id_del').value = id;
 };
 
 // Display div

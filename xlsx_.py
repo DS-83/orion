@@ -43,6 +43,7 @@ def SaveReport(date_start, date_end, data, report_name):
 
     indent = 6
     old = None
+    
     # Find time column
     time_col = [data[0].index(x) for x in data[0] if x == 'Time']
 

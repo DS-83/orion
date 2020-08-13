@@ -6,11 +6,14 @@ from app.db import get_db
 from app.reports_sql import (
     OrionReportAccessPoint, OrionQueryEvents, OrionQueryAccessPoints,
     UnpackData, OrionQueryPersons, OrionReportWalkwaysPerson,
-    OrionReportFirtsLast
+    OrionReportFirtsLast, OrionReportViolations
 )
 from app.auth import login_required
 from app.xlsx_ import SaveReport
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+from dateutil.relativedelta import relativedelta
+from calendar import monthrange
+
 
 
 bp = Blueprint('reports', __name__, url_prefix='/reports')
@@ -326,7 +329,7 @@ def firstlast(page):
     # Save Report
     if page == 'savereport':
         db = get_db()
-        report = "Person"
+        report = "First-Last"
         name = request.form["reportname"]
         period = request.form["period"]
         data = ", ".join(map(str, request.form.getlist('personId')))
@@ -337,16 +340,149 @@ def firstlast(page):
             flash('Saved', 'success')
         except Exception as err:
             flash(err, 'warning')
-        return render_template('reports/firstlast.html', result=0)
 
     # Default route
     return render_template('reports/firstlast.html', result=0)
 
 
-# Saved reports
-@bp.route('/savedreports')
+# Report "Violations"
+@bp.route('/violations', defaults={'page': 'violations.html'})
+# Search person by Name
+@bp.route('/violations/<page>', methods=(['POST']))
 @login_required
-def savedreports():
+def violations(page):
+
+    # Report functon
+    def report(action):
+        # Request date time
+        date_start = request.form['date_start']
+        time_start = request.form['time_start']
+        date_end = request.form['date_end']
+        time_end = request.form['time_end']
+        ap = ", ".join(map(str, request.form.getlist('ap[]')))
+
+        #  Check time range
+        date_start = date_start.replace('-', '') + time_start.replace(':', '')
+        date_end = date_end.replace('-', '') + time_end.replace(':', '')
+        if int(date_end) - int(date_start) <= 0:
+            flash('Не пытайся обмануть меня, кожаный ублюдок', 'warning')
+            return redirect(url_for('.violations'))
+
+        # Request data from Orion
+        data = UnpackData(OrionReportViolations(date_start, date_end, ap))
+        if action == 'display':
+            return render_template('reports/generatedreport.html', data=data)
+        if action == 'save':
+            report_name = f'Violations in {ap}'
+            filename = SaveReport(date_start, date_end, data, report_name)
+            folder =  current_app.config['DWNLD_FOLDER']
+            return send_from_directory(folder, filename, as_attachment=True)
+
+    # Report display
+    if page == 'display' and request.form['submit'] == 'display':
+        return report('display')
+
+    # Save to file
+    if page == 'display' and request.form['submit'] == 'save':
+        return report('save')
+
+    # Save Report
+    if page == 'savereport':
+        db = get_db()
+        report = 'Violations'
+        name = request.form["reportname"]
+        period = request.form["period"]
+        data = ", ".join(map(str, request.form.getlist('ap[]')))
+
+        try:
+            db.execute("INSERT INTO saved_reports (report_type, name, user_id, period, data)\
+                        VALUES (?,?,?,?,?);", (report, name, session['user_id'], period, data))
+            db.commit()
+            flash('Saved', 'success')
+        except Exception as err:
+            flash(err, 'warning')
+
+    # Default route
+    access_p = UnpackData(OrionQueryAccessPoints())
+    return render_template('reports/violations.html', access_p=access_p)
+
+
+
+# Saved reports
+@bp.route('/savedreports', defaults={'page': 'savedreports.html'})
+@bp.route('/savedreports/<page>', methods=['POST'])
+@login_required
+def savedreports(page):
+
+    def report(action):
+
+        db = get_db()
+        report_id = request.form['hidden_id_disp']
+        row = db.execute("SELECT id, report_type, name, period,\
+                            data FROM saved_reports WHERE id = ?",
+                             (report_id,)).fetchone()
+        if row:
+
+            # Calculate time intervals
+
+            # Today
+            today = datetime.today()
+            # Monday
+            mon = today - timedelta(days = date.isoweekday(today)-1)
+
+            if row['period'] == 'Previous week':
+                date_start = (mon - timedelta(days = 7)).replace(hour=0, minute=0, second=0)
+                date_end = (date_start + timedelta(days = 6)).replace(hour=23, minute=59, second=59)
+
+            elif row['period'] == 'Previous day':
+                date_start = today.replace(hour=0, minute=0, second=0) - timedelta(days=1)
+                date_end = date_start.replace(hour=23, minute=59, second=59)
+
+            elif row['period'] == 'Previous month':
+                date_start = today.replace(day=1, hour=0, minute=0, second=0) - relativedelta(months = 1)
+                # Last day of current month
+                last_day = monthrange(date_start.year, date_start.month)[1]
+                date_end = date_start.replace(day=last_day, hour=23, minute=59, second=59)
+
+        # Request data from Orion for each type of report
+        # For person
+        if row['report_type'] == 'Person':
+            persons_id = row['data']
+            data = UnpackData(OrionReportWalkwaysPerson(date_start, date_end, persons_id))
+
+        # For access point
+        elif row['report_type'] == 'Access point':
+            ap = eval(row['data'])['ap']
+            events = eval(row['data'])['events']
+            data = UnpackData(OrionReportAccessPoint(date_start, date_end, ap, events))
+
+        #  For first-last
+        elif row['report_type'] == 'First-Last':
+            persons_id = row['data'].split(',')
+            data = OrionReportFirtsLast(date_start, date_end, persons_id)
+
+        # For violations
+        elif row['report_type'] == 'Violations':
+            ap = row['data']
+            data = UnpackData(OrionReportViolations(date_start, date_end), ap)
+
+        if action == 'display':
+            return render_template('reports/generatedreport.html', data=data)
+        if action == 'save':
+            filename =  SaveReport(date_start, date_end, data, row['name'])
+            folder =  current_app.config['DWNLD_FOLDER']
+            return send_from_directory(folder, filename, as_attachment=True)
+
+
+    # Report display
+    if page == 'display' and request.form['submit'] == 'display':
+        return report('display')
+
+    # Save to file
+    if page == 'display' and request.form['submit'] == 'save':
+        return report('save')
+
+
     db = get_db()
     cursor = db.execute("SELECT id AS 'N', report_type AS 'Report type',\
                         name AS 'Report name', period AS 'Time interval',\
@@ -357,8 +493,8 @@ def savedreports():
         data.append(row.keys())
         while row:
 
-            # For person
-            if row['Report type'] == 'Person':
+            # For person and first-last
+            if row['Report type'] == 'Person' or row['Report type'] == 'First-Last':
                 persons_id = row['data'].split(',')
                 data_orion = UnpackData(OrionQueryPersons())
                 report_data = []
@@ -388,12 +524,24 @@ def savedreports():
                             l.append(r[1])
                 report_data.append(l)
 
+            # For violations
+            elif row['Report type'] == 'Violations':
+                aps_id = row['data'].split(',')
+                data_orion = UnpackData(OrionQueryAccessPoints())
+                report_data = []
+                l = []
+                for r in data_orion:
+                    for ap in aps_id:
+                        if int(ap) == r[1]:
+                            l.append(r[0])
+                report_data.append(l)
+
+
             l = list(row)
             l[4] = report_data
             data.append(l)
 
             row = cursor.fetchone()
-
 
     return render_template('reports/savedreports.html', data=data)
 
@@ -401,27 +549,39 @@ def savedreports():
 @bp.route('/savedreports', methods=['POST'])
 @login_required
 def delete():
-    db = get_db()
-    id = request.form['hidden_id']
-    try:
-        row = db.execute("SELECT celery_id\
-                          FROM mail_task\
-                          WHERE id = ?", (id,)
-                          ).fetchone()
 
-        # # Revoke celery task
-        if row['celery_id']:
-            celery_app.control.revoke(row['celery_id'])
-            celery_app.control.terminate(row['celery_id'])
+    from .celery_utils import celery_app
+
+    db = get_db()
+    id = request.form['hidden_id_del']
+    try:
+        cursor = db.execute("SELECT celery_id\
+                             FROM mail_task\
+                             WHERE report_id = ? AND user_id = ?",
+                             (id, session['user_id'])
+                            )
+        row = cursor.fetchone()
+
+        # Revoke each celery task
+        while row:
+            if row['celery_id']:
+                celery_app.control.revoke(row['celery_id'])
+                celery_app.control.terminate(row['celery_id'])
+            row = cursor.fetchone()
+
+        # Delete each related mail tasks
+        db.execute("DELETE FROM mail_task\
+                    WHERE report_id = ? AND user_id = ?",
+                    (id, session['user_id'])
+                    )
 
         # Delete report
-        db.execute("DELETE FROM saved_reports WHERE id = ?", (id,))
-
-        # Delete related mail tasks
-        db.execute("DELETE FROM mail_task WHERE report_id = ?", (id))
+        db.execute("DELETE FROM saved_reports\
+                    WHERE id = ? AND user_id = ?", (id, session['user_id']))
         db.commit()
-        flash('success', 'success')
+        flash('Successfuly remove report and appropriate mail tasks', 'success')
     except Exception as err:
+        db.rollback()
         flash(err, 'warning')
 
     return redirect(url_for('reports.savedreports'))

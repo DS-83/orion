@@ -464,7 +464,7 @@ def savedreports(page):
         # For violations
         elif row['report_type'] == 'Violations':
             ap = row['data']
-            data = UnpackData(OrionReportViolations(date_start, date_end), ap)
+            data = UnpackData(OrionReportViolations(date_start, date_end, ap))
 
         if action == 'display':
             return render_template('reports/generatedreport.html', data=data)

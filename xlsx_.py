@@ -43,7 +43,7 @@ def SaveReport(date_start, date_end, data, report_name):
 
     indent = 6
     old = None
-    
+
     # Find time column
     time_col = [data[0].index(x) for x in data[0] if x == 'Time']
 
@@ -88,7 +88,6 @@ def SaveReport(date_start, date_end, data, report_name):
     # Set columns width
     for col in range(len(col_width)):
         worksheet.set_column(col, col, col_width[col])
-
 
 
     workbook.close()

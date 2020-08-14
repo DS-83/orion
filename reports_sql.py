@@ -133,7 +133,8 @@ def OrionReportWalkwaysPerson(date_start, date_end, persons):
     db.execute(query, (date_start, date_end))
     return db
 
-# Report "first enter - last exit"
+# Report "first enter - last exit".
+# Variable persons - <class list> for looping each element 
 def OrionReportFirtsLast(date_start, date_end, persons):
 
     if isinstance(date_start, str):

@@ -16,7 +16,7 @@ from app.db import get_db_no_g
 
 import os
 
-
+# Helper datetime function
 def dt_tw(wday):
     # Monday
     today = datetime.today()
@@ -32,11 +32,10 @@ def dt_tw(wday):
         return today
 
 
-
+# This task called by create_mail_task to create periodicaly task by schedule.
 @celery_app.task
 def send_mail_task(id, report_id, recipient, periodicity, time, filename,
                             weekday=None, date=None):
-
 
     db = get_db_no_g()
 
@@ -76,6 +75,11 @@ def send_mail_task(id, report_id, recipient, periodicity, time, filename,
             ap = row['data']
             data = UnpackData(OrionReportViolations(date_start, date_end), ap)
 
+        #  For first-last
+        elif row['report_type'] == 'First-Last':
+            persons_id = row['data'].split(',') # <class list>
+            data = OrionReportFirtsLast(date_start, date_end, persons_id)
+
     xlsxfile = SaveReport(date_start, date_end, data, row['name'])
     subj = f"Automatic report system. Report: \"{row['name']}\", generated at {datetime.now().isoformat()}"
 
@@ -83,6 +87,10 @@ def send_mail_task(id, report_id, recipient, periodicity, time, filename,
     mail_obj.start()
     return
 
+# This task starts by schedule of celery beat, configured in celery_utils.py.
+# Default time startup - daily, at 00:00. This task selects mail task from
+# mail_task table and load today tasks to celery queue calling send_mail_task.apply_async()
+# method.
 @celery_app.task
 def create_mail_task():
     from calendar import day_name

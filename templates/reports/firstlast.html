@@ -8,7 +8,7 @@
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap
                   align-items-center pt-3 pb-2 mb-3">
         <div class="col">
-          <img src="{{ url_for('static', filename='text-146110.svg') }}"
+          <img src="{{ url_for('static', filename='pic/text-146110.svg') }}"
               class="float-left mx-auto" style="width: 80px;" alt="report">
           <h3 style="text-align: center;">First enter, last exit</h3>
         </div>
@@ -142,7 +142,7 @@
                       <span data-feather="monitor"></span>
                     </button>
                     <button class="btn  btn-outline-secondary" type="submit" name="submit" value="save">
-                      <img src="{{ url_for('static', filename='icon-xls-24.png') }}" alt="xls">
+                      <img src="{{ url_for('static', filename='pic/icon-xls-24.png') }}" alt="xls">
                     </button>
                     <button class="btn  btn-outline-secondary" type="button"
                             data-toggle="collapse" data-target="#collapseSaveRep" aria-expanded="false"
@@ -205,5 +205,5 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', filename='autofill.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autofill.js') }}"></script>
 {% endblock %}

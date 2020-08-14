@@ -31,7 +31,7 @@
       }
     </style>
     <!-- Custom styles for this template -->
-    <link href="/static/signin.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename'css/signin.css') }}" rel="stylesheet">
   </head>
 
   <body class="text-center">
@@ -46,7 +46,7 @@
       </section>
     </div>
     <form class="form-signin" method="post">
-      <img class="mb-4" src="/static/logo.png" alt="logo" width="72" height="72">
+      <img class="mb-4" src="{{ url_for('static', filename='pic/logo.png') }}" alt="logo" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
       <label for="UserName" class="sr-only">User Name</label>
       <input type="text" name="username" class="form-control" placeholder="User Name" required autofocus autocomplete="off">

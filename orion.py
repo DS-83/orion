@@ -161,7 +161,7 @@ def delete():
     from .celery_utils import celery_app
 
     db = get_db()
-    id = request.form['hidden_id']
+    id = request.form['hidden_id_del']
     try:
         row = db.execute("SELECT celery_id\
                           FROM mail_task\
@@ -178,7 +178,7 @@ def delete():
                     WHERE id = ? AND user_id = ?", (id, session['user_id']))
         db.commit()
 
-        flash('Success', 'success')
+        flash('Successfuly delete', 'success')
     except Exception as err:
         flash(err, 'warning')
 

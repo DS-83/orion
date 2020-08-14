@@ -57,6 +57,22 @@ def create_app(test_config=None):
     logger = logging.getLogger(__name__)
     logfile = f"{app.config['LOGS_FOLDER']}/app-{time.strftime('%Y%m%d')}.log"
     logging.basicConfig(filename=logfile, level=logging.INFO)
-    logging.info('Started')
+    logger.setLevel(logging.DEBUG)
+    # create file handler which logs even debug messages
+    fh = logging.FileHandler(logfile)
+    fh.setLevel(logging.INFO)
+    # create console handler with a higher log level
+    # ch = logging.StreamHandler()
+    # ch.setLevel(logging.ERROR)
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # ch.setFormatter(formatter)
+    fh.setFormatter(formatter)
+    # add the handlers to logger
+    # logger.addHandler(ch)
+    logger.addHandler(fh)
+
+    logger.info('App started')
+
 
     return app

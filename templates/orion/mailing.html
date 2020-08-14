@@ -115,7 +115,7 @@
                           {% endif %}
                       {% endfor %}
                       <td>
-                        <button type="button" onclick="fillHidden({{ row[6] }})" class="btn btn-outline-secondary btn-sm"
+                        <button type="button" onclick="fillHidden_del({{ row[6] }})" class="btn btn-outline-secondary btn-sm"
                                   data-toggle="modal" data-target="#modalDelete">
 
                           <span data-feather="trash-2"></span>
@@ -142,7 +142,7 @@
             <div class="modal-body">
                 <p>Are you sure you want to delete?</p>
                 <div class="col-sm hidden" hidden>
-                  <input type="hidden" id="hidden_id" name="hidden_id">
+                  <input type="hidden" id="hidden_id_del" name="hidden_id_del">
                 </div>
             </div>
             <div class="modal-footer">

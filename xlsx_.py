@@ -30,9 +30,9 @@ def SaveReport(date_start, date_end, data, report_name):
     # Merge format
     merge_format = workbook.add_format({'align': 'center'})
     if g:
-        im_path = os.path.join(current_app.static_folder, 'logo.png')
+        im_path = os.path.join(current_app.static_folder, 'pic/logo.png')
     else:
-        im_path = os.path.join('./app/static', 'logo.png')
+        im_path = os.path.join('./app/static/pic', 'logo.png')
     image = worksheet.insert_image(0, 0, im_path,
                             {'x_scale': 0.6, 'y_scale': 0.6,}
                             )

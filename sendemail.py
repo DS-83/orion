@@ -14,10 +14,22 @@ PORT = 25
 
 
 # Logging config
-logger = logging.getLogger(__name__)
 logfile = os.path.join(os.path.abspath('instance/logs'), f"mail-{strftime('%Y%m%d')}.log")
-logging.basicConfig(filename=logfile, level=logging.INFO)
-
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+# create file handler which logs even debug messages
+fh = logging.FileHandler(logfile)
+fh.setLevel(logging.INFO)
+# # create console handler with a higher log level
+# ch = logging.StreamHandler()
+# ch.setLevel(logging.ERROR)
+# create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# ch.setFormatter(formatter)
+fh.setFormatter(formatter)
+# add the handlers to logger
+# logger.addHandler(ch)
+logger.addHandler(fh)
 
 
 # Function for testing connection
@@ -30,43 +42,7 @@ def test_smtp(server, port):
     except Exception as err:
         return False, err
 
-
-def send_mail():
-    textfile = "textfile"
-    xlsxfile = "Bro_20191203140000_20191202110100.xlsx"
-    # Open the plain text file whose name is in textfile for reading.
-    with open(textfile) as fp:
-        # Create a text/plain message
-        msg = EmailMessage()
-        msg.set_content(fp.read())
-
-    # me == the sender's email address
-    me = "denis@localhost"
-    # you == the recipient's email address
-    you = "denis@localhost"
-    msg['Subject'] = f"The contents of {textfile}"
-    msg['From'] = me
-    msg['To'] = you
-    # Create xlsx attach
-    with open(xlsxfile, 'rb') as fp:
-        xlsx_data = fp.read()
-    msg.add_attachment(xlsx_data,
-        'application',
-        'vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        filename = xlsxfile)
-
-    # Get config from DB
-    db = get_db_no_g()
-    config = db.execute("SELECT server, port FROM smtp;").fetchone()
-    if config:
-        SERVER = config[0]
-        PORT = config[1]
-    # Send the email via our own SMTP server.
-    with smtplib.SMTP(SERVER, PORT) as smtp:
-        smtp.send_message(msg)
-
-    return "ok"
-
+# Class for create and send mail
 class SendMail:
     def __init__(self, text, xlsxfile, sender, to, subj):
         self.text = text
@@ -101,8 +77,8 @@ class SendMail:
         # Send the email via our own SMTP server.
         with smtplib.SMTP(SERVER, PORT) as smtp:
             smtp.send_message(msg)
-            logging.info(f'msg to {self.to} successfuly send. mail-server: {SERVER}:{PORT}')
+            logger.info(f'Msg to: {self.to} successfuly send. Mail-server: {SERVER}:{PORT}')
             return True
 
-        logging.error(f'error sending mail msg to {self.to}, server: {SERVER}:{PORT}')
+        logger.error(f'Error sending mail msg to: {self.to}, server: {SERVER}:{PORT}')
         return False

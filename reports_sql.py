@@ -26,7 +26,12 @@ def OrionQueryEvents():
 
 # Access points
 def OrionQueryAccessPoints():
-    db = get_mssql()
+
+    if not g:
+        db = get_mssql_no_g()
+    else:
+        db = get_mssql()
+
     db.execute("SELECT Name, GIndex AS DoorIndex, ID\
                 FROM AcessPoint\
                 ORDER BY GIndex;"
@@ -134,7 +139,7 @@ def OrionReportWalkwaysPerson(date_start, date_end, persons):
     return db
 
 # Report "first enter - last exit".
-# Variable persons - <class list> for looping each element 
+# Variable persons - <class list> for looping each element
 def OrionReportFirtsLast(date_start, date_end, persons):
 
     if isinstance(date_start, str):
@@ -195,7 +200,6 @@ def OrionReportFirtsLast(date_start, date_end, persons):
                                     AND\
                                     	Plogdata.Event IN (28)\
                                     ORDER BY Plogdata.TimeVal DESC) as b"
-            print(date_start_new, date_end_new)
             db.execute(query, (date_start_new, date_end_new, date_start_new, date_end_new))
             #Unpack data and append to result
             row = db.fetchone()

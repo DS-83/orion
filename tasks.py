@@ -2,8 +2,8 @@ from .celery_utils import celery_app
 from .sendemail import SendMail
 
 from app.reports_sql import (
-    OrionReportAccessPoint,
-    UnpackData, OrionReportWalkwaysPerson, OrionReportViolations
+    OrionReportAccessPoint, UnpackData, OrionReportWalkwaysPerson,
+    OrionReportViolations, OrionReportFirtsLast
 )
 
 from datetime import datetime, timedelta
@@ -73,7 +73,7 @@ def send_mail_task(id, report_id, recipient, periodicity, time, filename,
         # For violations
         elif row['report_type'] == 'Violations':
             ap = row['data']
-            data = UnpackData(OrionReportViolations(date_start, date_end), ap)
+            data = UnpackData(OrionReportViolations(date_start, date_end, ap))
 
         #  For first-last
         elif row['report_type'] == 'First-Last':

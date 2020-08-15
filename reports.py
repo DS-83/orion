@@ -66,7 +66,11 @@ def accessp(page):
             data = UnpackData(OrionReportAccessPoint(date_start, date_end, ap, events))
 
             if action == 'display':
-                return render_template('reports/generatedreport.html', data=data)
+                report_name = {'Report':'Access point',
+                               'Reference point':datetime.strptime(date_start, '%Y%m%d%H%M%S'),
+                               'End point':datetime.strptime(date_end, '%Y%m%d%H%M%S')}
+                return render_template('reports/generatedreport.html', data=data,
+                                        report_name=report_name)
             if action == 'save':
                 report_name = f'Access point: {ap}'
                 filename = SaveReport(date_start, date_end, data, report_name)
@@ -193,7 +197,11 @@ def person(page):
             return redirect(url_for('.person'))
         data = UnpackData(OrionReportWalkwaysPerson(date_start, date_end, personId))
         if action == 'display':
-            return render_template('reports/generatedreport.html', data=data)
+            report_name = {'Report':'Person walkways',
+                           'Reference point':datetime.strptime(date_start, '%Y%m%d%H%M%S'),
+                           'End point':datetime.strptime(date_end, '%Y%m%d%H%M%S')}
+            return render_template('reports/generatedreport.html', data=data,
+                                    report_name=report_name)
         if action == 'save':
             report_name = 'Person walkways'
             filename = SaveReport(date_start, date_end, data, report_name)
@@ -311,7 +319,11 @@ def firstlast(page):
             return redirect(url_for('.firstlast'))
         data = OrionReportFirtsLast(date_start, date_end, personId)  # Data unpack inside OrionReportFirtsLast function
         if action == 'display':
-            return render_template('reports/generatedreport.html', data=data)
+            report_name = {'Report':'First-Last',
+                           'Reference point':datetime.strptime(date_start, '%Y%m%d%H%M%S'),
+                           'End point':datetime.strptime(date_end, '%Y%m%d%H%M%S')}
+            return render_template('reports/generatedreport.html', data=data,
+                                    report_name=report_name)
         if action == 'save':
             report_name = 'First enter - last exit'
             filename = SaveReport(date_start, date_end, data, report_name)
@@ -371,7 +383,11 @@ def violations(page):
         # Request data from Orion
         data = UnpackData(OrionReportViolations(date_start, date_end, ap))
         if action == 'display':
-            return render_template('reports/generatedreport.html', data=data)
+            report_name = {'Report':'Violations',
+                           'Reference point':datetime.strptime(date_start, '%Y%m%d%H%M%S'),
+                           'End point':datetime.strptime(date_end, '%Y%m%d%H%M%S')}
+            return render_template('reports/generatedreport.html', data=data,
+                                    report_name=report_name)
         if action == 'save':
             report_name = f'Violations in {ap}'
             filename = SaveReport(date_start, date_end, data, report_name)
@@ -467,7 +483,12 @@ def savedreports(page):
             data = UnpackData(OrionReportViolations(date_start, date_end, ap))
 
         if action == 'display':
-            return render_template('reports/generatedreport.html', data=data)
+            report_name = {'Report':row['report_type'],
+                           'Name':row['name'],
+                           'Reference point':date_start,
+                           'End point':date_end}
+            return render_template('reports/generatedreport.html', data=data,
+                                    report_name=report_name)
         if action == 'save':
             filename =  SaveReport(date_start, date_end, data, row['name'])
             folder =  current_app.config['DWNLD_FOLDER']

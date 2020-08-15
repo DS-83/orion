@@ -65,7 +65,8 @@ def index(page=None):
 
 
     return render_template('orion/index.html', labels=labels, data=data_l,
-                            str_date=str_date, period=period, tick_step=tick_step)
+                            str_date=str_date, period=period, tick_step=tick_step
+                            )
 
 
 @bp.route('/mailing', methods=('GET', 'POST'))

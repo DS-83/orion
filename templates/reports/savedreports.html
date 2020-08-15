@@ -5,6 +5,11 @@
 {% block main %}
 
 <div class="container">
+
+  <div class="py-4 mb-3 border-bottom">
+    <h2 class="h2">Saved reports</h2>
+  </div>
+
   {% if data|length > 1 %}
   <div class="table-responsive-sm">
     <table class="table">
@@ -123,7 +128,7 @@
             Display
           </button>
           <button class="btn  btn-outline-secondary btn-sm" type="submit" name="submit" value="save">
-            <img src="{{ url_for('static', filename='icon-xls-24.png') }}" alt="xls">
+            <img src="{{ url_for('static', filename='pic/icon-xls-24.png') }}" alt="xls">
             Save file
           </button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

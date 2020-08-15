@@ -5,16 +5,13 @@
 {% block main %}
 
     <div class="container">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap
-                  align-items-center pt-3 pb-2 mb-3">
-        <div class="col">
-          <img src="{{ url_for('static', filename='pic/text-146110.svg') }}"
-              class="float-left mx-auto" style="width: 80px;" alt="report">
-          <h3 style="text-align: center;">Person walkways</h3>
-        </div>
+      <div class="container">
+        <img src="{{ url_for('static', filename='pic/text-146110.svg') }}"
+             class="float-left mx-auto" style="width: 80px;" alt="text">
       </div>
-    </div>
-
+      <div class="py-5 text-center">
+        <h2 class="h2">Person walkways</h2>
+      </div>
 
     <form class="" action="{{ url_for('.person', page='name') }}" method="post">
         <div class="input-group mb-3">
@@ -92,7 +89,7 @@
                 <div class="form-group" name="from">
                   <label class="control-label" for="date_start">Date</label>
                   <span data-feather="calendar"></span>
-                  <input type="date" id="date_start" name="date_start" required>
+                  <input type="date" id="date_start" name="date_start" required autofocus>
                   <label class="control-label" for="time_start">Time</label>
                   <span data-feather="clock"></span>
                   <input type="time" id="time_start" name="time_start" step = "1">
@@ -199,7 +196,7 @@
     <li class="list-inline-item"><a href="#">Support</a></li>
   </ul>
 </footer>
-
+</div>
 {% endblock %}
 
 {% block script %}

@@ -10,12 +10,13 @@
 
     <div class="container">
       <div class="container">
-        <img src="{{ url_for('static', filename='pic/text-146110.svg') }}" class="float-left mx-auto" style="width: 80px;" alt="text">
+        <img src="{{ url_for('static', filename='pic/text-146110.svg') }}"
+             class="float-left mx-auto" style="width: 80px;" alt="text">
       </div>
 
-        <div class="py-5 text-center">
-          <p class="lead">Violations report</p>
-        </div>
+      <div class="py-5 text-center">
+        <h2 class="h2">Violations report</h2>
+      </div>
 
     <b><label for="autofill">Enter time range or use presets</label></b>
     <div class="container" id="autofill">
@@ -55,7 +56,7 @@
             <div class="form-group" name="from">
               <label class="control-label" for="date_start">Date</label>
               <span data-feather="calendar"></span>
-              <input type="date" id="date_start" name="date_start" required>
+              <input type="date" id="date_start" name="date_start" required autofocus>
               <label class="control-label" for="time_start">Time</label>
               <span data-feather="clock"></span>
               <input type="time" id="time_start" name="time_start" step = "1" required>
@@ -117,7 +118,7 @@
               <span data-feather="monitor"></span>
             </button>
             <button class="btn  btn-outline-secondary" type="submit" name="submit" value="save">
-              <img src="{{ url_for('static', filename='icon-xls-24.png') }}" alt="xls">
+              <img src="{{ url_for('static', filename='pic/icon-xls-24.png') }}" alt="xls">
             </button>
             <button class="btn  btn-outline-secondary" type="button" id="btn-save"
                     data-toggle="collapse" data-target="#collapseSaveRep_ap" aria-expanded="false"

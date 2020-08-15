@@ -4,12 +4,13 @@
 
 {% block main %}
     <div class="container">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap
-                  align-items-center pt-3 pb-2 mb-3">
+      <div class="row py-4 border-bottom">
         <div class="col">
           <img src="{{ url_for('static', filename='pic/alphabet-word-images-1295488.svg')}}"
               class="float-left mx-auto" style="width: 80px;" alt="email">
-          <h3 style="text-align: center;">Mailing Lists</h3>
+        </div>
+        <div class="col">
+          <h2 class="h2">Mailing Lists</h2>
         </div>
         <div class="col">
           <button type="button" class="btn btn-outline-secondary" style="float:right"
@@ -20,7 +21,6 @@
           </button>
         </div>
       </div>
-    </div>
 
     <div class="collapse" id="collapseNewMail">
       <div class="card card-body">
@@ -97,11 +97,15 @@
     </div>
 
     {% if tasks %}
-    <div class="container-fluid">
-          <table id="mailTask" class="table table-hover">
-              <thead>
-                {% for key in tasks[0][:6] %}
-                  <th>{{ key }}</th>
+      <div class="table-responsive-sm py-4">
+        <table id="mailTask" class="table">
+            <thead class="thead-light">
+                {% for key in tasks[0] %}
+                  {% if key != 'id' %}
+                    <th>{{ key }}</th>
+                  {% else %}
+                    <th></th>
+                  {% endif %}
                 {% endfor %}
               </thead>
               <tbody>
@@ -153,7 +157,15 @@
         </div>
       </div>
     </div>
-
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+      <p class="mb-1">&copy; 2020 CNC Corp.</p>
+      <ul class="list-inline">
+        <li class="list-inline-item"><a href="#">Privacy</a></li>
+        <li class="list-inline-item"><a href="#">Terms</a></li>
+        <li class="list-inline-item"><a href="#">Support</a></li>
+      </ul>
+    </footer>
+</div>
 
 {% endblock %}
 

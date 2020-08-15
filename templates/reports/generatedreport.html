@@ -3,13 +3,20 @@
 {% block title %}Reports{% endblock %}
 {% block head %}
   <!-- Custom styles for this template -->
-  <link href="/static/form-validation.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/form-validation.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block main %}
 
     <div class="container">
       {% if data|length > 1 %}
+
+      <div class="py-3">
+          {% for key, value in report_name.items() %}
+          <h4 class="h6"><b>{{ key }}:</b> {{ value }}</h4>
+        {% endfor %}
+
+      </div>
         <table class="table table-responsive table-bordered table-sm">
             <thead class="thead-dark">
                 {% for i in data[0] %}

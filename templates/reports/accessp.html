@@ -10,12 +10,13 @@
 
     <div class="container">
       <div class="container">
-        <img src="{{ url_for('static', filename='pic/text-146110.svg') }}" class="float-left mx-auto" style="width: 80px;" alt="text">
+        <img src="{{ url_for('static', filename='pic/text-146110.svg') }}"
+             class="float-left mx-auto" style="width: 80px;" alt="text">
       </div>
 
-        <div class="py-5 text-center">
-          <p class="lead">Access point report</p>
-        </div>
+      <div class="py-5 text-center">
+        <h2 class="h2">Access point report</h2>
+      </div>
 
     <b><label for="autofill">Enter time range or use presets</label></b>
     <div class="container" id="autofill">
@@ -50,18 +51,18 @@
     <div class="container text-left">
         <form class="form-horizontal" action="{{ url_for('.accessp', page='display') }}" method="post">
         <div class="row row-cols-2">
-          <div class="col form-group">
+          <div class="col form-group p-2">
             <label class="control-label" for="from">Reference point:</label>
             <div class="form-group" name="from">
               <label class="control-label" for="date_start">Date</label>
               <span data-feather="calendar"></span>
-              <input type="date" id="date_start" name="date_start" required>
+              <input type="date" id="date_start" name="date_start" required autofocus>
               <label class="control-label" for="time_start">Time</label>
               <span data-feather="clock"></span>
               <input type="time" id="time_start" name="time_start" step = "1" required>
             </div>
           </div>
-          <div class="col form-group">
+          <div class="col form-group p-2">
             <label class="control-label" for="to">End point:</label>
             <div class="form-group" name="to">
               <label class="control-label" for="date_end">Date</label>
@@ -208,7 +209,7 @@
 
 
   <footer class="my-5 pt-5 text-muted text-center text-small">
-    <p class="mb-1">&copy; 2017-2020 Company Name</p>
+    <p class="mb-1">&copy; 2020 CNC Corp.</p>
     <ul class="list-inline">
       <li class="list-inline-item"><a href="#">Privacy</a></li>
       <li class="list-inline-item"><a href="#">Terms</a></li>

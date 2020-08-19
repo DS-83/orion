@@ -1,6 +1,6 @@
 {% extends "base1.html" %}
 
-{% block title %}Reports{% endblock %}
+{% block title %}{{ _('Reports') }}{% endblock %}
 {% block head %}
   <!-- Custom styles for this template -->
   <link href="{{ url_for('static', filename='css/form-validation.css') }}" rel="stylesheet">
@@ -35,7 +35,7 @@
         </table>
       {% else %}
         <div class="alert alert-warning" role="alert" style="text-align: center">
-          <strong>Not found</strong>
+          <strong>{{ _('Not found') }}</strong>
         </div>
       {% endif %}
     </div>

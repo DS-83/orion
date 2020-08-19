@@ -1,6 +1,6 @@
 {% extends "base_admin.html" %}
 
-{% block title %}admin{% endblock %}
+{% block title %}{{ _('admin') }}{% endblock %}
 
 {% block main %}
 
@@ -9,21 +9,21 @@
     <div class="container p-1">
       <a class="" href="{{ url_for('.users') }}">
         <span data-feather="users"></span>
-        Users
+        {{ _('Users') }}
       </a>
     </div>
 
     <div class="container p-1">
       <a class="" href="{{ url_for('.smtpconf') }}">
         <span data-feather="mail"></span>
-        SMTP server configuration
+        {{ _('SMTP server configuration') }}
       </a>
     </div>
 
     <div class="container p-1">
       <a class="" href="{{ url_for('.mssqlconf') }}">
         <span data-feather="database"></span>
-        MSSQL server connection
+        {{ _('MSSQL server connection') }}
       </a>
     </div>
 

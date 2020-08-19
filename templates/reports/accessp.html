@@ -1,6 +1,6 @@
 {% extends "base1.html" %}
 
-{% block title %}AccessPoint{% endblock %}
+{% block title %}{{ _('AccessPoint') }}{% endblock %}
 {% block head %}
   <!-- Custom styles for this template -->
   <link href="{{ url_for('static', filename='css/form-validation.css') }} rel="stylesheet">
@@ -15,74 +15,100 @@
       </div>
 
       <div class="py-5 text-center">
-        <h2 class="h2">Access point report</h2>
+        <h2 class="h2">{{ _('Access point') }}</h2>
       </div>
 
-    <b><label for="autofill">Enter time range or use presets</label></b>
+    <b><label for="autofill">{{ _('Enter time range or use presets') }}</label></b>
     <div class="container" id="autofill">
         <div class="row row-cols-3">
-          <button type="button" id="tweek_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary" value="{{ 'm'|dt_tw }}">
+          <button type="button" id="tweek_btn" onclick="autoDate(this.id);"
+                  class="btn btn-sm btn-outline-secondary" value="{{ 'm'|dt_tw }}">
             <span data-feather="calendar"></span>
-            This week
+            {{ _('This week') }}
           </button>
-          <button type="button" id="tday_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+          <button type="button" id="tday_btn" onclick="autoDate(this.id);"
+                  class="btn btn-sm btn-outline-secondary">
             <span data-feather="calendar"></span>
-            This day
+            {{ _('This day') }}
           </button>
-          <button type="button" id="thour_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+          <button type="button" id="thour_btn" onclick="autoDate(this.id);"
+                  class="btn btn-sm btn-outline-secondary">
             <span data-feather="clock"></span>
-            This hour
+            {{ _('This hour') }}
           </button>
-          <button type="button" id="pweek_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary" value="{{ 'm'|dt_tw }}">
+          <button type="button" id="pweek_btn" onclick="autoDate(this.id);"
+                  class="btn btn-sm btn-outline-secondary" value="{{ 'm'|dt_tw }}">
             <span data-feather="calendar"></span>
-            Previous week
+            {{ _('Previous week') }}
           </button>
-          <button type="button" id="pday_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+          <button type="button" id="pday_btn" onclick="autoDate(this.id);"
+                  class="btn btn-sm btn-outline-secondary">
             <span data-feather="calendar"></span>
-            Previous day
+            {{ _('Previous day') }}
           </button>
-          <button type="button" id="phour_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
+          <button type="button" id="phour_btn" onclick="autoDate(this.id);"
+                  class="btn btn-sm btn-outline-secondary">
             <span data-feather="clock"></span>
-            Previous hour
+            {{ _('Previous hour') }}
           </button>
         </div>
     </div>
 
     <div class="container text-left">
-        <form class="form-horizontal" action="{{ url_for('.accessp', page='display') }}" method="post">
+        <form class="form-horizontal"
+              action="{{ url_for('.accessp', page='display') }}" method="post">
         <div class="row row-cols-2">
           <div class="col form-group p-2">
-            <label class="control-label" for="from">Reference point:</label>
+            <label class="control-label" for="from">
+              {{ _('Reference point:') }}
+            </label>
             <div class="form-group" name="from">
-              <label class="control-label" for="date_start">Date</label>
+              <label class="control-label" for="date_start">
+                {{ _('Date') }}
+              </label>
               <span data-feather="calendar"></span>
-              <input type="date" id="date_start" name="date_start" required autofocus>
-              <label class="control-label" for="time_start">Time</label>
+              <input type="date" id="date_start" name="date_start"
+                     required autofocus>
+              <label class="control-label" for="time_start">
+                {{ _('Time') }}
+              </label>
               <span data-feather="clock"></span>
-              <input type="time" id="time_start" name="time_start" step = "1" required>
+              <input type="time" id="time_start" name="time_start" step = "1"
+                     required>
             </div>
           </div>
           <div class="col form-group p-2">
-            <label class="control-label" for="to">End point:</label>
+            <label class="control-label" for="to">
+              {{ _('End point:') }}
+            </label>
             <div class="form-group" name="to">
-              <label class="control-label" for="date_end">Date</label>
+              <label class="control-label" for="date_end">
+                {{ _('Date') }}
+              </label>
               <span data-feather="calendar"></span>
               <input type="date" id="date_end" name="date_end" required>
-              <label class="control-label" for="time_end">Time</label>
+              <label class="control-label" for="time_end">
+                {{ _('Time') }}
+              </label>
               <span data-feather="clock"></span>
-              <input type="time" id="time_end" name="time_end" step = "1" required>
+              <input type="time" id="time_end" name="time_end" step = "1"
+                     required>
             </div>
           </div>
           </div>
           <div class="form-group">
               <label for="From[]">
-                  <b><span data-feather="home"></span> Access points</b>
+                  <b><span data-feather="home"></span>
+                     {{ _('Access points') }}
+                   </b>
               </label>
               <div class="row">
                   <div class="col-sm-5">
-                      <select multiple="multiple" class="form-control" id="multiselect1" name="From[]" size="8">
+                      <select multiple="multiple" class="form-control"
+                              id="multiselect1" name="From[]" size="8">
                       {% for row in access_p[1:] %}
-                          <option value="{{ row[1] }}" data-position="{{ loop.index }}">
+                          <option value="{{ row[1] }}"
+                                  data-position="{{ loop.index }}">
                               {{ "{} DoorId: {}".format(row[0], row[1]) }}
                           </option>
                       {% endfor %}
@@ -90,37 +116,46 @@
                   </div>
 
                   <div class="col-sm-2 btn btn-group-vertical" role="group">
-                      <button type="button" id="multiselect1_rightAll" class="btn btn-secondary">
+                      <button type="button" id="multiselect1_rightAll"
+                              class="btn btn-secondary">
                         <span data-feather="plus"></span>
                         <span data-feather="layers"></span>
                       </button>
-                      <button type="button" id="multiselect1_rightSelected" class="btn btn-secondary">
+                      <button type="button" id="multiselect1_rightSelected"
+                              class="btn btn-secondary">
                         <span data-feather="file-plus"></span>
                       </button>
-                      <button type="button" id="multiselect1_leftSelected" class="btn btn-secondary">
+                      <button type="button" id="multiselect1_leftSelected"
+                              class="btn btn-secondary">
                         <span data-feather="file-minus"></span>
                       </button>
-                      <button type="button" id="multiselect1_leftAll" class="btn btn-secondary">
+                      <button type="button" id="multiselect1_leftAll"
+                              class="btn btn-secondary">
                         <span data-feather="minus"></span>
                         <span data-feather="layers"></span>
                       </button>
                   </div>
 
                   <div class="col-sm-5">
-                      <select multiple="multiple" name="ap[]" id="multiselect1_to" class="form-control" size="8" multiple></select>
+                      <select multiple="multiple" name="ap[]"
+                              id="multiselect1_to" class="form-control"
+                              size="8" multiple>
+                      </select>
                   </div>
               </div>
           </div>
 
           <div class="form-group">
             <label for="events">
-              <b><span data-feather="list"></span> Events</b>
+              <b><span data-feather="list"></span> {{ _('Events') }}</b>
             </label>
             <div class="row">
                 <div class="col-sm-5">
-                    <select multiple="multiple" class="form-control" id="multiselect2" name="From[]" size="8">
+                    <select multiple="multiple" class="form-control"
+                            id="multiselect2" name="From[]" size="8">
                     {% for row in events[1:] %}
-                        <option value="{{ row[0] }}" data-position="{{ loop.index }}">
+                        <option value="{{ row[0] }}"
+                                data-position="{{ loop.index }}">
                             {{ row[1] }}
                         </option>
                     {% endfor %}
@@ -128,24 +163,31 @@
                 </div>
 
                 <div class="col-sm-2 btn btn-group-vertical" role="group">
-                    <button type="button" id="multiselect2_rightAll" class="btn btn-secondary">
+                    <button type="button" id="multiselect2_rightAll"
+                            class="btn btn-secondary">
                       <span data-feather="plus"></span>
                       <span data-feather="layers"></span>
                     </button>
-                    <button type="button" id="multiselect2_rightSelected" class="btn btn-secondary">
+                    <button type="button" id="multiselect2_rightSelected"
+                            class="btn btn-secondary">
                       <span data-feather="file-plus"></span>
                     </button>
-                    <button type="button" id="multiselect2_leftSelected" class="btn btn-secondary">
+                    <button type="button" id="multiselect2_leftSelected"
+                            class="btn btn-secondary">
                       <span data-feather="file-minus"></span>
                     </button>
-                    <button type="button" id="multiselect2_leftAll" class="btn btn-secondary">
+                    <button type="button" id="multiselect2_leftAll"
+                            class="btn btn-secondary">
                       <span data-feather="minus"></span>
                       <span data-feather="layers"></span>
                     </button>
                 </div>
 
                 <div class="col-sm-5">
-                    <select multiple="multiple" name="events[]" id="multiselect2_to" class="form-control" size="8" multiple></select>
+                    <select multiple="multiple" name="events[]"
+                            id="multiselect2_to" class="form-control"
+                            size="8" multiple>
+                    </select>
                 </div>
             </div>
           </div>
@@ -171,37 +213,42 @@
       <div class="card card-body">
             <form action="{{ url_for('.accessp', page='savereport') }}" method="post">
               <div class="form-group">
-                <label for="reportname" class="col-form-label">Report name:</label>
+                <label for="reportname" class="col-form-label">{{ _('Report name:') }}</label>
                 <input type="text" class="form-control" name="reportname" id="reportname">
               </div>
               <div class="form-group">
-                <label for="period" class="col-form-label">Period:</label>
+                <label for="period" class="col-form-label">{{ _('Period:') }}</label>
                 <select class="custom-select" name="period" id="period">
-                    <option selected disabled>Choose...</option>
-                    <option value="Previous day">Previous day</option>
-                    <option value="Previous week">Previous week</option>
-                    <option value="Previous month">Previous month</option>
+                    <option selected disabled>{{ _('Choose...') }}</option>
+                    <option value="Previous day">{{ _('Previous day') }}</option>
+                    <option value="Previous week">{{ _('Previous week') }}</option>
+                    <option value="Previous month">{{ _('Previous month') }}</option>
                 </select>
               </div>
               <div class="form-group">
-                <label for="ap" class="col-form-label">Access points:</label>
+                <label for="ap" class="col-form-label">
+                  {{ _('Access points:') }}
+                </label>
                 <select multiple="multiple" class="form-control" id="modalSelect1"
                         name="ap[]" size="8">
                 </select>
               </div>
               <div class="form-group">
-                <label for="ap" class="col-form-label">Events:</label>
+                <label for="ap" class="col-form-label">{{ _('Events:') }}</label>
                 <select multiple="multiple" class="form-control" id="modalSelect2"
                         name="events[]" size="8">
                 </select>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary"
-                        data-toggle="collapse" data-target="#collapseSaveRep_ap" aria-expanded="false"
+                        data-toggle="collapse" data-target="#collapseSaveRep_ap"
+                        aria-expanded="false"
                         aria-controls="collapseSaveRep_ap">
-                      Close
+                      {{ _('Close') }}
                 </button>
-                <button type="submit" class="btn btn-primary">Save report</button>
+                <button type="submit" class="btn btn-primary">
+                  {{ _('Save report') }}
+                </button>
               </div>
             </form>
           </div>

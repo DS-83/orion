@@ -1,6 +1,6 @@
 {% extends "base1.html" %}
 
-{% block title %}Person{% endblock %}
+{% block title %}{{ _('Person') }}{% endblock %}
 
 {% block main %}
 
@@ -10,33 +10,45 @@
              class="float-left mx-auto" style="width: 80px;" alt="text">
       </div>
       <div class="py-5 text-center">
-        <h2 class="h2">Person walkways</h2>
+        <h2 class="h2">{{ _('Person walkways') }}</h2>
       </div>
 
     <form class="" action="{{ url_for('.person', page='name') }}" method="post">
         <div class="input-group mb-3">
-            <input type="text" name="LastName" class="form-control" placeholder="LastName" autocomplete="off" required>
-            <input type="text" name="FirstName" class="form-control" placeholder="FirstName" autocomplete="off">
+            <input type="text" name="LastName" class="form-control"
+                   placeholder="{{ _('LastName') }}" autocomplete="off" required>
+            <input type="text" name="FirstName" class="form-control"
+                   placeholder="{{ _('FirstName') }}" autocomplete="off">
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                  {{ _('Search') }}
+                </button>
             </div>
         </div>
     </form>
 
     <form class="" action="{{ url_for('.person', page='tn') }}" method="post">
         <div class="input-group mb-3">
-            <input type="text" id="TabNumber" name="TabNumber" class="form-control" placeholder="Personnel number" autocomplete="off" required>
+            <input type="text" id="TabNumber" name="TabNumber"
+                   class="form-control" placeholder="{{ _('Personnel number') }}"
+                   autocomplete="off" required>
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                  {{ _('Search') }}
+                </button>
             </div>
         </div>
     </form>
 
     <form class="" action="{{ url_for('.person', page='department') }}" method="post">
         <div class="input-group mb-3">
-            <input type="text" id="department" name="department" class="form-control" placeholder="Department" autocomplete="off" required>
+            <input type="text" id="department" name="department"
+                   class="form-control" placeholder="{{ _('Department') }}"
+                   autocomplete="off" required>
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                  {{ _('Search') }}
+                </button>
             </div>
         </div>
     </form>
@@ -44,38 +56,38 @@
 
     {% if result == [] %}
         <div class="alert alert-warning" role="alert">
-          Nothing Found
+          {{ _('Nothing Found') }}
         </div>
     {% endif %}
 
     {% if result != 0 and result != [] %}
 
-        <b><label for="autofill">Enter time range or use presets</label></b>
+        <b><label for="autofill">{{ _('Enter time range or use presets') }}</label></b>
         <div class="container" id="autofill">
             <div class="row row-cols-3">
               <button type="button" id="tweek_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary" value="{{ 'm'|dt_tw }}">
                 <span data-feather="calendar"></span>
-                This week
+                {{ _('This week') }}
               </button>
               <button type="button" id="tday_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
                 <span data-feather="calendar"></span>
-                This day
+                {{ _('This day') }}
               </button>
               <button type="button" id="thour_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
                 <span data-feather="clock"></span>
-                This hour
+                {{ _('This hour') }}
               </button>
               <button type="button" id="pweek_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary" value="{{ 'm'|dt_tw }}">
                 <span data-feather="calendar"></span>
-                Previous week
+                {{ _('Previous week') }}
               </button>
               <button type="button" id="pday_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
                 <span data-feather="calendar"></span>
-                Previous day
+                {{ _('Previous day') }}
               </button>
               <button type="button" id="phour_btn" onclick="autoDate(this.id);" class="btn btn-sm btn-outline-secondary">
                 <span data-feather="clock"></span>
-                Previous hour
+                {{ _('Previous hour') }}
               </button>
             </div>
         </div>
@@ -83,23 +95,23 @@
 
         <div class="input-group mb-3">
             <form class="form-horizontal" action="{{ url_for('.person', page='display') }}" method="post">
-              <label for="datetime">Time Range:</label>
+              <label for="datetime">{{ _('Time Range:') }}</label>
               <div class="form-group" name="datetime" id="datetime">
-                <label class="control-label" for="from">From:</label>
+                <label class="control-label" for="from">{{ _('From:') }}</label>
                 <div class="form-group" name="from">
-                  <label class="control-label" for="date_start">Date</label>
+                  <label class="control-label" for="date_start">{{ _('Date') }}</label>
                   <span data-feather="calendar"></span>
                   <input type="date" id="date_start" name="date_start" required autofocus>
-                  <label class="control-label" for="time_start">Time</label>
+                  <label class="control-label" for="time_start">{{ _('Time') }}</label>
                   <span data-feather="clock"></span>
                   <input type="time" id="time_start" name="time_start" step = "1">
                 </div>
-                <label class="control-label" for="to">to:</label>
+                <label class="control-label" for="to">{{ _('to:') }}</label>
                 <div class="form-group" name="to">
-                  <label class="control-label" for="date_end">Date</label>
+                  <label class="control-label" for="date_end">{{ _('Date') }}</label>
                   <span data-feather="calendar"></span>
                   <input type="date" id="date_end" name="date_end" required>
-                  <label class="control-label" for="time_end">Time</label>
+                  <label class="control-label" for="time_end">{{ _('Time') }}</label>
                   <span data-feather="clock"></span>
                   <input type="time" id="time_end" name="time_end" step = "1">
                 </div>
@@ -107,7 +119,7 @@
               <div class="container-fluid">
                     <table id="personTable" class="table table-hover">
                         <thead>
-                            <th>Selection</th>
+                            <th>{{ _('Selection') }}</th>
                             {% for i in result[0][1:] %}
                                 <th>{{ i }}</th>
                             {% endfor %}
@@ -154,20 +166,20 @@
       <div class="card card-body">
             <form action="{{ url_for('.person', page='savereport') }}" method="post">
               <div class="form-group">
-                <label for="reportname" class="col-form-label">Report name:</label>
+                <label for="reportname" class="col-form-label">{{ _('Report name:') }}</label>
                 <input type="text" class="form-control" name="reportname" id="reportname">
               </div>
               <div class="form-group">
-                <label for="period" class="col-form-label">Period:</label>
+                <label for="period" class="col-form-label">{{ _('Period:') }}</label>
                 <select class="custom-select" name="period" id="period">
-                    <option selected disabled>Choose...</option>
-                    <option value="Previous day">Previous day</option>
-                    <option value="Previous week">Previous week</option>
-                    <option value="Previous month">Previous month</option>
+                    <option selected disabled>{{ _('Choose...') }}</option>
+                    <option value="Previous day">{{ _('Previous day') }}</option>
+                    <option value="Previous week">{{ _('Previous week') }}</option>
+                    <option value="Previous month">{{ _('Previous month') }}</option>
                 </select>
               </div>
               <div class="form-group">
-                <label for="person" class="col-form-label">Person:</label>
+                <label for="person" class="col-form-label">{{ _('Person:') }}</label>
                 <table class="table">
                   <tbody id="modalTable">
                     <tr>
@@ -180,9 +192,9 @@
                 <button type="button" class="btn btn-secondary"
                         data-toggle="collapse" data-target="#collapseSaveRep" aria-expanded="false"
                         aria-controls="collapseSaveRep">
-                      Close
+                      {{ _('Close') }}
                 </button>
-                <button type="submit" class="btn btn-primary">Save report</button>
+                <button type="submit" class="btn btn-primary">{{ _('Save report') }}</button>
               </div>
             </form>
           </div>

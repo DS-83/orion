@@ -1,36 +1,36 @@
 {% extends "base1.html" %}
 
-{% block title %}Reports{% endblock %}
+{% block title %}{{ _('Reports') }}{% endblock %}
 
 {% block main %}
     <div class="container">
       <div class="container p-5">
         <img src="{{ url_for('static', filename='pic/search-151037.svg') }}" class="float-left mx-auto" style="width: 80px;" alt="search">
-        <h3 class="col">Reports</h3>
+        <h3 class="col">{{ _('Reports') }}</h3>
       </div>
 
       <div class="container p-5" id="autofill">
-          <b><label for="autofill">Select the required report</label></b>
+          <b><label for="autofill">{{ _('Select the required report') }}</label></b>
           <div class="row row-cols-3">
             <a type="button" class="btn btn-sm btn-outline-secondary"
               href="{{ url_for('reports.accessp') }}">
               <span data-feather="file-text"></span>
-              Access Point Report
+              {{ _('Access Point Report') }}
             </a>
             <a type="button" class="btn btn-sm btn-outline-secondary"
               href="{{ url_for('reports.person') }}">
               <span data-feather="file-text"></span>
-              Person Report
+              {{ _('Person Report') }}
             </a>
             <a type="button" class="btn btn-sm btn-outline-secondary"
               href="{{ url_for('reports.firstlast') }}">
               <span data-feather="file-text"></span>
-              First enter, last exit Report
+              {{ _('First enter, last exit Report') }}
             </a>
             <a type="button" class="btn btn-sm btn-outline-secondary"
               href="{{ url_for('reports.violations') }}">
               <span data-feather="file-text"></span>
-              Violations Report
+              {{ _('Violations Report') }}
             </a>
             <a type="button" class="btn btn-sm btn-outline-secondary"
               href="#">

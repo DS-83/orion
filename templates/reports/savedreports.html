@@ -1,13 +1,13 @@
 {% extends 'base1.html' %}
 
-{% block title %}Saved reports{% endblock %}
+{% block title %}{{ _('Saved reports') }}{% endblock %}
 
 {% block main %}
 
 <div class="container">
 
   <div class="py-4 mb-3 border-bottom">
-    <h2 class="h2">Saved reports</h2>
+    <h2 class="h2">{{ _('Saved reports') }}</h2>
   </div>
 
   {% if data|length > 1 %}
@@ -75,7 +75,7 @@
   </div>
   {% else %}
     <div class="alert alert-warning" role="alert" style="text-align: center">
-      <strong>Not found</strong>
+      <strong>{{ _('Not found') }}</strong>
     </div>
   {% endif %}
 </div>
@@ -85,21 +85,21 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Delete</h5>
+        <h5 class="modal-title">{{ _('Delete') }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <form action="{{ url_for('reports.delete') }}" method="post">
         <div class="modal-body">
-            <p>Are you sure you want to delete?</p>
+            <p>{{ _('Are you sure you want to delete?') }}</p>
             <div class="col-sm hidden" hidden>
               <input type="hidden" id="hidden_id_del" name="hidden_id_del">
             </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Yes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ _('Cancel') }}</button>
+          <button type="submit" class="btn btn-primary">{{ _('Yes') }}</button>
         </div>
     </form>
     </div>
@@ -117,7 +117,7 @@
       </div>
       <form action="{{ url_for('.savedreports', page='display') }}" method="post">
         <div class="modal-body">
-            <p>Show on screen or save report to a file?</p>
+            <p>{{ _('Show on screen or save report to a file?') }}</p>
             <div class="col-sm hidden" hidden>
               <input type="hidden" id="hidden_id_disp" name="hidden_id_disp">
             </div>
@@ -125,13 +125,13 @@
         <div class="modal-footer">
           <button class="btn  btn-outline-secondary" type="submit" name="submit" value="display">
             <span data-feather="monitor"></span>
-            Display
+            {{ _('Display') }}
           </button>
           <button class="btn  btn-outline-secondary btn-sm" type="submit" name="submit" value="save">
             <img src="{{ url_for('static', filename='pic/icon-xls-24.png') }}" alt="xls">
-            Save file
+            {{ _('Save file') }}
           </button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ _('Cancel') }}</button>
         </div>
     </form>
     </div>

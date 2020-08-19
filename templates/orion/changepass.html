@@ -1,6 +1,6 @@
 {% extends "base1.html" %}
 
-{% block title %}Change password{% endblock %}
+{% block title %}{{ _('Change password') }}{% endblock %}
 
 {% block main %}
 <div class="container p-5">
@@ -8,7 +8,7 @@
   <form class="form-signin" action="{{ url_for('.changepass') }}" method="post">
     <div class="form-group row">
         <label for="CurrentPassword" class="col-sm-2 col-form-label">
-          Current password
+          {{ _('Current password') }}
         </label>
         <div class="col-sm-5">
             <input type="password" name="CurrentPassword" class="form-control"
@@ -16,13 +16,13 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="NewPassword" class="col-sm-2 col-form-label">New password</label>
+        <label for="NewPassword" class="col-sm-2 col-form-label">{{ _('New password') }}</label>
         <div class="col-sm-5">
             <input type="password" name="NewPassword" class="form-control"required>
         </div>
     </div>
     <div class="form-group row">
-        <label for="ReNewPassword" class="col-sm-2 col-form-label">Re-enter new password</label>
+        <label for="ReNewPassword" class="col-sm-2 col-form-label">{{ _('Re-enter new password') }}</label>
         <div class="col-sm-5">
             <input type="password" name="ReNewPassword" class="form-control"required>
         </div>
@@ -30,7 +30,7 @@
     <div class="form-group row">
       <div class="col-sm-5">
         <button class="btn btn-md btn-secondary" type="submit">
-          Save
+          {{ _('Save') }}
         </button>
       </div>
     </div>

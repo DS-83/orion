@@ -16,6 +16,8 @@ from app.reports_sql import OrionQueryDashboard, UnpackData
 
 from datetime import datetime
 
+from flask_babel import _
+
 bp = Blueprint('orion', __name__)
 
 
@@ -25,43 +27,46 @@ bp = Blueprint('orion', __name__)
 def index(page=None):
 
     #Calculate date and time
-    date_end = datetime.now()
+    date_end = (datetime.now()).replace(microsecond=0)
 
     if page is None :
-        period = 'This week'
-        date_start = (dt_tw('m')).replace(hour=0, minute=0, second=0)
+        period = _('This week')
+        date_start = (dt_tw('m')).replace(hour=0, minute=0, second=0, microsecond=0)
     elif page == 'day':
-        period = 'This day'
+        period = _('This day')
         date_start = date_end.replace(hour=0, minute=0, second=0)
     else:
-        period = 'This month'
+        period = _('This month')
         date_start = date_end.replace(day=1, hour=0, minute=0, second=0)
 
 
     # Data for Chart
     tick_step = 1
+    labels = []
+    data_l = []
 
     try:
         data = UnpackData(OrionQueryDashboard(date_start, date_end))
 
-        # Chart labels
-        labels = [l[0] for l in data[1:]]
+        # Check 'data' for data
+        if len(data) > 1:
+            # Chart labels
+            labels = [l[0] for l in data[1:]]
 
-        # Chart data
-        data_l = [d[1] for d in data[1:]]
+            # Chart data
+            data_l = [d[1] for d in data[1:]]
+
+            # Tick display step
+            max_val = max(data_l)
+            if max_val > 18:
+                tick_step = round(max_val / 12)
 
         #Label for chart
-        str_date = f"Violations from: {date_start} to: {date_end}"
-
-        # Tick display step
-        max_val = max(data_l)
-        if max_val > 18:
-            tick_step = round(max_val / 12)
+        str_date = _("Violations from: %(date_start)s to: %(date_end)s",
+                        date_start=date_start, date_end=date_end)
 
     except:
-        str_date = "To display chart, administrator must configure connection to MSSQL server"
-        labels = []
-        data_l = []
+        str_date = _("To display chart, administrator must configure connection to MSSQL server")
 
 
     return render_template('orion/index.html', labels=labels, data=data_l,
@@ -101,22 +106,22 @@ def mailing():
         weekday = None
         report_id = request.form['reportname']
         if not report_id:
-            error = 'Must choose report.'
+            error = _('Must choose report.')
         recipient = request.form['recipient']
         if not recipient:
-            error = 'Recipient can not be blank.'
+            error = _('Recipient can not be blank.')
         periodicity = request.form['periodicity']
         if periodicity == 'monthly':
             date = request.form.get('date')
             if not date or int(date) > 29 or int(date) < 1:
-                error = 'Date must be in between 1 and 29 include.'
+                error = _('Date must be in between 1 and 29 include.')
         elif periodicity == 'weekly':
             weekday = request.form.get('weekday')
         time = request.form['time']
         # Create text file with text message`
         textmsg = request.form['text_message']
         if not textmsg:
-            error = 'Message text can not be blank.'
+            error = _('Message text can not be blank.')
 
         if error is None:
             try:
@@ -145,7 +150,7 @@ def mailing():
                                )
                     db.commit()
 
-                flash('Success', 'success')
+                flash(_('Success'), 'success')
                 return redirect(url_for('orion.mailing'))
             except Exception as error:
                 flash(error, 'warning')

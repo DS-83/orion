@@ -4,7 +4,7 @@
 
 {% block main %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">Dashboard</h1>
+  <h1 class="h2">{{ _('Dashboard') }}</h1>
   <div class="btn-toolbar mb-2 mb-md-0">
     <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
             id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
@@ -13,23 +13,17 @@
       {{ period }}
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-      {% if period != 'This week' %}
         <a class="dropdown-item"
            href="{{ url_for('.index') }}"
-           role="button">This week</a>
-      {% endif %}
+           role="button">{{ _('This week') }}</a>
 
-      {% if period != 'This month' %}
         <a class="dropdown-item"
            href="{{ url_for('.index', page='month') }}"
-           role="button">This month</a>
-      {% endif %}
+           role="button">{{ _('This month') }}</a>
 
-      {% if period != 'This day' %}
         <a class="dropdown-item"
            href="{{ url_for('.index', page='day') }}"
-           role="button">This day</a>
-      {% endif %}
+           role="button">{{ _('This day') }}</a>
     </div>
   </div>
 </div>

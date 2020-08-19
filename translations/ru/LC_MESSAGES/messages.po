@@ -1,0 +1,623 @@
+# Russian translations for PROJECT.
+# Copyright (C) 2020 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2020-08-19 12:43+0300\n"
+"PO-Revision-Date: 2020-08-17 21:17+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: app/orion.py:33 app/templates/orion/index.html:18
+#: app/templates/reports/accessp.html:27
+#: app/templates/reports/firstlast.html:77 app/templates/reports/person.html:70
+#: app/templates/reports/violations.html:26
+msgid "This week"
+msgstr "Текущая неделя"
+
+#: app/orion.py:36 app/templates/orion/index.html:26
+#: app/templates/reports/accessp.html:32
+#: app/templates/reports/firstlast.html:82 app/templates/reports/person.html:74
+#: app/templates/reports/violations.html:30
+msgid "This day"
+msgstr "Текущий день"
+
+#: app/orion.py:39 app/templates/orion/index.html:22
+msgid "This month"
+msgstr "Текущий месяц"
+
+#: app/orion.py:65
+#, python-format
+msgid "Violations from: %(date_start)s to: %(date_end)s"
+msgstr "Нарушения с: %(date_start)s по: %(date_end)s"
+
+#: app/orion.py:69
+msgid "To display chart, administrator must configure connection to MSSQL server"
+msgstr ""
+"Для отображения графика, необходимо настроить соединение с сервером базы "
+"данных Орион Про"
+
+#: app/orion.py:109
+msgid "Must choose report."
+msgstr "Необходимо выбрать отчет."
+
+#: app/orion.py:112
+msgid "Recipient can not be blank."
+msgstr "Поле получатьль не может быть пустым."
+
+#: app/orion.py:117
+msgid "Date must be in between 1 and 29 include."
+msgstr "Дата должна быть меджу 1 и 29 включительно."
+
+#: app/orion.py:124
+msgid "Message text can not be blank."
+msgstr "Текст сообщения не может быть пустым."
+
+#: app/orion.py:153
+msgid "Success"
+msgstr "Успешно"
+
+#: app/templates/base1.html:67 app/templates/base_admin.html:43
+msgid "Sign out"
+msgstr "Выход"
+
+#: app/templates/base1.html:82 app/templates/base_admin.html:60
+#: app/templates/orion/index.html:7
+msgid "Dashboard"
+msgstr "Виджеты"
+
+#: app/templates/base1.html:92 app/templates/orion/changepass.html:3
+msgid "Change password"
+msgstr "Сменить пароль"
+
+#: app/templates/base1.html:98 app/templates/base_admin.html:32
+#: app/templates/reports/firstlast.html:3
+#: app/templates/reports/generatedreport.html:3
+#: app/templates/reports/reports.html:3 app/templates/reports/reports.html:9
+msgid "Reports"
+msgstr "Отчеты"
+
+#: app/templates/base1.html:104
+msgid "Mail lists"
+msgstr "Рассылки"
+
+#: app/templates/base1.html:113 app/templates/reports/savedreports.html:3
+#: app/templates/reports/savedreports.html:10
+msgid "Saved reports"
+msgstr "Сохраненные отчеты"
+
+#: app/templates/base1.html:121
+msgid "Settings"
+msgstr "Настройки"
+
+#: app/templates/base_admin.html:24
+msgid "Administration"
+msgstr "Администрирование"
+
+#: app/templates/admin/admin.html:12 app/templates/base_admin.html:66
+msgid "Users"
+msgstr "Пользователи"
+
+#: app/templates/base_admin.html:72
+msgid "SMTP config"
+msgstr "Настройки SMTP"
+
+#: app/templates/base_admin.html:78
+msgid "MSSQL config"
+msgstr "Настройки MSSQL"
+
+#: app/templates/admin/admin.html:3
+msgid "admin"
+msgstr "Администратор"
+
+#: app/templates/admin/admin.html:19
+msgid "SMTP server configuration"
+msgstr "Параметры SMTP сервера"
+
+#: app/templates/admin/admin.html:26
+msgid "MSSQL server connection"
+msgstr "Параметры MSSQL сервера"
+
+#: app/templates/admin/mssqlconf.html:3
+msgid "MSSQL server"
+msgstr "MSSQL сервер"
+
+#: app/templates/admin/mssqlconf.html:13
+msgid "MSSQL Server connection settings"
+msgstr "Параметры MSSQL сервера"
+
+#: app/templates/admin/mssqlconf.html:19 app/templates/admin/smtpconf.html:19
+#: app/templates/admin/users.html:119
+msgid "Edit"
+msgstr "Редактировать"
+
+#: app/templates/admin/mssqlconf.html:34
+msgid "MSSQL Server"
+msgstr "MSSQL сервер"
+
+#: app/templates/admin/mssqlconf.html:38
+msgid "Database"
+msgstr "База данных"
+
+#: app/templates/admin/mssqlconf.html:46 app/templates/admin/smtpconf.html:59
+msgid "Authentication"
+msgstr "Аутентификация"
+
+#: app/templates/admin/mssqlconf.html:50 app/templates/admin/smtpconf.html:63
+#: app/templates/admin/users.html:34 app/templates/admin/users.html:137
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: app/templates/admin/mssqlconf.html:54 app/templates/admin/smtpconf.html:67
+#: app/templates/admin/users.html:38 app/templates/auth/login.html:51
+msgid "Password"
+msgstr "Пароль"
+
+#: app/templates/admin/mssqlconf.html:64 app/templates/admin/smtpconf.html:76
+msgid "Test"
+msgstr "Тест"
+
+#: app/templates/admin/mssqlconf.html:71 app/templates/admin/smtpconf.html:82
+#: app/templates/orion/changepass.html:33
+msgid "Save"
+msgstr "Сохранить"
+
+#: app/templates/admin/mssqlconf.html:77 app/templates/admin/smtpconf.html:87
+msgid "connection"
+msgstr "подключение"
+
+#: app/templates/admin/mssqlconf.html:80 app/templates/admin/smtpconf.html:90
+msgid "settings"
+msgstr "параметры"
+
+#: app/templates/admin/mssqlconf.html:86 app/templates/admin/smtpconf.html:96
+msgid "Current config:"
+msgstr "Текущие параметры"
+
+#: app/templates/admin/smtpconf.html:3
+msgid "SMTP"
+msgstr ""
+
+#: app/templates/admin/smtpconf.html:13
+msgid "SMTP Config"
+msgstr "Параметры SMTP"
+
+#: app/templates/admin/smtpconf.html:34
+msgid "SMTP Server"
+msgstr "SMTP сервер"
+
+#: app/templates/admin/smtpconf.html:40
+msgid "Port"
+msgstr "Порт"
+
+#: app/templates/admin/smtpconf.html:52
+msgid "use secure connection"
+msgstr "использовать безопасное соединение"
+
+#: app/templates/admin/users.html:12
+msgid "User Accounts"
+msgstr "Учетные записи пользователей"
+
+#: app/templates/admin/users.html:18 app/templates/orion/mailing.html:19
+msgid "New"
+msgstr "Создать"
+
+#: app/templates/admin/users.html:45 app/templates/admin/users.html:141
+msgid "First Name"
+msgstr "Имя"
+
+#: app/templates/admin/users.html:50 app/templates/admin/users.html:145
+msgid "Last Name"
+msgstr "Фамилия"
+
+#: app/templates/admin/users.html:57 app/templates/admin/users.html:149
+msgid "Email"
+msgstr "электронная почта"
+
+#: app/templates/admin/users.html:61 app/templates/admin/users.html:153
+msgid "Company"
+msgstr "Название компании"
+
+#: app/templates/admin/users.html:68 app/templates/admin/users.html:160
+msgid "Admin"
+msgstr "Администратор"
+
+#: app/templates/admin/users.html:71 app/templates/admin/users.html:163
+msgid "No"
+msgstr "Нет"
+
+#: app/templates/admin/users.html:72 app/templates/admin/users.html:164
+#: app/templates/orion/mailing.html:155
+#: app/templates/reports/savedreports.html:102
+msgid "Yes"
+msgstr "Да"
+
+#: app/templates/admin/users.html:171
+msgid "status"
+msgstr "статус"
+
+#: app/templates/admin/users.html:174
+msgid "active"
+msgstr "активна"
+
+#: app/templates/admin/users.html:175
+msgid "disabled"
+msgstr "заблокарована"
+
+#: app/templates/auth/login.html:9
+msgid "Signin"
+msgstr "Вход в систему"
+
+#: app/templates/auth/login.html:48
+msgid "Please sign in"
+msgstr "Вход в систему"
+
+#: app/templates/auth/login.html:49
+msgid "User Name"
+msgstr "Имя пользователя"
+
+#: app/templates/auth/login.html:53
+msgid "Sign in"
+msgstr "Войти"
+
+#: app/templates/orion/changepass.html:11
+msgid "Current password"
+msgstr "Текущий пароль"
+
+#: app/templates/orion/changepass.html:19
+msgid "New password"
+msgstr "Новый пароль"
+
+#: app/templates/orion/changepass.html:25
+msgid "Re-enter new password"
+msgstr "Повторить новый пароль"
+
+#: app/templates/orion/mailing.html:3
+msgid "Mailing"
+msgstr "Рассылки"
+
+#: app/templates/orion/mailing.html:13
+msgid "Mailing Lists"
+msgstr "Рассылки"
+
+#: app/templates/orion/mailing.html:30
+msgid "Report name"
+msgstr "Название отчета"
+
+#: app/templates/orion/mailing.html:33 app/templates/orion/mailing.html:50
+#: app/templates/orion/mailing.html:61 app/templates/reports/accessp.html:222
+#: app/templates/reports/firstlast.html:191
+#: app/templates/reports/person.html:175
+#: app/templates/reports/violations.html:143
+msgid "Choose..."
+msgstr "Выбрать..."
+
+#: app/templates/orion/mailing.html:41
+msgid "Recipient(s)"
+msgstr "Получатель(и)"
+
+#: app/templates/orion/mailing.html:47
+msgid "Periodicity"
+msgstr "Периодичность"
+
+#: app/templates/orion/mailing.html:51
+msgid "daily"
+msgstr "ежедневно"
+
+#: app/templates/orion/mailing.html:52
+msgid "weekly"
+msgstr "еженедельно"
+
+#: app/templates/orion/mailing.html:53
+msgid "monthly"
+msgstr "ежемесячно"
+
+#: app/templates/orion/mailing.html:62
+msgid "Monday"
+msgstr "Понедельник"
+
+#: app/templates/orion/mailing.html:63
+msgid "Tuesday"
+msgstr "Вторник"
+
+#: app/templates/orion/mailing.html:64
+msgid "Wednesday"
+msgstr "Среда"
+
+#: app/templates/orion/mailing.html:65
+msgid "Thursday"
+msgstr "Четверг"
+
+#: app/templates/orion/mailing.html:66
+msgid "Friday"
+msgstr "Пятница"
+
+#: app/templates/orion/mailing.html:67
+msgid "Saturday"
+msgstr "Суббота"
+
+#: app/templates/orion/mailing.html:68
+msgid "Sunday"
+msgstr "Воскресенье"
+
+#: app/templates/orion/mailing.html:70
+msgid "Weekday"
+msgstr "День недели"
+
+#: app/templates/orion/mailing.html:76 app/templates/reports/accessp.html:67
+#: app/templates/reports/accessp.html:86
+#: app/templates/reports/firstlast.html:116
+#: app/templates/reports/firstlast.html:126
+#: app/templates/reports/person.html:102 app/templates/reports/person.html:111
+#: app/templates/reports/violations.html:57
+#: app/templates/reports/violations.html:68
+msgid "Date"
+msgstr "Дата"
+
+#: app/templates/orion/mailing.html:81 app/templates/reports/accessp.html:73
+#: app/templates/reports/accessp.html:91
+#: app/templates/reports/firstlast.html:119
+#: app/templates/reports/firstlast.html:129
+#: app/templates/reports/person.html:105 app/templates/reports/person.html:114
+#: app/templates/reports/violations.html:60
+#: app/templates/reports/violations.html:71
+msgid "Time"
+msgstr "Время"
+
+#: app/templates/orion/mailing.html:86
+msgid "Enter message text"
+msgstr "Введите текст сообщения"
+
+#: app/templates/orion/mailing.html:141
+#: app/templates/reports/savedreports.html:88
+msgid "Delete"
+msgstr "Удалить"
+
+#: app/templates/orion/mailing.html:148
+#: app/templates/reports/savedreports.html:95
+msgid "Are you sure you want to delete?"
+msgstr "Действительно хотите удалить?"
+
+#: app/templates/orion/mailing.html:154
+#: app/templates/reports/savedreports.html:101
+#: app/templates/reports/savedreports.html:134
+msgid "Cancel"
+msgstr "Отмена"
+
+#: app/templates/reports/accessp.html:3
+msgid "AccessPoint"
+msgstr "Точка доступа"
+
+#: app/templates/reports/accessp.html:18
+msgid "Access point"
+msgstr "Точка доступа"
+
+#: app/templates/reports/accessp.html:21
+#: app/templates/reports/firstlast.html:70 app/templates/reports/person.html:65
+#: app/templates/reports/violations.html:21
+msgid "Enter time range or use presets"
+msgstr "Укажите временной интервал или используйте временные предустановки"
+
+#: app/templates/reports/accessp.html:37 app/templates/reports/person.html:78
+#: app/templates/reports/violations.html:34
+msgid "This hour"
+msgstr "Текущий час"
+
+#: app/templates/reports/accessp.html:42 app/templates/reports/accessp.html:224
+#: app/templates/reports/firstlast.html:92
+#: app/templates/reports/firstlast.html:193
+#: app/templates/reports/person.html:82 app/templates/reports/person.html:177
+#: app/templates/reports/violations.html:38
+#: app/templates/reports/violations.html:145
+msgid "Previous week"
+msgstr "Предыдущая неделя"
+
+#: app/templates/reports/accessp.html:47 app/templates/reports/accessp.html:223
+#: app/templates/reports/firstlast.html:97
+#: app/templates/reports/firstlast.html:192
+#: app/templates/reports/person.html:86 app/templates/reports/person.html:176
+#: app/templates/reports/violations.html:42
+#: app/templates/reports/violations.html:144
+msgid "Previous day"
+msgstr "Предыдущий день"
+
+#: app/templates/reports/accessp.html:52 app/templates/reports/person.html:90
+#: app/templates/reports/violations.html:46
+msgid "Previous hour"
+msgstr "Предыдущий час"
+
+#: app/templates/reports/accessp.html:63
+#: app/templates/reports/violations.html:55
+msgid "Reference point:"
+msgstr "С:"
+
+#: app/templates/reports/accessp.html:82
+#: app/templates/reports/violations.html:66
+msgid "End point:"
+msgstr "По:"
+
+#: app/templates/reports/accessp.html:102
+#: app/templates/reports/violations.html:80
+msgid "Access points"
+msgstr "Точки доступа"
+
+#: app/templates/reports/accessp.html:150
+msgid "Events"
+msgstr "События"
+
+#: app/templates/reports/accessp.html:216
+#: app/templates/reports/firstlast.html:185
+#: app/templates/reports/person.html:169
+#: app/templates/reports/violations.html:137
+msgid "Report name:"
+msgstr "Название отчета:"
+
+#: app/templates/reports/accessp.html:220
+#: app/templates/reports/firstlast.html:189
+#: app/templates/reports/person.html:173
+#: app/templates/reports/violations.html:141
+msgid "Period:"
+msgstr "Временной интервал:"
+
+#: app/templates/reports/accessp.html:225
+#: app/templates/reports/firstlast.html:102
+#: app/templates/reports/firstlast.html:194
+#: app/templates/reports/person.html:178
+#: app/templates/reports/violations.html:146
+msgid "Previous month"
+msgstr "Предыдущий месяц"
+
+#: app/templates/reports/accessp.html:230
+#: app/templates/reports/violations.html:150
+msgid "Access points:"
+msgstr "Точки доступа:"
+
+#: app/templates/reports/accessp.html:237
+msgid "Events:"
+msgstr "События:"
+
+#: app/templates/reports/accessp.html:247
+#: app/templates/reports/firstlast.html:211
+#: app/templates/reports/person.html:195
+#: app/templates/reports/violations.html:159
+msgid "Close"
+msgstr "Закрыть"
+
+#: app/templates/reports/accessp.html:250
+#: app/templates/reports/firstlast.html:213
+#: app/templates/reports/person.html:197
+#: app/templates/reports/violations.html:161
+msgid "Save report"
+msgstr "Сохранить отчет"
+
+#: app/templates/reports/firstlast.html:13
+msgid "First enter, last exit"
+msgstr "Первый вход, последний выход"
+
+#: app/templates/reports/firstlast.html:20 app/templates/reports/person.html:19
+msgid "LastName"
+msgstr "Фамилия"
+
+#: app/templates/reports/firstlast.html:22 app/templates/reports/person.html:21
+msgid "FirstName"
+msgstr "Имя"
+
+#: app/templates/reports/firstlast.html:26
+#: app/templates/reports/firstlast.html:40
+#: app/templates/reports/firstlast.html:55 app/templates/reports/person.html:24
+#: app/templates/reports/person.html:37 app/templates/reports/person.html:50
+msgid "Search"
+msgstr "Поиск"
+
+#: app/templates/reports/firstlast.html:35 app/templates/reports/person.html:33
+msgid "Personnel number"
+msgstr "Табельный номер"
+
+#: app/templates/reports/firstlast.html:50 app/templates/reports/person.html:46
+msgid "Department"
+msgstr "Подразделение"
+
+#: app/templates/reports/firstlast.html:64 app/templates/reports/person.html:59
+msgid "Nothing Found"
+msgstr "Ничего не найдено"
+
+#: app/templates/reports/firstlast.html:112
+#: app/templates/reports/person.html:98
+msgid "Time Range:"
+msgstr "Временной интервал"
+
+#: app/templates/reports/firstlast.html:114
+#: app/templates/reports/person.html:100
+msgid "From:"
+msgstr "С:"
+
+#: app/templates/reports/firstlast.html:124
+#: app/templates/reports/person.html:109
+msgid "to:"
+msgstr "до:"
+
+#: app/templates/reports/firstlast.html:198
+#: app/templates/reports/person.html:182
+msgid "Person:"
+msgstr "Сотрудник:"
+
+#: app/templates/reports/generatedreport.html:38
+#: app/templates/reports/savedreports.html:78
+msgid "Not found"
+msgstr "Не найден"
+
+#: app/templates/reports/person.html:3
+msgid "Person"
+msgstr "Маршруты движения человека"
+
+#: app/templates/reports/person.html:13
+msgid "Person walkways"
+msgstr "Маршруты движения человека"
+
+#: app/templates/reports/person.html:122
+msgid "Selection"
+msgstr "Отметить"
+
+#: app/templates/reports/reports.html:13
+msgid "Select the required report"
+msgstr "Выберете нужный отчет"
+
+#: app/templates/reports/reports.html:18
+msgid "Access Point Report"
+msgstr "Отчет: Точка доступа"
+
+#: app/templates/reports/reports.html:23
+msgid "Person Report"
+msgstr "Отчет: Маршруты движения человека"
+
+#: app/templates/reports/reports.html:28
+msgid "First enter, last exit Report"
+msgstr "Отчет: Первый вход, последний выход"
+
+#: app/templates/reports/reports.html:33
+msgid "Violations Report"
+msgstr "Отчет: Нарушения"
+
+#: app/templates/reports/savedreports.html:120
+msgid "Show on screen or save report to a file?"
+msgstr "Вывести на экран или сохранить в файл?"
+
+#: app/templates/reports/savedreports.html:128
+msgid "Display"
+msgstr "Показать"
+
+#: app/templates/reports/savedreports.html:132
+msgid "Save file"
+msgstr "Сохранить файл"
+
+#: app/templates/reports/violations.html:3
+msgid "Violations"
+msgstr "Нарушения"
+
+#: app/templates/reports/violations.html:18
+msgid "Violations report"
+msgstr "Нарушения"
+
+#~ msgid "Violations from:"
+#~ msgstr "Нарушения с:"
+
+#~ msgid "to:"
+#~ msgstr "по:"
+
+#~ msgid "%(period)s"
+#~ msgstr ""
+
+#~ msgid "%(error)"
+#~ msgstr ""
+

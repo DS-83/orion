@@ -64,7 +64,7 @@
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
       <a class="nav-link" href="{{ url_for('auth.logout') }}">
-        Sign out
+        {{ _('Sign out') }}
         <span data-feather="log-out"></span>
       </a>
     </li>
@@ -79,7 +79,7 @@
           <li class="nav-item">
             <a class="nav-link active" href="{{ url_for('orion.index') }}">
               <span data-feather="home"></span>
-              Dashboard <span class="sr-only">(current)</span>
+              {{ _('Dashboard') }} <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item dropdown">
@@ -89,19 +89,19 @@
               {{ g.user.username }}
             </a>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="{{ url_for('orion.changepass')}}">Change password</a>
+              <a class="dropdown-item" href="{{ url_for('orion.changepass')}}">{{ _('Change password') }}</a>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('reports.index') }}">
               <span data-feather="bar-chart-2"></span>
-              Reports
+              {{ _('Reports') }}
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('orion.mailing') }}">
               <span data-feather="mail"></span>
-              Mail lists
+              {{ _('Mail lists') }}
             </a>
           </li>
 
@@ -110,7 +110,7 @@
                href="{{ url_for('reports.savedreports') }}"
                aria-label="Saved reports">
                <span data-feather="file-text"></span>
-              Saved reports
+              {{ _('Saved reports') }}
             </a>
           </li>
 
@@ -118,7 +118,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('admin.index')}}">
                   <span data-feather="settings"></span>
-                  Settings
+                  {{ _('Settings') }}
                 </a>
               </li>
           {% endif %}

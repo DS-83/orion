@@ -1,6 +1,6 @@
 {% extends "base_admin.html" %}
 
-{% block title %}Users{% endblock %}
+{% block title %}{{ _('Users') }}{% endblock %}
 
 {% block main %}
 <div class="container">
@@ -9,13 +9,13 @@
     <div class="col">
       <img src="{{ url_for('static', filename='pic/account-1293744.svg')}}"
           class="float-left mx-auto" style="width: 80px;" alt="user">
-      <h3>User Accounts</h3>
+      <h3>{{ _('User Accounts') }}</h3>
     </div>
     <div class="col">
       <button type="button" class="btn btn-outline-secondary" style="float:right"
                 data-toggle="collapse" data-target="#collapseNewUser" aria-expanded="false"
                 aria-controls="collapseNewUser">
-        New
+        {{ _('New') }}
         <span data-feather="user-plus"></span>
       </button>
     </div>
@@ -30,46 +30,52 @@
           <fieldset class="form-group">
             <div class="form-row">
               <div class="form-group col-md-3">
-                <input type="text" name="username" class="form-control" placeholder="User Name" required autocomplete="off">
-                <small class="form-text text-muted">Username</small>
+                <input type="text" name="username" class="form-control"
+                       placeholder="{{ _('User Name') }}" required autocomplete="off">
+                <small class="form-text text-muted">{{ _('Username') }}</small>
               </div>
               <div class="form-group col-md-3">
-                <input type="password" name="password" class="form-control" placeholder="Password" required autocomplete="off">
-                <small class="form-text text-muted">Password</small>
+                <input type="password" name="password" class="form-control"
+                       placeholder="{{ _('Password') }}" required autocomplete="off">
+                <small class="form-text text-muted">{{ _('Password') }}</small>
               </div>
 
             </div>
             <div class="form-row">
               <div class="form-group col-3">
-                <input type="text" name="Firstname" class="form-control" placeholder="Firstname">
-                <small class="form-text text-muted">First Name</small>
+                <input type="text" name="Firstname" class="form-control"
+                       placeholder="{{ _('Firstname') }}">
+                <small class="form-text text-muted">{{ _('First Name') }}</small>
               </div>
 
               <div class="form-group col-3">
-                  <input type="text" name="Lastname" class="form-control" placeholder="Lastname">
-                  <small class="form-text text-muted">Last Name</small>
+                  <input type="text" name="Lastname" class="form-control"
+                         placeholder="{{ _('Lastname') }}">
+                  <small class="form-text text-muted">{{ _('Last Name') }}</small>
               </div>
             </div>
 
             <div class="form-row">
               <div class="col-3">
-                <input type="email" name="Email" class="form-control" placeholder="Email">
-                <small class="form-text text-muted">Email</small>
+                <input type="email" name="Email" class="form-control"
+                       placeholder="{{ _('Email') }}">
+                <small class="form-text text-muted">{{ _('Email') }}</small>
               </div>
               <div class="col-3">
-                <input type="text" name="Company" class="form-control" placeholder="Company">
-                <small class="form-text text-muted">Company</small>
+                <input type="text" name="Company" class="form-control"
+                       placeholder="{{ _('Company') }}">
+                <small class="form-text text-muted">{{ _('Company') }}</small>
               </div>
             </div>
 
             <div class="form-row">
               <div class="col-3 input-group mb-3">
                 <div class="input-group-prepend">
-                  <label class="input-group-text" for="Admin">Admin</label>
+                  <label class="input-group-text" for="Admin">{{ _('Admin') }}</label>
                 </div>
                 <select class="custom-select" name="Admin" id="Admin">
-                  <option value="No">No</option>
-                  <option value="Yes">Yes</option>
+                  <option value="No">{{ _('No') }}</option>
+                  <option value="Yes">{{ _('Yes') }}</option>
                 </select>
               </div>
             </div>
@@ -116,7 +122,7 @@
             <button type="button" onclick="userEdit({{ row[7] }});" class="btn btn-outline-secondary btn-sm"
                       data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false"
                       aria-controls="collapseEdit">
-              Edit
+              {{ _('Edit') }}
               <span data-feather="edit"></span>
             </button>
 
@@ -131,53 +137,58 @@
 <div class="collapse" id="collapseEdit">
   <div class="card card-body">
       <form method="post">
-        <div class="row" id="collapseRow1">
+        <div class="row p-2" id="collapseRow1">
           <div class="col-sm">
-            <input type="text" name="username" class="form-control" placeholder="User Name" required autocomplete="off">
-            <small class="form-text text-muted">Username</small>
+            <input type="text" name="username" class="form-control"
+                   placeholder="{{ _('User Name') }}" required autocomplete="off">
+            <small class="form-text text-muted">{{ _('Username') }}</small>
           </div>
           <div class="col-md">
-            <input type="text" name="Firstname" class="form-control" placeholder="Firstname">
-            <small class="form-text text-muted">First Name</small>
+            <input type="text" name="Firstname" class="form-control"
+                   placeholder="{{ _('Firstname') }}">
+            <small class="form-text text-muted">{{ _('First Name') }}</small>
           </div>
           <div class="col-md">
-            <input type="text" name="Lastname" class="form-control" placeholder="Lastname">
-            <small class="form-text text-muted">Last Name</small>
+            <input type="text" name="Lastname" class="form-control"
+                   placeholder="{{ _('Lastname') }}">
+            <small class="form-text text-muted">{{ _('Last Name') }}</small>
           </div>
           <div class="col-md">
-            <input type="email" name="Email" class="form-control" placeholder="Email">
-            <small class="form-text text-muted">Email</small>
+            <input type="email" name="Email" class="form-control"
+                   placeholder="{{ _('Email') }}">
+            <small class="form-text text-muted">{{ _('Email') }}</small>
           </div>
           <div class="col-md">
-            <input type="text" name="Company" class="form-control" placeholder="Company">
-            <small class="form-text text-muted">Company</small>
+            <input type="text" name="Company" class="form-control"
+                   placeholder="{{ _('Company') }}">
+            <small class="form-text text-muted">{{ _('Company') }}</small>
           </div>
         </div>
-        <div class="row" id="collapseRow2">
+        <div class="row p-2" id="collapseRow2">
           <div class="col-md">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <label class="input-group-text" for="Admin">Admin</label>
+                <label class="input-group-text" for="Admin">{{ _('Admin') }}</label>
               </div>
               <select class="custom-select" name="Admin" id="Admin">
-                <option value="No">No</option>
-                <option value="Yes">Yes</option>
+                <option value="No">{{ _('No') }}</option>
+                <option value="Yes">{{ _('Yes') }}</option>
               </select>
             </div>
           </div>
           <div class="col-md">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <label class="input-group-text" for="Status">status</label>
+                <label class="input-group-text" for="Status">{{ _('status') }}</label>
               </div>
               <select class="custom-select" name="status" id="status">
-                <option value="active">active</option>
-                <option value="disabled">disabled</option>
+                <option value="active">{{ _('active') }}</option>
+                <option value="disabled">{{ _('disabled') }}</option>
               </select>
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row p-2">
           <div class="col-md">
             <button type="submit" name="submit" value="edit" class="btn btn-primary btn-sm" style="float:right">
               <span data-feather="save"></span>

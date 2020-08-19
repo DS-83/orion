@@ -7,6 +7,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.db import get_db
 
+from flask_babel import get_locale
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
@@ -49,6 +51,8 @@ def login():
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
+    # g.locale = f'{get_locale()}'
+    g.locale = 'ru'
 
     if user_id is None:
         g.user = None

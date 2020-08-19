@@ -8,6 +8,10 @@ from . import (db, auth, orion, reports, reports_sql, xlsx_, admin,
                 sendemail, celery_utils, tasks
               )
 
+from flask_babel import Babel
+
+from jinja2 import Environment
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -19,7 +23,8 @@ def create_app(test_config=None):
         LOGS_FOLDER=os.path.join(app.instance_path, 'logs'),
         TEXTFILE_FOLDER=os.path.join(app.instance_path, 'textmsg'),
         CELERY_BROKER_URL='redis://localhost:6379',
-        CELERY_RESULT_BACKEND='redis://localhost:6379'
+        CELERY_RESULT_BACKEND='redis://localhost:6379',
+        LANGUAGES = ['ru', 'en']
 
     )
 
@@ -52,6 +57,12 @@ def create_app(test_config=None):
     # Register Admin Blueprint
     app.register_blueprint(admin.bp)
 
+    babel = Babel(app)
+
+    @babel.localeselector
+    def get_locale():
+        # return request.accept_languages.best_match(app.config['LANGUAGES'])
+        return 'ru'
 
     # Logging config
     logger = logging.getLogger(__name__)

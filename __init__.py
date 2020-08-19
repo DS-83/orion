@@ -3,7 +3,7 @@ import os
 import logging
 import time
 
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session, url_for
 from . import (db, auth, orion, reports, reports_sql, xlsx_, admin,
                 sendemail, celery_utils, tasks
               )
@@ -11,6 +11,7 @@ from . import (db, auth, orion, reports, reports_sql, xlsx_, admin,
 from flask_babel import Babel
 
 from jinja2 import Environment
+
 
 
 def create_app(test_config=None):
@@ -24,7 +25,10 @@ def create_app(test_config=None):
         TEXTFILE_FOLDER=os.path.join(app.instance_path, 'textmsg'),
         CELERY_BROKER_URL='redis://localhost:6379',
         CELERY_RESULT_BACKEND='redis://localhost:6379',
-        LANGUAGES = ['ru', 'en'],
+        LANGUAGES = {
+                    'ru': 'Russian',
+                    'en': 'English'
+                    },
         KEY_P=b'cXhd_G3PU4U-6QWPHfgNz8BcHOAZV1I0zN0o6u5CC3c='
 
     )
@@ -60,10 +64,10 @@ def create_app(test_config=None):
 
     babel = Babel(app)
 
-    @babel.localeselector
-    def get_locale():
-        # return request.accept_languages.best_match(app.config['LANGUAGES'])
-        return 'ru'
+    # @babel.localeselector
+    # def get_locale():
+    #     # return request.accept_languages.best_match(app.config['LANGUAGES'])
+    #     return 'ru'
 
     # Logging config
     logger = logging.getLogger(__name__)
@@ -85,6 +89,32 @@ def create_app(test_config=None):
     logger.addHandler(fh)
 
     logger.info('App started')
+
+
+    @app.route('/language/<language>')
+    def set_language(language=None):
+        session['language'] = language
+        return redirect(url_for('index'))
+
+
+    @babel.localeselector
+    def get_locale():
+        # if the user has set up the language manually it will be stored in the session,
+        # so we use the locale from the user settings
+        try:
+            language = session['language']
+        except KeyError:
+            language = None
+        if language is not None:
+            return language
+        return request.accept_languages.best_match(app.config['LANGUAGES'].keys())
+
+    @app.context_processor
+    def inject_conf_var():
+        return dict(
+                    AVAILABLE_LANGUAGES=app.config['LANGUAGES'],
+                    CURRENT_LANGUAGE=session.get('language',request.accept_languages.best_match(app.config['LANGUAGES'].keys())))
+
 
 
     return app

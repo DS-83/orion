@@ -62,6 +62,19 @@
     </li>
   </ul>
   <ul class="navbar-nav px-3">
+    <li class="nav-item">
+      <span class="navbar-text">
+        {% for language in AVAILABLE_LANGUAGES.items() %}
+           {% if CURRENT_LANGUAGE == language[0] %}
+               {{ language[1] }}
+           {% else %}
+               <a href="{{ url_for('set_language', language=language[0]) }}" >{{ language[1] }}</a>
+           {%  endif %}
+        {% endfor %}
+      </span>
+    </li>
+  </ul>
+  <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
       <a class="nav-link" href="{{ url_for('auth.logout') }}">
         {{ _('Sign out') }}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-08-19 12:43+0300\n"
+"POT-Creation-Date: 2020-08-19 14:16+0300\n"
 "PO-Revision-Date: 2020-08-17 21:17+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -105,7 +105,8 @@ msgstr "Настройки"
 msgid "Administration"
 msgstr "Администрирование"
 
-#: app/templates/admin/admin.html:12 app/templates/base_admin.html:66
+#: app/templates/admin/admin.html:12 app/templates/admin/users.html:3
+#: app/templates/base_admin.html:66
 msgid "Users"
 msgstr "Пользователи"
 
@@ -137,71 +138,55 @@ msgstr "MSSQL сервер"
 msgid "MSSQL Server connection settings"
 msgstr "Параметры MSSQL сервера"
 
-#: app/templates/admin/mssqlconf.html:19 app/templates/admin/smtpconf.html:19
-#: app/templates/admin/users.html:119
-msgid "Edit"
-msgstr "Редактировать"
-
-#: app/templates/admin/mssqlconf.html:34
+#: app/templates/admin/mssqlconf.html:26
 msgid "MSSQL Server"
 msgstr "MSSQL сервер"
 
-#: app/templates/admin/mssqlconf.html:38
+#: app/templates/admin/mssqlconf.html:30
 msgid "Database"
 msgstr "База данных"
 
-#: app/templates/admin/mssqlconf.html:46 app/templates/admin/smtpconf.html:59
+#: app/templates/admin/mssqlconf.html:38 app/templates/admin/smtpconf.html:51
 msgid "Authentication"
 msgstr "Аутентификация"
 
-#: app/templates/admin/mssqlconf.html:50 app/templates/admin/smtpconf.html:63
-#: app/templates/admin/users.html:34 app/templates/admin/users.html:137
+#: app/templates/admin/mssqlconf.html:42 app/templates/admin/smtpconf.html:55
+#: app/templates/admin/users.html:35 app/templates/admin/users.html:144
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: app/templates/admin/mssqlconf.html:54 app/templates/admin/smtpconf.html:67
-#: app/templates/admin/users.html:38 app/templates/auth/login.html:51
+#: app/templates/admin/mssqlconf.html:46 app/templates/admin/smtpconf.html:59
+#: app/templates/admin/users.html:39 app/templates/admin/users.html:40
+#: app/templates/auth/login.html:51
 msgid "Password"
 msgstr "Пароль"
 
-#: app/templates/admin/mssqlconf.html:64 app/templates/admin/smtpconf.html:76
+#: app/templates/admin/mssqlconf.html:56 app/templates/admin/smtpconf.html:68
 msgid "Test"
 msgstr "Тест"
 
-#: app/templates/admin/mssqlconf.html:71 app/templates/admin/smtpconf.html:82
+#: app/templates/admin/mssqlconf.html:63 app/templates/admin/smtpconf.html:74
 #: app/templates/orion/changepass.html:33
 msgid "Save"
 msgstr "Сохранить"
 
-#: app/templates/admin/mssqlconf.html:77 app/templates/admin/smtpconf.html:87
-msgid "connection"
-msgstr "подключение"
-
-#: app/templates/admin/mssqlconf.html:80 app/templates/admin/smtpconf.html:90
-msgid "settings"
-msgstr "параметры"
-
-#: app/templates/admin/mssqlconf.html:86 app/templates/admin/smtpconf.html:96
+#: app/templates/admin/mssqlconf.html:70 app/templates/admin/smtpconf.html:80
 msgid "Current config:"
 msgstr "Текущие параметры"
-
-#: app/templates/admin/smtpconf.html:3
-msgid "SMTP"
-msgstr ""
 
 #: app/templates/admin/smtpconf.html:13
 msgid "SMTP Config"
 msgstr "Параметры SMTP"
 
-#: app/templates/admin/smtpconf.html:34
+#: app/templates/admin/smtpconf.html:26
 msgid "SMTP Server"
 msgstr "SMTP сервер"
 
-#: app/templates/admin/smtpconf.html:40
+#: app/templates/admin/smtpconf.html:32
 msgid "Port"
 msgstr "Порт"
 
-#: app/templates/admin/smtpconf.html:52
+#: app/templates/admin/smtpconf.html:44
 msgid "use secure connection"
 msgstr "использовать безопасное соединение"
 
@@ -213,45 +198,64 @@ msgstr "Учетные записи пользователей"
 msgid "New"
 msgstr "Создать"
 
-#: app/templates/admin/users.html:45 app/templates/admin/users.html:141
+#: app/templates/admin/users.html:34 app/templates/admin/users.html:143
+#: app/templates/auth/login.html:49
+msgid "User Name"
+msgstr "Имя пользователя"
+
+#: app/templates/admin/users.html:47 app/templates/admin/users.html:148
+msgid "Firstname"
+msgstr "Имя"
+
+#: app/templates/admin/users.html:48 app/templates/admin/users.html:149
 msgid "First Name"
 msgstr "Имя"
 
-#: app/templates/admin/users.html:50 app/templates/admin/users.html:145
+#: app/templates/admin/users.html:53 app/templates/admin/users.html:153
+msgid "Lastname"
+msgstr "Фамилия"
+
+#: app/templates/admin/users.html:54 app/templates/admin/users.html:154
 msgid "Last Name"
 msgstr "Фамилия"
 
-#: app/templates/admin/users.html:57 app/templates/admin/users.html:149
+#: app/templates/admin/users.html:61 app/templates/admin/users.html:62
+#: app/templates/admin/users.html:158 app/templates/admin/users.html:159
 msgid "Email"
 msgstr "электронная почта"
 
-#: app/templates/admin/users.html:61 app/templates/admin/users.html:153
+#: app/templates/admin/users.html:66 app/templates/admin/users.html:67
+#: app/templates/admin/users.html:163 app/templates/admin/users.html:164
 msgid "Company"
 msgstr "Название компании"
 
-#: app/templates/admin/users.html:68 app/templates/admin/users.html:160
+#: app/templates/admin/users.html:74 app/templates/admin/users.html:171
 msgid "Admin"
 msgstr "Администратор"
 
-#: app/templates/admin/users.html:71 app/templates/admin/users.html:163
+#: app/templates/admin/users.html:77 app/templates/admin/users.html:174
 msgid "No"
 msgstr "Нет"
 
-#: app/templates/admin/users.html:72 app/templates/admin/users.html:164
+#: app/templates/admin/users.html:78 app/templates/admin/users.html:175
 #: app/templates/orion/mailing.html:155
 #: app/templates/reports/savedreports.html:102
 msgid "Yes"
 msgstr "Да"
 
-#: app/templates/admin/users.html:171
+#: app/templates/admin/users.html:125
+msgid "Edit"
+msgstr "Редактировать"
+
+#: app/templates/admin/users.html:182
 msgid "status"
 msgstr "статус"
 
-#: app/templates/admin/users.html:174
+#: app/templates/admin/users.html:185
 msgid "active"
 msgstr "активна"
 
-#: app/templates/admin/users.html:175
+#: app/templates/admin/users.html:186
 msgid "disabled"
 msgstr "заблокарована"
 
@@ -262,10 +266,6 @@ msgstr "Вход в систему"
 #: app/templates/auth/login.html:48
 msgid "Please sign in"
 msgstr "Вход в систему"
-
-#: app/templates/auth/login.html:49
-msgid "User Name"
-msgstr "Имя пользователя"
 
 #: app/templates/auth/login.html:53
 msgid "Sign in"
@@ -619,5 +619,14 @@ msgstr "Нарушения"
 #~ msgstr ""
 
 #~ msgid "%(error)"
+#~ msgstr ""
+
+#~ msgid "connection"
+#~ msgstr "подключение"
+
+#~ msgid "settings"
+#~ msgstr "параметры"
+
+#~ msgid "SMTP"
 #~ msgstr ""
 

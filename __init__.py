@@ -24,7 +24,8 @@ def create_app(test_config=None):
         TEXTFILE_FOLDER=os.path.join(app.instance_path, 'textmsg'),
         CELERY_BROKER_URL='redis://localhost:6379',
         CELERY_RESULT_BACKEND='redis://localhost:6379',
-        LANGUAGES = ['ru', 'en']
+        LANGUAGES = ['ru', 'en'],
+        KEY_P=b'cXhd_G3PU4U-6QWPHfgNz8BcHOAZV1I0zN0o6u5CC3c='
 
     )
 
@@ -68,7 +69,7 @@ def create_app(test_config=None):
     logger = logging.getLogger(__name__)
     logfile = f"{app.config['LOGS_FOLDER']}/app-{time.strftime('%Y%m%d')}.log"
     logging.basicConfig(filename=logfile, level=logging.INFO)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     # create file handler which logs even debug messages
     fh = logging.FileHandler(logfile)
     fh.setLevel(logging.INFO)

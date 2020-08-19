@@ -8,6 +8,9 @@ import pyodbc
 
 import os
 
+from cryptography.fernet import Fernet
+
+
 def init_db():
     db = get_db()
 
@@ -68,7 +71,13 @@ def get_mssql():
     SERVER = row['server']
     DATABASE = row['database']
     USERNAME = row['username']
-    PASSWORD = row['password']
+    ciphered_text = row['password']
+
+    # Uncipher password
+    key = current_app.config['KEY_P']
+    cipher_suite = Fernet(key)
+    uncipher_text = (cipher_suite.decrypt(ciphered_text))
+    PASSWORD = bytes(uncipher_text).decode("utf-8")
 
     if 'odbcConn' not in g:
 
@@ -85,7 +94,13 @@ def get_mssql_no_g():
     SERVER = row['server']
     DATABASE = row['database']
     USERNAME = row['username']
-    PASSWORD = row['password']
+    ciphered_text = row['password']
+
+    # Uncipher password
+    key = current_app.config['KEY_P']
+    cipher_suite = Fernet(key)
+    uncipher_text = (cipher_suite.decrypt(ciphered_text))
+    PASSWORD = bytes(uncipher_text).decode("utf-8")
 
     odbcConn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};\
                                SERVER='+SERVER+';DATABASE='+DATABASE+';\

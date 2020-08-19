@@ -16,7 +16,7 @@ PORT = 25
 # Logging config
 logfile = os.path.join(os.path.abspath('instance/logs'), f"mail-{strftime('%Y%m%d')}.log")
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 # create file handler which logs even debug messages
 fh = logging.FileHandler(logfile)
 fh.setLevel(logging.INFO)

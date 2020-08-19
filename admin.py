@@ -1,14 +1,38 @@
 from flask import (Blueprint, render_template, request,
-        flash, redirect, url_for)
+        flash, redirect, url_for, g, current_app)
 from app.auth import login_required, user_role
 from app.sendemail import test_smtp
 from app.db import get_db, test_mssql
 from werkzeug.security import generate_password_hash
 
+import os
+
+from time import strftime
+
+import logging
+
+from cryptography.fernet import Fernet
 
 
-# # set optional bootswatch theme
-# app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
+
+# Logging config
+logfile = os.path.join(os.path.abspath('instance/logs'), f"admin-{strftime('%Y%m%d')}.log")
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+# create file handler which logs even debug messages
+fh = logging.FileHandler(logfile)
+fh.setLevel(logging.INFO)
+# # create console handler with a higher log level
+# ch = logging.StreamHandler()
+# ch.setLevel(logging.ERROR)
+# create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# ch.setFormatter(formatter)
+fh.setFormatter(formatter)
+# add the handlers to logger
+# logger.addHandler(ch)
+logger.addHandler(fh)
+
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -60,13 +84,12 @@ def smtpconf():
                                 password=? WHERE id = 1;", (server, port, ssl, username, password))
                 db.commit()
                 flash('Saved', 'success')
+                logger.info(f"SMTP config was change by user {g.user['username']}")
                 config = db.execute("SELECT server, port, ssl FROM smtp;").fetchone()
-                return render_template('admin/smtpconf.html', config=config)
 
             except Exception as err:
                 flash(err)
-                return render_template('admin/smtpconf.html', config=config)
-
+                logger.warning(err)
 
     return render_template('admin/smtpconf.html', config=config)
 
@@ -123,10 +146,12 @@ def users():
                     (username, firstname, lastname, email, company, admin, status, id)
                 )
                 db.commit()
-                flash('saved', 'success')
+                flash('Saved', 'success')
+                logger.info(f"User account {username} was change by user {g.user['username']}")
                 return redirect(url_for('.users'))
             except Exception as err:
                 flash(err, 'warning')
+                logger.warning(err)
                 return render_template('admin/users.html', users=users)
 
         # New user
@@ -162,12 +187,11 @@ def users():
                 )
                 db.commit()
                 flash('User added', 'success')
+                logger.info(f"Create new user {username}, by user {g.user['username']}")
                 return redirect(url_for('.users'))
             except Exception as err:
                 flash(err)
-                return render_template('admin/users.html', users=users)
-
-
+                logger.warning(err)
 
     return render_template('admin/users.html', users=users)
 
@@ -188,6 +212,11 @@ def mssqlconf():
         username = request.form['username']
         password = request.form['password']
 
+        # Encrypt password
+        key = current_app.config['KEY_P']
+        cipher_suite = Fernet(key)
+        ciphered_text = cipher_suite.encrypt(str.encode(password))
+
         # Test connection to mssql server
         if request.form['submit'] == 'test':
             r = test_mssql(server, database, username, password)
@@ -203,16 +232,21 @@ def mssqlconf():
             try:
                 if config is None:
                     db.execute("INSERT INTO mssql (server, database, username, password)\
-                                VALUES (?,?,?,?);", (server, database, username, password))
+                                VALUES (?,?,?,?);", (server, database, username, ciphered_text))
                 else:
                     db.execute("UPDATE mssql SET server=?, database=?, username=?,\
-                                password=? WHERE id = 1;", (server, database, username, password))
+                                password=? WHERE id = 1;", (server, database, username, ciphered_text))
                 db.commit()
+
                 flash('Saved', 'success')
+
+                logger.info(f"MSSQL config was change by user {g.user['username']}")
+
                 config = db.execute("SELECT server, database, username FROM mssql;").fetchone()
 
             except Exception as err:
                 flash(err)
+                logger.warning(err)
 
 
     return render_template('admin/mssqlconf.html', config=config)

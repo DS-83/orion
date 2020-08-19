@@ -14,6 +14,7 @@ from datetime import date, timedelta, datetime
 from dateutil.relativedelta import relativedelta
 from calendar import monthrange
 
+from flask_babel import _
 
 
 bp = Blueprint('reports', __name__, url_prefix='/reports')
@@ -60,19 +61,19 @@ def accessp(page):
             date_start = date_start.replace('-', '') + time_start.replace(':', '')
             date_end = date_end.replace('-', '') + time_end.replace(':', '')
             if int(date_end) - int(date_start) <= 0:
-                flash('Не пытайся обмануть меня, кожаный ублюдок', 'warning')
+                flash(_('Time range error.'), 'warning')
                 return redirect(url_for('reports.accessp'))
 
             data = UnpackData(OrionReportAccessPoint(date_start, date_end, ap, events))
 
             if action == 'display':
-                report_name = {'Report':'Access point',
-                               'Reference point':datetime.strptime(date_start, '%Y%m%d%H%M%S'),
-                               'End point':datetime.strptime(date_end, '%Y%m%d%H%M%S')}
+                report_name = {_('Report'):_('Access point'),
+                               _('Reference point'):datetime.strptime(date_start, '%Y%m%d%H%M%S'),
+                               _('End point'):datetime.strptime(date_end, '%Y%m%d%H%M%S')}
                 return render_template('reports/generatedreport.html', data=data,
                                         report_name=report_name)
             if action == 'save':
-                report_name = f'Access point: {ap}'
+                report_name = f"{_('Access point')}: {ap}"
                 filename = SaveReport(date_start, date_end, data, report_name)
                 folder =  current_app.config['DWNLD_FOLDER']
                 return send_from_directory(folder, filename, as_attachment=True)
@@ -102,7 +103,7 @@ def accessp(page):
                 db.execute("INSERT INTO saved_reports (report_type, name, user_id, period, data)\
                             VALUES (?,?,?,?,?);", (report, name, session['user_id'], period, data))
                 db.commit()
-                flash('Saved', 'success')
+                flash(_('Saved'), 'success')
                 return redirect(url_for('reports.savedreports'))
             except Exception as err:
                 flash(err, 'warning')
@@ -122,7 +123,7 @@ def person(page):
     if page == 'tn':
         tNum = request.form.get('TabNumber')  # type <class 'str'>
         if not tNum:
-            flash('Field can not be blank', 'warning')
+            flash(_('Field can not be blank'), 'warning')
             return render_template('reports/person.html')
         persons = UnpackData(OrionQueryPersons())
         result = []
@@ -137,7 +138,7 @@ def person(page):
     if page == 'department':
         dept = request.form.get('department')
         if not dept:
-            flash('Field can not be blank')
+            flash(_('Field can not be blank'))
             return render_template('reports/person.html')
         persons = UnpackData(OrionQueryPersons())
         result = []
@@ -153,7 +154,7 @@ def person(page):
         lName = request.form.get('LastName')  # type <class 'str'>
         fName = request.form.get('FirstName') # type <class 'str'>
         if not lName:
-            flash('LastName can not be blank')
+            flash(_('LastName can not be blank'))
             return render_template('reports/person.html', result=0)
 
         # Convert first char upper other lower
@@ -183,7 +184,7 @@ def person(page):
     def report(action):
         personId = ", ".join(map(str, request.form.getlist('personId')))
         if personId == "":
-            flash('Should select one or several names', 'warning')
+            flash(_('Should select one or several names'), 'warning')
             return render_template('reports/person.html', result=0)
         date_start = request.form['date_start']
         time_start = request.form['time_start']
@@ -193,17 +194,17 @@ def person(page):
         date_start = date_start.replace('-', '') + time_start.replace(':', '')
         date_end = date_end.replace('-', '') + time_end.replace(':', '')
         if int(date_end) - int(date_start) <= 0:
-            flash('Не пытайся обмануть меня, кожаный ублюдок', 'warning')
+            flash(_('Time range error'), 'warning')
             return redirect(url_for('.person'))
         data = UnpackData(OrionReportWalkwaysPerson(date_start, date_end, personId))
         if action == 'display':
-            report_name = {'Report':'Person walkways',
-                           'Reference point':datetime.strptime(date_start, '%Y%m%d%H%M%S'),
-                           'End point':datetime.strptime(date_end, '%Y%m%d%H%M%S')}
+            report_name = {_('Report'):_('Person walkways'),
+                           _('Reference point'):datetime.strptime(date_start, '%Y%m%d%H%M%S'),
+                           _('End point'):datetime.strptime(date_end, '%Y%m%d%H%M%S')}
             return render_template('reports/generatedreport.html', data=data,
                                     report_name=report_name)
         if action == 'save':
-            report_name = 'Person walkways'
+            report_name = _('Person walkways')
             filename = SaveReport(date_start, date_end, data, report_name)
             folder =  current_app.config['DWNLD_FOLDER']
             return send_from_directory(folder, filename, as_attachment=True)
@@ -227,7 +228,7 @@ def person(page):
             db.execute("INSERT INTO saved_reports (report_type, name, user_id, period, data)\
                         VALUES (?,?,?,?,?);", (report, name, session['user_id'], period, data))
             db.commit()
-            flash('Saved', 'success')
+            flash(_('Saved'), 'success')
         except Exception as err:
             flash(err, 'warning')
         return render_template('reports/person.html', result=0)
@@ -246,7 +247,7 @@ def firstlast(page):
     if page == 'tn':
         tNum = request.form.get('TabNumber')  # type <class 'str'>
         if not tNum:
-            flash('Field can not be blank', 'warning')
+            flash(_('Field can not be blank'), 'warning')
             return render_template('reports/firstlast.html')
         persons = UnpackData(OrionQueryPersons())
         result = []
@@ -261,7 +262,7 @@ def firstlast(page):
     if page == 'department':
         dept = request.form.get('department')
         if not dept:
-            flash('Field can not be blank')
+            flash(_('Field can not be blank'))
             return render_template('reports/firstlast.html')
         persons = UnpackData(OrionQueryPersons())
         result = []
@@ -277,7 +278,7 @@ def firstlast(page):
         lName = request.form.get('LastName')  # type <class 'str'>
         fName = request.form.get('FirstName') # type <class 'str'>
         if not lName:
-            flash('LastName can not be blank')
+            flash(_('LastName can not be blank'))
             return render_template('reports/firstlast.html', result=0)
 
         # Convert first char upper other lower
@@ -307,7 +308,7 @@ def firstlast(page):
     def report(action):
         personId = request.form.getlist('personId')
         if personId == "":
-            flash('Should select one or several names', 'warning')
+            flash(_('Should select one or several names'), 'warning')
             return render_template('reports/firstlast.html', result=0)
         date_start = request.form['date_start']
         date_end = request.form['date_end']
@@ -315,17 +316,17 @@ def firstlast(page):
         date_start = date_start.replace('-', '') + "000000"
         date_end = date_end.replace('-', '') + "235959"
         if int(date_end) - int(date_start) <= 0:
-            flash('Time range error', 'warning')
+            flash(_('Time range error'), 'warning')
             return redirect(url_for('.firstlast'))
         data = OrionReportFirtsLast(date_start, date_end, personId)  # Data unpack inside OrionReportFirtsLast function
         if action == 'display':
-            report_name = {'Report':'First-Last',
-                           'Reference point':datetime.strptime(date_start, '%Y%m%d%H%M%S'),
-                           'End point':datetime.strptime(date_end, '%Y%m%d%H%M%S')}
+            report_name = {_('Report'):_('First-Last'),
+                           _('Reference point'):datetime.strptime(date_start, '%Y%m%d%H%M%S'),
+                           _('End point'):datetime.strptime(date_end, '%Y%m%d%H%M%S')}
             return render_template('reports/generatedreport.html', data=data,
                                     report_name=report_name)
         if action == 'save':
-            report_name = 'First enter - last exit'
+            report_name = _('First enter - last exit')
             filename = SaveReport(date_start, date_end, data, report_name)
             folder =  current_app.config['DWNLD_FOLDER']
             return send_from_directory(folder, filename, as_attachment=True)
@@ -349,7 +350,7 @@ def firstlast(page):
             db.execute("INSERT INTO saved_reports (report_type, name, user_id, period, data)\
                         VALUES (?,?,?,?,?);", (report, name, session['user_id'], period, data))
             db.commit()
-            flash('Saved', 'success')
+            flash(_('Saved'), 'success')
         except Exception as err:
             flash(err, 'warning')
 
@@ -377,19 +378,19 @@ def violations(page):
         date_start = date_start.replace('-', '') + time_start.replace(':', '')
         date_end = date_end.replace('-', '') + time_end.replace(':', '')
         if int(date_end) - int(date_start) <= 0:
-            flash('Не пытайся обмануть меня, кожаный ублюдок', 'warning')
+            flash(_('Time range error'), 'warning')
             return redirect(url_for('.violations'))
 
         # Request data from Orion
         data = UnpackData(OrionReportViolations(date_start, date_end, ap))
         if action == 'display':
-            report_name = {'Report':'Violations',
-                           'Reference point':datetime.strptime(date_start, '%Y%m%d%H%M%S'),
-                           'End point':datetime.strptime(date_end, '%Y%m%d%H%M%S')}
+            report_name = {_('Report'):_('Violations'),
+                           _('Reference point'):datetime.strptime(date_start, '%Y%m%d%H%M%S'),
+                           _('End point'):datetime.strptime(date_end, '%Y%m%d%H%M%S')}
             return render_template('reports/generatedreport.html', data=data,
                                     report_name=report_name)
         if action == 'save':
-            report_name = f'Violations in {ap}'
+            report_name = f"{_('Violations in')} {ap}"
             filename = SaveReport(date_start, date_end, data, report_name)
             folder =  current_app.config['DWNLD_FOLDER']
             return send_from_directory(folder, filename, as_attachment=True)
@@ -414,7 +415,7 @@ def violations(page):
             db.execute("INSERT INTO saved_reports (report_type, name, user_id, period, data)\
                         VALUES (?,?,?,?,?);", (report, name, session['user_id'], period, data))
             db.commit()
-            flash('Saved', 'success')
+            flash(_('Saved'), 'success')
         except Exception as err:
             flash(err, 'warning')
 
@@ -600,7 +601,7 @@ def delete():
         db.execute("DELETE FROM saved_reports\
                     WHERE id = ? AND user_id = ?", (id, session['user_id']))
         db.commit()
-        flash('Successfuly remove report and appropriate mail tasks', 'success')
+        flash(_('Successfuly remove report and appropriate mail tasks'), 'success')
     except Exception as err:
         db.rollback()
         flash(err, 'warning')

@@ -13,6 +13,7 @@ import logging
 
 from cryptography.fernet import Fernet
 
+from flask_babel import _
 
 
 # Logging config
@@ -59,9 +60,9 @@ def smtpconf():
             port = request.form.get('port')
             r = test_smtp(server, port)
             if r[0]:
-                flash(f"Success {r[1]}", 'success')
+                flash(f"{_('Success')} {r[1]}", 'success')
             else:
-                flash(f"Faled. {r[1]}", 'danger')
+                flash(f"{_('Faled')}. {r[1]}", 'danger')
             return render_template('admin/smtpconf.html', config=config)
 
         # Save smtp config to DB
@@ -83,7 +84,7 @@ def smtpconf():
                     db.execute("UPDATE smtp SET server=?, port=?, ssl=?, username=?,\
                                 password=? WHERE id = 1;", (server, port, ssl, username, password))
                 db.commit()
-                flash('Saved', 'success')
+                flash(_('Saved'), 'success')
                 logger.info(f"SMTP config was change by user {g.user['username']}")
                 config = db.execute("SELECT server, port, ssl FROM smtp;").fetchone()
 
@@ -126,7 +127,7 @@ def users():
         if request.form['submit'] == 'edit':
             username = request.form['username']
             if not username:
-                flash("<username> can not be blank")
+                flash(_("USERNAME can not be blank"))
                 return render_template('admin/users.html', users=users)
             username = username[0].upper() + request.form['username'][1:].lower()
             firstname = request.form.get('Firstname')
@@ -146,7 +147,7 @@ def users():
                     (username, firstname, lastname, email, company, admin, status, id)
                 )
                 db.commit()
-                flash('Saved', 'success')
+                flash(_('Saved'), 'success')
                 logger.info(f"User account {username} was change by user {g.user['username']}")
                 return redirect(url_for('.users'))
             except Exception as err:
@@ -158,16 +159,16 @@ def users():
         if request.form['submit'] == 'new':
             username = request.form['username']
             if not username:
-                flash('<username> can not be blank', 'warning')
+                flash(_('USERNAME can not be blank'), 'warning')
                 return render_template('admin/users.html', users=users)
             username = username[0].upper() + request.form['username'][1:].lower()
             for user in users:
                 if username == user[0]:
-                    flash(f'Username {username} already taken', 'warning')
+                    flash(f"{_('Username')} {username} {_('already taken')}", 'warning')
                     return render_template('admin/users.html', users=users)
             password = request.form['password']
             if not password:
-                flash('<password> can not be blank', 'warning')
+                flash(_('<password> can not be blank'), 'warning')
                 return render_template('admin/users.html', users=users)
             password = generate_password_hash(password)
             firstname = request.form.get('Firstname')
@@ -186,7 +187,7 @@ def users():
                     (username, password, firstname, lastname, email, company, admin)
                 )
                 db.commit()
-                flash('User added', 'success')
+                flash(_('User added'), 'success')
                 logger.info(f"Create new user {username}, by user {g.user['username']}")
                 return redirect(url_for('.users'))
             except Exception as err:
@@ -221,9 +222,9 @@ def mssqlconf():
         if request.form['submit'] == 'test':
             r = test_mssql(server, database, username, password)
             if r[0]:
-                flash(f"Success. {r[1]}", 'success')
+                flash(f"{_('Success.')} {r[1]}", 'success')
             else:
-                flash(f"Faled. {r[1]}", 'danger')
+                flash(f"{_('Faled.')} {r[1]}", 'danger')
             return render_template('admin/mssqlconf.html', config=config)
 
         # Save mssql config to DB
@@ -238,7 +239,7 @@ def mssqlconf():
                                 password=? WHERE id = 1;", (server, database, username, ciphered_text))
                 db.commit()
 
-                flash('Saved', 'success')
+                flash(_('Saved'), 'success')
 
                 logger.info(f"MSSQL config was change by user {g.user['username']}")
 

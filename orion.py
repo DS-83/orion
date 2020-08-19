@@ -184,7 +184,7 @@ def delete():
                     WHERE id = ? AND user_id = ?", (id, session['user_id']))
         db.commit()
 
-        flash('Successfuly delete', 'success')
+        flash(_('Successfuly delete'), 'success')
     except Exception as err:
         flash(err, 'warning')
 
@@ -245,14 +245,14 @@ def changepass():
         current_pass = request.form['CurrentPassword']
 
         if not check_password_hash(g.user['password'], current_pass):
-            error = 'Incorrect current password.'
+            error = _('Incorrect current password.')
 
         # Check new password and re-enter password
         if error is None:
             new_pass = request.form['NewPassword']
             re_new_pass = request.form['ReNewPassword']
             if new_pass != re_new_pass:
-                error = 'Password mismatch'
+                error = _('Password mismatch')
             else:
                 if g.user['username'] == 'Admin':
                     table_name = 'admin'
@@ -267,7 +267,7 @@ def changepass():
                     db.commit()
 
                     session.clear()
-                    flash('Password successfuly changed', 'success')
+                    flash(_('Password successfuly changed'), 'success')
                     return redirect(url_for('auth.login'))
                 except Exception as error:
                     flash(error, 'warning')

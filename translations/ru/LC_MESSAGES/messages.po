@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-08-19 14:16+0300\n"
+"POT-Creation-Date: 2020-08-20 02:29+0300\n"
 "PO-Revision-Date: 2020-08-17 21:17+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -18,6 +18,35 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
+
+#: app/admin.py:87 app/admin.py:150 app/admin.py:242 app/reports.py:106
+#: app/reports.py:231 app/reports.py:353 app/reports.py:418
+msgid "Saved"
+msgstr "Успешно сохранено"
+
+#: app/admin.py:130 app/admin.py:162
+msgid "USERNAME can not be blank"
+msgstr "Имя пользователя не может быть пустым"
+
+#: app/admin.py:171
+msgid "<password> can not be blank"
+msgstr "пароль не может быть пустым"
+
+#: app/admin.py:190
+msgid "User added"
+msgstr "Пользователь успешно создан"
+
+#: app/auth.py:64
+msgid "Incorrect username."
+msgstr "Неправильное имя пользователя."
+
+#: app/auth.py:68
+msgid "Incorrect password."
+msgstr "Неверный пароль."
+
+#: app/auth.py:72
+msgid "Account disabled"
+msgstr "Учетная запись заблокирована."
 
 #: app/orion.py:33 app/templates/orion/index.html:18
 #: app/templates/reports/accessp.html:27
@@ -68,36 +97,108 @@ msgstr "Текст сообщения не может быть пустым."
 msgid "Success"
 msgstr "Успешно"
 
-#: app/templates/base1.html:67 app/templates/base_admin.html:43
+#: app/orion.py:187
+msgid "Successfuly delete"
+msgstr "Успешно удалено"
+
+#: app/orion.py:248
+msgid "Incorrect current password."
+msgstr "Неверный текущий пароль."
+
+#: app/orion.py:255
+msgid "Password mismatch"
+msgstr "Пароли не совпадают"
+
+#: app/orion.py:270
+msgid "Password successfuly changed"
+msgstr "Пароль успешно изменен."
+
+#: app/reports.py:64
+msgid "Time range error."
+msgstr "Ошибка временного интервала."
+
+#: app/reports.py:70 app/reports.py:201 app/reports.py:323 app/reports.py:387
+msgid "Report"
+msgstr "Отчет"
+
+#: app/reports.py:70 app/templates/reports/accessp.html:18
+msgid "Access point"
+msgstr "Точка доступа"
+
+#: app/reports.py:71 app/reports.py:202 app/reports.py:324 app/reports.py:388
+msgid "Reference point"
+msgstr "С"
+
+#: app/reports.py:72 app/reports.py:203 app/reports.py:325 app/reports.py:389
+msgid "End point"
+msgstr "По"
+
+#: app/reports.py:126 app/reports.py:141 app/reports.py:250 app/reports.py:265
+msgid "Field can not be blank"
+msgstr "Поле не может быть пустым"
+
+#: app/reports.py:157 app/reports.py:281
+msgid "LastName can not be blank"
+msgstr "Поле Фамилия не может быть пустым"
+
+#: app/reports.py:187 app/reports.py:311
+msgid "Should select one or several names"
+msgstr "Необходимо выбрать одно или несколько имен"
+
+#: app/reports.py:197 app/reports.py:319 app/reports.py:381
+msgid "Time range error"
+msgstr "Ошибка временного интервала"
+
+#: app/reports.py:201 app/reports.py:207 app/templates/reports/person.html:13
+msgid "Person walkways"
+msgstr "Маршруты движения человека"
+
+#: app/reports.py:323
+msgid "First-Last"
+msgstr "Первый вход, последний выход"
+
+#: app/reports.py:329
+msgid "First enter - last exit"
+msgstr "Первый вход, последний выход"
+
+#: app/reports.py:387 app/templates/reports/violations.html:3
+msgid "Violations"
+msgstr "Нарушения"
+
+#: app/reports.py:604
+msgid "Successfuly remove report and appropriate mail tasks"
+msgstr "Отчет и связанные рассылки удалены"
+
+#: app/templates/base1.html:81 app/templates/base_admin.html:43
 msgid "Sign out"
 msgstr "Выход"
 
-#: app/templates/base1.html:82 app/templates/base_admin.html:60
+#: app/templates/base1.html:96 app/templates/base_admin.html:60
 #: app/templates/orion/index.html:7
 msgid "Dashboard"
 msgstr "Виджеты"
 
-#: app/templates/base1.html:92 app/templates/orion/changepass.html:3
+#: app/templates/base1.html:106 app/templates/orion/changepass.html:3
 msgid "Change password"
 msgstr "Сменить пароль"
 
-#: app/templates/base1.html:98 app/templates/base_admin.html:32
+#: app/templates/base1.html:112 app/templates/base_admin.html:32
 #: app/templates/reports/firstlast.html:3
 #: app/templates/reports/generatedreport.html:3
 #: app/templates/reports/reports.html:3 app/templates/reports/reports.html:9
 msgid "Reports"
 msgstr "Отчеты"
 
-#: app/templates/base1.html:104
+#: app/templates/base1.html:118
 msgid "Mail lists"
 msgstr "Рассылки"
 
-#: app/templates/base1.html:113 app/templates/reports/savedreports.html:3
+#: app/templates/base1.html:127 app/templates/reports/savedreports.html:3
 #: app/templates/reports/savedreports.html:10
 msgid "Saved reports"
 msgstr "Сохраненные отчеты"
 
-#: app/templates/base1.html:121
+#: app/templates/base1.html:135
 msgid "Settings"
 msgstr "Настройки"
 
@@ -399,10 +500,6 @@ msgstr "Отмена"
 msgid "AccessPoint"
 msgstr "Точка доступа"
 
-#: app/templates/reports/accessp.html:18
-msgid "Access point"
-msgstr "Точка доступа"
-
 #: app/templates/reports/accessp.html:21
 #: app/templates/reports/firstlast.html:70 app/templates/reports/person.html:65
 #: app/templates/reports/violations.html:21
@@ -561,10 +658,6 @@ msgstr "Не найден"
 msgid "Person"
 msgstr "Маршруты движения человека"
 
-#: app/templates/reports/person.html:13
-msgid "Person walkways"
-msgstr "Маршруты движения человека"
-
 #: app/templates/reports/person.html:122
 msgid "Selection"
 msgstr "Отметить"
@@ -601,10 +694,6 @@ msgstr "Показать"
 msgid "Save file"
 msgstr "Сохранить файл"
 
-#: app/templates/reports/violations.html:3
-msgid "Violations"
-msgstr "Нарушения"
-
 #: app/templates/reports/violations.html:18
 msgid "Violations report"
 msgstr "Нарушения"
@@ -629,4 +718,7 @@ msgstr "Нарушения"
 
 #~ msgid "SMTP"
 #~ msgstr ""
+
+#~ msgid "already taken"
+#~ msgstr "уже используется"
 

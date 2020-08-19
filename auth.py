@@ -15,6 +15,9 @@ import logging
 
 from time import strftime
 
+from flask_babel import _
+
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
@@ -58,15 +61,15 @@ def login():
             ).fetchone()
 
         if user is None:
-            error = 'Incorrect username.'
+            error = _('Incorrect username.')
             logger.warning(error)
 
         elif not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
+            error = _('Incorrect password.')
             logger.warning(error)
         # Check for disabled account
         elif user['status'] == 'disabled':
-            error = "Account disabled"
+            error = _("Account disabled")
             logger.warning(error)
 
         if error is None:

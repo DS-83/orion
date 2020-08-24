@@ -10,6 +10,8 @@ import os
 
 from cryptography.fernet import Fernet
 
+from config_module import Config
+
 
 def init_db():
     db = get_db()
@@ -97,8 +99,7 @@ def get_mssql_no_g():
     ciphered_text = row['password']
 
     # Uncipher password
-    key = current_app.config['KEY_P']
-    cipher_suite = Fernet(key)
+    cipher_suite = Fernet(Config.KEY_P)
     uncipher_text = (cipher_suite.decrypt(ciphered_text))
     PASSWORD = bytes(uncipher_text).decode("utf-8")
 

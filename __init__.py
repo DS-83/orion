@@ -10,9 +10,6 @@ from . import (db, auth, orion, reports, reports_sql, xlsx_, admin,
 
 from flask_babel import Babel
 
-from jinja2 import Environment
-
-
 
 def create_app(test_config=None):
     # create and configure the app
@@ -22,16 +19,16 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'app.sqlite'),
         DWNLD_FOLDER=os.path.join(app.instance_path, 'xlsx'),
         LOGS_FOLDER=os.path.join(app.instance_path, 'logs'),
-        TEXTFILE_FOLDER=os.path.join(app.instance_path, 'textmsg'),
-        CELERY_BROKER_URL='redis://localhost:6379',
-        CELERY_RESULT_BACKEND='redis://localhost:6379',
-        LANGUAGES = {
-                    'ru': 'Russian',
-                    'en': 'English'
-                    },
-        KEY_P=b'cXhd_G3PU4U-6QWPHfgNz8BcHOAZV1I0zN0o6u5CC3c='
+        TEXTFILE_FOLDER=os.path.join(app.instance_path, 'textmsg')
+        # CELERY_BROKER_URL='redis://localhost:6379',
+        # CELERY_RESULT_BACKEND='redis://localhost:6379',
+        # LANGUAGES = {
+        #             'ru': 'Russian',
+        #             'en': 'English'
+        #             }
 
     )
+    app.config.from_object('config_module.DevelopmentConfig')
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -64,11 +61,6 @@ def create_app(test_config=None):
 
     babel = Babel(app)
 
-    # @babel.localeselector
-    # def get_locale():
-    #     # return request.accept_languages.best_match(app.config['LANGUAGES'])
-    #     return 'ru'
-
     # Logging config
     logger = logging.getLogger(__name__)
     logfile = f"{app.config['LOGS_FOLDER']}/app-{time.strftime('%Y%m%d')}.log"
@@ -94,7 +86,9 @@ def create_app(test_config=None):
     @app.route('/language/<language>')
     def set_language(language=None):
         session['language'] = language
-        return redirect(url_for('index'))
+
+        # Redirect back to the url that came from
+        return redirect(request.referrer)
 
 
     @babel.localeselector

@@ -40,16 +40,6 @@
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  {#
-  <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
-  <!-- <table class="navbar-nav col-lg-1 px-3">
-    <thead>
-      <tr>
-        <th class="nav-item"><img src="https://eu.ui-avatars.com/api/?bold=true&name={{ g.user['username'] }}" width="30" height="30" class="rounded-circle avatar d-inline-block align-top"></th>
-        <th class="nav-item">{{ g.user.username }}</th>
-      </tr>
-    </thead>
-  </table> --> #}
   <ul class="navbar-nav px-3">
     <li class="nav-item">
       <img src="https://eu.ui-avatars.com/api/?bold=true&name={{ g.user['username'] }}"
@@ -62,19 +52,8 @@
       <span class="navbar-text">{{ g.user.email }}</span>
     </li>
   </ul>
-  <ul class="navbar-nav px-3">
-    <li class="nav-item">
-      <span class="navbar-text">
-        {% for language in AVAILABLE_LANGUAGES.items() %}
-           {% if CURRENT_LANGUAGE == language[0] %}
-               {{ language[1] }}
-           {% else %}
-               <a href="{{ url_for('set_language', language=language[0]) }}" >{{ language[1] }}</a>
-           {%  endif %}
-        {% endfor %}
-      </span>
-    </li>
-  </ul>
+  {% block lang %}
+  {% endblock %}
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
       <a class="nav-link" href="{{ url_for('auth.logout') }}">

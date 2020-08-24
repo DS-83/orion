@@ -2,6 +2,11 @@
 
 {% block title %}{{ _('Users') }}{% endblock %}
 
+{% block lang %}
+  {% from 'lang_selector.html' import lang_selector with context %}
+  {{ lang_selector() }}
+{% endblock %}
+
 {% block main %}
 <div class="container">
   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap

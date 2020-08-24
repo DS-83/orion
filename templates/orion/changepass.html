@@ -2,6 +2,11 @@
 
 {% block title %}{{ _('Change password') }}{% endblock %}
 
+{% block lang %}
+  {% from 'lang_selector.html' import lang_selector with context %}
+  {{ lang_selector() }}
+{% endblock %}
+
 {% block main %}
 <div class="container p-5">
 

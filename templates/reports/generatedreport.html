@@ -1,10 +1,6 @@
 {% extends "base1.html" %}
 
 {% block title %}{{ _('Reports') }}{% endblock %}
-{% block head %}
-  <!-- Custom styles for this template -->
-  <link href="{{ url_for('static', filename='css/form-validation.css') }}" rel="stylesheet">
-{% endblock %}
 
 {% block main %}
 
@@ -13,18 +9,33 @@
 
       <div class="py-3">
           {% for key, value in report_name.items() %}
-          <h4 class="h6"><b>{{ key }}:</b> {{ value }}</h4>
-        {% endfor %}
-
+            <h4 class="h6"><b>{{ key }}:</b> {{ value }}</h4>
+          {% endfor %}
       </div>
+
+        <!-- {% set print_date = "1899-01-01" %} -->
         <table class="table table-responsive table-bordered table-sm">
             <thead class="thead-dark">
                 {% for i in data[0] %}
                     <th>{{ i }}</th>
                 {% endfor %}
             </thead>
+
             <tbody>
+              {# From jinja docs: Please keep in mind that it is not possible
+                 to set variables inside a block and have them show up outside
+                 of it. This also applies to loops. The only exception to that
+                 rule are if statements which do not introduce a scope. #}
+
+                {% set ns = namespace(print_date="") %}
                 {% for row in data[1:] %}
+                  {% set row_date = row['Time'].date()|string %}
+                  {% if row_date != ns.print_date %}
+                    {% set ns.print_date = row_date %}
+                    <tr>
+                      <td><b>{{ _('Date:') }} {{ ns.print_date }}</b></td>
+                    </tr>
+                  {% endif %}
                     <tr>
                       {% for i in row %}
                           <td>{{ i }}</td>

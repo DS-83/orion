@@ -20,15 +20,9 @@ def create_app(test_config=None):
         DWNLD_FOLDER=os.path.join(app.instance_path, 'xlsx'),
         LOGS_FOLDER=os.path.join(app.instance_path, 'logs'),
         TEXTFILE_FOLDER=os.path.join(app.instance_path, 'textmsg')
-        # CELERY_BROKER_URL='redis://localhost:6379',
-        # CELERY_RESULT_BACKEND='redis://localhost:6379',
-        # LANGUAGES = {
-        #             'ru': 'Russian',
-        #             'en': 'English'
-        #             }
 
     )
-    app.config.from_object('config_module.DevelopmentConfig')
+    app.config.from_object('config_module.ProductionConfig')
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -107,7 +101,8 @@ def create_app(test_config=None):
     def inject_conf_var():
         return dict(
                     AVAILABLE_LANGUAGES=app.config['LANGUAGES'],
-                    CURRENT_LANGUAGE=session.get('language',request.accept_languages.best_match(app.config['LANGUAGES'].keys())))
+                    CURRENT_LANGUAGE=session.get('language',
+                    request.accept_languages.best_match(app.config['LANGUAGES'].keys())))
 
 
 

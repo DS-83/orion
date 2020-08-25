@@ -39,7 +39,7 @@ def SaveReport(date_start, date_end, data, report_name):
     worksheet.merge_range(0, 0, 5, 1, image, merge_format)
 
     # Keep track columns width
-    col_width = list(range(len(data[0])))
+    col_width = list(range(len(data[0]) + 1))
 
     indent = 6
     old = None
@@ -47,26 +47,44 @@ def SaveReport(date_start, date_end, data, report_name):
     # Find time column
     time_col = [data[0].index(x) for x in data[0] if x == 'Time']
 
-    # Write data
+    # Variables to remember each new date in date column
+    print_date = ""
+    lines = 0
+
+    # Cell format for date column
+    cell_format_date = workbook.add_format({
+                          'top': True,
+                          'bottom': True,
+                          'num_format': 'DD-MM-YYYY',
+                          'bg_color': '#FFFFFF',
+                          'align': 'left'})
+
+    # Loop each row
     for row in range(indent, len(data) + indent):
 
         # Head format
         if row == indent:
-            cell_format = workbook.add_format({'bold': True, 'font_size': 11,
-                            'border': True, 'align': 'center', 'bg_color': '#3b3a30',
+            cell_format = workbook.add_format({
+                            'bold': True, 'font_size': 11,
+                            'border': True, 'align': 'center',
+                            'bg_color': '#3b3a30',
                             'font_color': 'white'})
-        # Highlight every new record in first column
+        # Format for highlight every new record in first column
         elif data[row - indent][0] != old:
-            cell_format = workbook.add_format({'top': True,
+            cell_format = workbook.add_format({
+                          'top': True,
+                          'border': True,
                           'bg_color': '#b2b2b2', 'bold': True,
                           'align': 'left'})
-            cell_format_t = workbook.add_format({'top': True,
+            cell_format_t = workbook.add_format({
+                          'top': True,
+                          'border': True,
                           'num_format': 'DD-MM-YYYY HH:MM:SS',
                           'bg_color': '#b2b2b2', 'bold': True,
                           'align': 'left'})
 
             old = data[row - indent][0]
-        # cell
+        # Cell format
         else:
             cell_format = workbook.add_format({
                             'align': 'left', 'right': True,
@@ -76,14 +94,29 @@ def SaveReport(date_start, date_end, data, report_name):
                             'num_format': 'DD-MM-YYYY HH:MM:SS',
                             'left': True, 'bg_color': '#e0e2e4'})
 
-        for col in range(len(data[row - indent])):
-            if col_width[col] < len(str(data[row - indent][col])):
-                col_width[col] = len(str(data[row - indent][col]))
+        # Get date in row
+        if row > indent:
+            row_date = data[row - indent][time_col[0]].date()
+            # Write each new date to appropriate column
+            if row_date != print_date:
+                print_date = row_date
+                if lines > 0:
+                    lines += 1
+                worksheet.write(row + lines, 0, print_date, cell_format_date)
+                col_width[0] = len(str(print_date))
+                lines += 1
+        else:
+            worksheet.write(row + lines, 0, 'Date', cell_format)
 
-            if col == time_col[0] and row > indent:
-                worksheet.write(row, col, data[row - indent][col], cell_format_t)
+        # Write data and remember column width
+        for col in range(1, len(data[row - indent]) + 1):
+            if col_width[col] < len(str(data[row - indent][col - 1])):
+                col_width[col] = len(str(data[row - indent][col - 1]))
+
+            if col == time_col[0] + 1 and row > indent:
+                worksheet.write(row + lines, col, data[row - indent][col - 1], cell_format_t)
             else:
-                worksheet.write(row, col, data[row - indent][col], cell_format)
+                worksheet.write(row + lines, col, data[row - indent][col - 1], cell_format)
 
     # Set columns width
     for col in range(len(col_width)):

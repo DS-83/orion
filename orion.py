@@ -79,17 +79,33 @@ def index(page=None):
 def mailing():
 
     db = get_db()
+
     reports = db.execute("SELECT id, name FROM saved_reports WHERE user_id = ?",
                         (session['user_id'],)
                         )
-    #Mail tasks
-    cursor = db.execute("SELECT saved_reports.name, recipient, periodicity,\
-                               weekday, date, time, mail_task.id FROM mail_task\
-                        LEFT JOIN saved_reports\
-                        ON mail_task.report_id = saved_reports.id\
-                        WHERE mail_task.user_id = ?;",
-                        (session['user_id'],)
-                      )
+    # Get Admin id
+    admin_id = db.execute("SELECT id FROM admin;").fetchone()
+    # Mail tasks
+    # Administrator must see all mail tasks
+    if session['user_id'] == admin_id['id']:
+        cursor = db.execute("SELECT mail_task.id, user.username,\
+                                    saved_reports.name, recipient,\
+                                    periodicity, weekday, date, time\
+                            FROM mail_task\
+                            LEFT JOIN saved_reports\
+                            ON mail_task.report_id = saved_reports.id\
+                            LEFT JOIN user\
+                            ON mail_task.user_id = user.id;")
+    else:
+        cursor = db.execute("SELECT mail_task.id, saved_reports.name,\
+                                    recipient, periodicity,\
+                                    weekday, date, time\
+                            FROM mail_task\
+                            LEFT JOIN saved_reports\
+                            ON mail_task.report_id = saved_reports.id\
+                            WHERE mail_task.user_id = ?;",
+                            (session['user_id'],)
+                          )
     row = cursor.fetchone()
     tasks = []
     if row:
@@ -167,21 +183,39 @@ def delete():
     from .celery_utils import celery_app
 
     db = get_db()
-    id = request.form['hidden_id_del']
-    try:
-        row = db.execute("SELECT celery_id\
-                          FROM mail_task\
-                          WHERE id = ? AND user_id = ?", (id, session['user_id'])
-                          ).fetchone()
 
-        # # Revoke celery task
+    # Get Admin id
+    admin_id = db.execute("SELECT id FROM admin;").fetchone()
+
+    id = request.form['hidden_id_del']
+
+    try:
+        # For Admin
+        if session['user_id'] == admin_id['id']:
+            row = db.execute("SELECT celery_id\
+                              FROM mail_task\
+                              WHERE id = ?", (id,)
+                              ).fetchone()
+        # For other users
+        else:
+            row = db.execute("SELECT celery_id\
+                              FROM mail_task\
+                              WHERE id = ? AND user_id = ?", (id, session['user_id'])
+                              ).fetchone()
+
+        #  Revoke celery task
         if row['celery_id']:
             celery_app.control.revoke(row['celery_id'])
             celery_app.control.terminate(row['celery_id'])
 
-        # Delete task from DB
-        db.execute("DELETE FROM mail_task\
-                    WHERE id = ? AND user_id = ?", (id, session['user_id']))
+        # Delete task from DB for Admin
+        if session['user_id'] == admin_id:
+            db.execute("DELETE FROM mail_task\
+                        WHERE id = ?", (id,))
+        # Delete task from DB for other users
+        else:
+            db.execute("DELETE FROM mail_task\
+                        WHERE id = ? AND user_id = ?", (id, session['user_id']))
         db.commit()
 
         flash(_('Successfuly delete'), 'success')

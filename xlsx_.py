@@ -65,11 +65,11 @@ def SaveReport(date_start, date_end, data, report_name):
         # Head format
         if row == indent:
             cell_format = workbook.add_format({
-                            'bold': True, 'font_size': 11,
+                            'bold': True, 'font_size': 12,
                             'border': True, 'align': 'center',
                             'bg_color': '#3b3a30',
                             'font_color': 'white'})
-        # Format for highlight every new record in first column
+        # Format for highlight row when new record detected in first column
         elif data[row - indent][0] != old:
             cell_format = workbook.add_format({
                           'top': True,

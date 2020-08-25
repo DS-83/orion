@@ -106,18 +106,15 @@
       <div class="table-responsive-sm py-4">
         <table id="mailTask" class="table">
             <thead class="thead-light">
-                {% for key in tasks[0] %}
-                  {% if key != 'id' %}
+                {% for key in tasks[0][1:] %}
                     <th>{{ key }}</th>
-                  {% else %}
-                    <th></th>
-                  {% endif %}
                 {% endfor %}
+                <th></th>
               </thead>
               <tbody>
                   {% for row in tasks[1:] %}
                     <tr>
-                      {% for i in row[:6] %}
+                      {% for i in row[1:] %}
                           {% if i == None %}
                             <td></td>
                           {% else %}
@@ -125,7 +122,7 @@
                           {% endif %}
                       {% endfor %}
                       <td>
-                        <button type="button" onclick="fillHidden_del({{ row[6] }})" class="btn btn-outline-secondary btn-sm"
+                        <button type="button" onclick="fillHidden_del({{ row[0] }})" class="btn btn-outline-secondary btn-sm"
                                   data-toggle="modal" data-target="#modalDelete">
 
                           <span data-feather="trash-2"></span>

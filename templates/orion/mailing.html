@@ -18,6 +18,7 @@
         <div class="col">
           <h2 class="h2">{{ _('Mailing Lists') }}</h2>
         </div>
+        {% if server_mail %}
         <div class="col">
           <button type="button" class="btn btn-outline-secondary" style="float:right"
                     data-toggle="collapse" data-target="#collapseNewMail" aria-expanded="false"
@@ -26,8 +27,10 @@
             <span data-feather="mail"></span>
           </button>
         </div>
+        {% endif %}
       </div>
 
+  {% if server_mail %}
     <div class="collapse" id="collapseNewMail">
       <div class="card card-body">
           <form method="post">
@@ -101,13 +104,21 @@
           </form>
       </div>
     </div>
+  {% else %}
+    <div class="container">
+      <h1 class="h4">{{  _("The SMTP server is not configured.
+        The administrator must specify the server parameters in the settings
+        for correct operation.") }}
+      </h1>
+    </div>
+  {% endif %}
 
     {% if tasks %}
       <div class="table-responsive-sm py-4">
         <table id="mailTask" class="table">
             <thead class="thead-light">
                 {% for key in tasks[0][1:] %}
-                    <th>{{ key }}</th>
+                    <th>{{ key|title }}</th>
                 {% endfor %}
                 <th></th>
               </thead>

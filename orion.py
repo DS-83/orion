@@ -1,12 +1,14 @@
 from __future__ import absolute_import, unicode_literals
 
+import os
+
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for,
     session, current_app
 )
 from werkzeug.exceptions import abort
 
-from app.auth import login_required
+from app.auth import login_required, user_is_auth
 from app.db import get_db
 from app.tasks import send_mail_task, dt_tw
 
@@ -15,8 +17,34 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app.reports_sql import OrionQueryDashboard, UnpackData
 
 from datetime import datetime
+from time import strftime
+
+import logging
+
 
 from flask_babel import _
+
+from app.serializer import verify_reset_token
+
+
+# Logging config
+logfile = os.path.join(os.path.abspath('instance/logs'), f"orion-{strftime('%Y%m%d')}.log")
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+# create file handler which logs even debug messages
+fh = logging.FileHandler(logfile)
+fh.setLevel(logging.INFO)
+# # create console handler with a higher log level
+# ch = logging.StreamHandler()
+# ch.setLevel(logging.ERROR)
+# create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# ch.setFormatter(formatter)
+fh.setFormatter(formatter)
+# add the handlers to logger
+# logger.addHandler(ch)
+logger.addHandler(fh)
+
 
 bp = Blueprint('orion', __name__)
 
@@ -173,7 +201,11 @@ def mailing():
         else:
             flash(error, 'warning')
 
-    return render_template('orion/mailing.html', reports=reports, tasks=tasks)
+    # Check if smtp configured
+    server_mail = db.execute("SELECT * FROM smtp;").fetchone()
+
+    return render_template('orion/mailing.html', reports=reports,
+                            tasks=tasks, server_mail=server_mail)
 
 # Delete task
 @bp.route('/mailing/delete', methods=['POST'])
@@ -310,3 +342,45 @@ def changepass():
 
 
     return render_template('orion/changepass.html')
+
+
+# Reset password route
+@bp.route('/reset_password/<token>', methods=('GET', 'POST'))
+@user_is_auth
+def reset_password(token):
+
+    error = None
+
+    user_id = verify_reset_token(token)
+    if user_id is None:
+        error = _('Invalid or expired link. Contact your system administrator')
+        flash(error, 'warning')
+        return redirect(url_for('auth.login'))
+
+    if request.method == 'POST':
+        db = get_db()
+
+        # Check new password and re-enter password
+        new_pass = request.form['NewPassword']
+        re_new_pass = request.form['ReNewPassword']
+        if new_pass != re_new_pass:
+            error = _('Password mismatch')
+        else:
+            new_pass = generate_password_hash(new_pass)
+
+            try:
+                db.execute(f"UPDATE user SET password = ? WHERE id = ?",
+                            (new_pass, user_id))
+                db.commit()
+
+                session.clear()
+                flash(_('Password successfuly changed'), 'success')
+                logger.info(f"Password successfuly changed for user id: {user_id}")
+                return redirect(url_for('auth.login'))
+            except Exception as error:
+                flash(error, 'warning')
+                logger.warning(error)
+
+        flash(error, 'warning')
+
+    return render_template('orion/resetpass.html')

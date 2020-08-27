@@ -1,4 +1,3 @@
-from __future__ import absolute_import, unicode_literals
 import os
 import logging
 import time
@@ -16,10 +15,10 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY=b'^SD$%1D<<L^Ggn97d5c3@!b94',
-        DATABASE=os.path.join(app.instance_path, 'app.sqlite'),
         DWNLD_FOLDER=os.path.join(app.instance_path, 'xlsx'),
         LOGS_FOLDER=os.path.join(app.instance_path, 'logs'),
-        TEXTFILE_FOLDER=os.path.join(app.instance_path, 'textmsg')
+        TEXTFILE_FOLDER=os.path.join(app.instance_path, 'textmsg'),
+        MAIL_SENDER='orion@localhost'
 
     )
     app.config.from_object('config_module.ProductionConfig')

@@ -17,7 +17,7 @@
       <div class="py-5 text-center">
         <h2 class="h2">{{ _('Person walkways') }}</h2>
       </div>
-
+{% if result is not none %}
     <form class="" action="{{ url_for('.person', page='name') }}" method="post">
         <div class="input-group mb-3">
             <input type="text" name="LastName" class="form-control"
@@ -204,6 +204,12 @@
             </form>
           </div>
         </div>
+    {% else %}
+      <div class="container">
+        <h1 class="h4">{{  _("To create report, administrator must configure connection to Orion MSSQL server.")}}</h1>
+      </div>
+    {% endif %}
+
 
 <footer class="my-5 pt-5 text-muted text-center text-small">
   <p class="mb-1">&copy; 2020 CNC Corp.</p>

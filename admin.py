@@ -1,7 +1,7 @@
 from flask import (Blueprint, render_template, request,
         flash, redirect, url_for, g, current_app)
 from app.auth import login_required, user_role
-from app.sendemail import test_smtp
+from app.sendemail import test_smtp, SendMailResetPassword
 from app.db import get_db, test_mssql
 from werkzeug.security import generate_password_hash
 
@@ -14,6 +14,8 @@ import logging
 from cryptography.fernet import Fernet
 
 from flask_babel import _
+
+from app.serializer import get_reset_token
 
 
 # Logging config
@@ -60,7 +62,7 @@ def smtpconf():
             port = request.form.get('port')
             r = test_smtp(server, port)
             if r[0]:
-                flash(f"{_('Success')} {r[1]}", 'success')
+                flash(f"{_('Success')}. {r[1]}", 'success')
             else:
                 flash(f"{_('Faled')}. {r[1]}", 'danger')
             return render_template('admin/smtpconf.html', config=config)
@@ -100,25 +102,27 @@ def smtpconf():
 @user_role
 def users():
 
-    # Get users from DB
-    db = get_db()
-    cursor = db.execute(
-        "SELECT username as 'Username', firstname, lastname,\
-        email, company, IsAdmin as 'Admin', status, id  FROM user;")
-    row = cursor.fetchone()
-    # Make list`
-    users = []
-    users.append(row.keys())
-    while row:
-        users.append(list(row))
+    try:
+        # Get users from DB
+        db = get_db()
+        cursor = db.execute(
+            "SELECT username, firstname, lastname,\
+            email, company, IsAdmin as 'Admin', status, id  FROM user;")
         row = cursor.fetchone()
-    # Replace numbers with "Yes" or "No"
-    for user in users:
-        if user[5] == 1:
-            user[5] = 'Yes'
-        elif user[5] == 0:
-            user[5] = 'No'
-
+        # Make list
+        users = []
+        users.append(row.keys())
+        while row:
+            users.append(list(row))
+            row = cursor.fetchone()
+        # Replace numbers with "Yes" or "No"
+        for user in users:
+            if user[5] == 1:
+                user[5] = 'Yes'
+            elif user[5] == 0:
+                user[5] = 'No'
+    except:
+        users = None
 
     # Route for 'POST'
     if request.method == "POST":
@@ -159,8 +163,7 @@ def users():
                     logger.info(f"User account {username} was change by user {g.user['username']}")
                     return redirect(url_for('.users'))
                 except Exception as error:
-                    logger.warning(err)
-
+                    logger.warning(error)
 
         # New user
         if request.form['submit'] == 'new':
@@ -176,7 +179,7 @@ def users():
                 else:
                     for user in users:
                         if username == user[0]:
-                            error = f"{_('Username')} {username} {_('already taken')}"
+                            error = _("Username %(u)s already taken", u = username)
 
             if error is None:
                 password = request.form['password']
@@ -205,9 +208,27 @@ def users():
                         logger.info(f"Create new user {username}, by user {g.user['username']}")
                         return redirect(url_for('.users'))
                     except Exception as error:
-                        logger.warning(err)
+                        logger.warning(error)
 
-
+        # Reset user password
+        if request.form['submit'] == 'reset':
+            user_id = request.form['hidden_id_disp']
+            if user_id is None:
+                error = _('Internal server error')
+            else:
+                cursor = db.execute('SELECT email, username FROM user WHERE id = ?',
+                                    (user_id,)
+                                 ).fetchone()
+                token = get_reset_token(user_id)
+                mail_obj = SendMailResetPassword(current_app.config['MAIL_SENDER'],
+                                                 cursor['email'], token)
+                if mail_obj.start():
+                    flash(_('Email with instructions was successfuly sent to user %(u)s',
+                            u=cursor['username']), 'success')
+                    logger.info(f"Reset password email was sent to user {cursor['username']}, by {g.user['username']}")
+                    return render_template('admin/users.html', users=users)
+                else:
+                    error = _('Error sending email message')
         flash(error, 'warning')
 
     return render_template('admin/users.html', users=users)
@@ -238,9 +259,9 @@ def mssqlconf():
         if request.form['submit'] == 'test':
             r = test_mssql(server, database, username, password)
             if r[0]:
-                flash(f"{_('Success.')} {r[1]}", 'success')
+                flash(_("Success. %(msg)s", msg = r[1]), 'success')
             else:
-                flash(f"{_('Faled.')} {r[1]}", 'danger')
+                flash(_("Faled. %(msg)s", msg = r[1]), 'danger')
             return render_template('admin/mssqlconf.html', config=config)
 
         # Save mssql config to DB

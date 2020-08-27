@@ -69,7 +69,7 @@ def get_db_no_g():
 # Neither crs.close() nor conn.close() will be called upon leaving the the `with` statement!!
 def get_mssql():
 
-    row = get_db_no_g().execute("SELECT * FROM mssql").fetchone()
+    row = get_db().execute("SELECT * FROM mssql").fetchone()
     SERVER = row['server']
     DATABASE = row['database']
     USERNAME = row['username']

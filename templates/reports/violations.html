@@ -18,7 +18,7 @@
       <div class="py-5 text-center">
         <h2 class="h2">{{ _('Violations report') }}</h2>
       </div>
-
+{% if access_p %}
     <b><label for="autofill">{{ _('Enter time range or use presets') }}</label></b>
     <div class="container" id="autofill">
         <div class="row row-cols-3">
@@ -165,6 +165,12 @@
           </div>
         </div>
 
+    {% else %}
+      <div class="container">
+        <h1 class="h4">{{  _("To create report, administrator must configure connection to Orion MSSQL server.")}}</h1>
+      </div>
+    {% endif %}
+
 
   <footer class="my-5 pt-5 text-muted text-center text-small">
     <p class="mb-1">&copy; 2017-2020 Company Name</p>
@@ -176,6 +182,7 @@
   </footer>
 </div>
 {% endblock %}
+
 {% block script %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/multiselect.js') }}"></script>
 

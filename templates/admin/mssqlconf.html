@@ -74,12 +74,12 @@
         <div class="col-4">
             <h5>{{ _('Current config:') }}</h5>
             {% if config == None %}
-              <p>Not configured</p>
+              <p>{{ _('Not configured') }}</p>
             {% else %}
                   <table class="table table-borderless table-small">
                     <thead>
                       {% for key in config.keys() %}
-                        <th>{{ key }}</th>
+                        <th>{{ key|title }}</th>
                       {% endfor %}
                     </thead>
                     <tbody>

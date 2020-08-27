@@ -107,9 +107,12 @@ def accessp(page):
                 return redirect(url_for('reports.savedreports'))
             except Exception as err:
                 flash(err, 'warning')
+    try:
+        events = UnpackData(OrionQueryEvents())
+        access_p = UnpackData(OrionQueryAccessPoints())
+    except:
+        events, access_p = None, None
 
-    events = UnpackData(OrionQueryEvents())
-    access_p = UnpackData(OrionQueryAccessPoints())
     return render_template('reports/accessp.html', events=events, access_p=access_p)
 
 
@@ -233,8 +236,15 @@ def person(page):
             flash(err, 'warning')
         return render_template('reports/person.html', result=0)
 
+    try:
+        db = OrionQueryPersons()
+        if db:
+            result = 0
+    except:
+        result = None
+
     # Default route
-    return render_template('reports/person.html', result=0)
+    return render_template('reports/person.html', result=result)
 
 
 # Report "First enter, last exit"
@@ -354,8 +364,15 @@ def firstlast(page):
         except Exception as err:
             flash(err, 'warning')
 
+    try:
+        db = OrionQueryPersons()
+        if db:
+            result = 0
+    except:
+        result = None
+
     # Default route
-    return render_template('reports/firstlast.html', result=0)
+    return render_template('reports/firstlast.html', result=result)
 
 
 # Report "Violations"
@@ -418,9 +435,12 @@ def violations(page):
             flash(_('Saved'), 'success')
         except Exception as err:
             flash(err, 'warning')
-
-    # Default route
-    access_p = UnpackData(OrionQueryAccessPoints())
+    try:
+        # Default route
+        access_p = UnpackData(OrionQueryAccessPoints())
+    except:
+        access_p = None
+        
     return render_template('reports/violations.html', access_p=access_p)
 
 

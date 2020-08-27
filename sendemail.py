@@ -5,8 +5,11 @@ from email.message import EmailMessage
 import logging
 import os
 from time import strftime
+from flask import url_for
+from app.db import get_db_no_g, get_db
 
-from app.db import get_db_no_g
+from flask_babel import _
+
 
 # Default configuration
 SERVER = "localhost"
@@ -78,6 +81,63 @@ class SendMail:
         with smtplib.SMTP(SERVER, PORT) as smtp:
             smtp.send_message(msg)
             logger.info(f'Msg to: {self.to} successfuly send. Mail-server: {SERVER}:{PORT}')
+            return True
+
+        logger.error(f'Error sending mail msg to: {self.to}, server: {SERVER}:{PORT}')
+        return False
+
+
+class SendMailResetPassword:
+    def __init__(self, sender, to, token):
+        self.sender = sender
+        self.to = to
+        self.token = token
+
+    def start(self):
+        msg_body = f"""You recently requested to reset password for your account.
+                    Use the button below to reset it.
+                    {url_for('orion.reset_password', token=self.token, _external=True)}"""
+        msg = EmailMessage()
+        msg.set_content(msg_body)
+        msg['From'] = self.sender
+        msg['To'] = self.to
+        msg['Subject'] = _("Automatic mail. Reset password OrionNG report system")
+        msg.add_alternative(f"""
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css>
+             <style>
+               @media (max-width: 991.98px){'{}'}
+             </style>
+          </head>
+          <body>
+            <div class="container-sm p-3">
+              <h4 class="h4">Reset password</h4>
+            </div>
+            <div class="container-sm p-3">
+              You recently requested to reset password for your account.
+              Use the button below to reset it.
+              <strong>This password reset is only valid
+              for the next 1 hour.</strong>
+            </div>
+            <div class="container container-sm">
+              <a class="btn btn-success btn-lg" href='{url_for('orion.reset_password', token=self.token, _external=True)}' role="button">Reset password</a>
+            </div>
+          </body>
+        </html>
+        """, subtype='html')
+
+        db = get_db()
+        config = db.execute("SELECT server, port FROM smtp;").fetchone()
+        if config:
+            SERVER = config[0]
+            PORT = config[1]
+        # Send the email via our own SMTP server.
+        with smtplib.SMTP(SERVER, PORT) as smtp:
+            smtp.send_message(msg)
+            logger.info(f'Reset password message to: {self.to} successfuly send. Mail-server: {SERVER}:{PORT}')
             return True
 
         logger.error(f'Error sending mail msg to: {self.to}, server: {SERVER}:{PORT}')

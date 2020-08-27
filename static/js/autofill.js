@@ -169,6 +169,7 @@ function fillHidden_del(id) {
     document.getElementById('hidden_id_del').value = id;
 };
 
+
 // Display div
 function displayDiv(id) {
     let date = document.getElementById('date');

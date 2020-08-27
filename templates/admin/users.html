@@ -72,8 +72,8 @@
               </div>
             </div>
 
-            <div class="form-row">
-              <div class="col-3 input-group mb-3">
+            <div class="form-row mt-3">
+              <div class="col-3 input-group">
                 <div class="input-group-prepend">
                   <label class="input-group-text" for="Admin">{{ _('Admin') }}</label>
                 </div>
@@ -100,11 +100,11 @@
 
 
 <div class="container">
-
-  <table class="table" id="usersTable">
+{% if users %}
+  <table class="table table-sm" id="usersTable">
     <thead>
       {% for key in users[0][:7] %}
-        <th>{{ key }}</th>
+        <th>{{ key|title }}</th>
       {% endfor %}
       <th></th>
     </thead>
@@ -123,19 +123,34 @@
             {% endif %}
           {% endfor %}
           <td>
-            <button type="button" onclick="userEdit({{ row[7] }});" class="btn btn-outline-secondary btn-sm"
-                      data-toggle="collapse" data-target="#collapseEdit" aria-expanded="false"
-                      aria-controls="collapseEdit">
-              {{ _('Edit') }}
-              <span data-feather="edit"></span>
-            </button>
-
+            {# button edit #}
+            <div class="dropdown">
+              <button type="button"
+                      class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                      id="dropdownMenu2"
+                      data-toggle="dropdown" aria-expanded="false">
+                <span data-feather="edit"></span>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <button class="dropdown-item" type="button"
+                        onclick="userEdit({{ row[7] }});"
+                        data-toggle="collapse" data-target="#collapseEdit"
+                        aria-expanded="false" aria-controls="collapseEdit">
+                    {{ _('Edit') }}
+                </button>
+                <button class="dropdown-item" type="button"
+                        data-toggle="modal" data-target="#modalPass"
+                        onclick="fillHidden_disp({{ row[7] }})">
+                    {{ _('Reset password') }}
+                </button>
+              </div>
+            </div>
           </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
-
+{% endif %}
 </div>
 
 <div class="collapse" id="collapseEdit">
@@ -194,7 +209,8 @@
         </div>
         <div class="row p-2">
           <div class="col-md">
-            <button type="submit" name="submit" value="edit" class="btn btn-primary btn-sm" style="float:right">
+            <button type="submit" name="submit" value="edit"
+                    class="btn btn-primary btn-sm" style="float:right">
               <span data-feather="save"></span>
             </button>
           </div>
@@ -205,6 +221,38 @@
       </form>
   </div>
 </div>
+
+{# modal reset password #}
+<div class="modal fade" id="modalPass" tabindex="-1" role="dialog"
+     aria-labelledby="modalPass" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ _('Reset password') }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post">
+        <div class="modal-body">
+            <p><strong>{{ _('Send user a link to reset their password?') }}</strong></p>
+            <div class="col-sm hidden" hidden>
+              <input type="hidden" id="hidden_id_disp" name="hidden_id_disp">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            {{ _('Cancel') }}
+          </button>
+          <button type="submit" name="submit" value="reset" class="btn btn-primary">
+            {{ _('Yes') }}
+          </button>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
+
 <footer class="my-5 pt-5 text-muted text-center text-small">
   <p class="mb-1">&copy; 2020 CNC Corp.</p>
   <ul class="list-inline">

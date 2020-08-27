@@ -36,21 +36,40 @@
     <div class="container">
       <section class="content">
         <header>
-          {% block header %}{% endblock %}
           {% for category, message in get_flashed_messages(True) %}
-            <div class="alert alert-{{ category }} border text-center" role="alert">{{ message }}</div>
+            <div class="alert alert-{{ category }} border text-center" role="alert">{{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
           {% endfor %}
         </header>
       </section>
+      <div class="container">
+        <span class="float-right">
+        {% for language in AVAILABLE_LANGUAGES.items() %}
+           {% if CURRENT_LANGUAGE == language[0] %}
+               {{ language[1] }}
+           {% else %}
+               <a href="{{ url_for('set_language', language=language[0]) }}" >{{ language[1] }}</a>
+           {%  endif %}
+        {% endfor %}
+      </span>
+      </div>
     </div>
     <form class="form-signin" method="post">
-      <img class="mb-4" src="{{ url_for('static', filename='pic/logo.png') }}" alt="logo" width="72" height="72">
+      <img class="mb-4" src="{{ url_for('static', filename='pic/logo.png') }}"
+           alt="logo" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">{{ _('Please sign in') }}</h1>
       <label for="UserName" class="sr-only">{{ _('User Name') }}</label>
-      <input type="text" name="username" class="form-control" placeholder="User Name" required autofocus autocomplete="off">
+      <input type="text" name="username" class="form-control"
+             placeholder="{{ _('User Name') }}" required autofocus autocomplete="off">
       <label for="inputPassword" class="sr-only">{{ _('Password') }}</label>
-      <input type="password" name="password" class="form-control" placeholder="Password" required>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">{{ _('Sign in') }}</button>
+      <input type="password" name="password" class="form-control"
+             placeholder="{{ _('Password') }}" required>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
+        {{ _('Sign in') }}
+      </button>
       <p class="mt-5 mb-3 text-muted">&copy; CNC Corp. 2020</p>
     </form>
 

@@ -86,8 +86,6 @@ def login():
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
-    # g.locale = f'{get_locale()}'
-    g.locale = 'ru'
 
     if user_id is None:
         g.user = None
@@ -115,6 +113,17 @@ def login_required(view):
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
+# User already auth
+def user_is_auth(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user:
+            return redirect(url_for('index'))
 
         return view(**kwargs)
 

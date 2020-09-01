@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-08-27 13:50+0300\n"
+"POT-Creation-Date: 2020-08-27 17:47+0300\n"
 "PO-Revision-Date: 2020-08-17 21:17+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -129,23 +129,23 @@ msgstr "Текст сообщения не может быть пустым."
 msgid "Success"
 msgstr "Успешно"
 
-#: app/orion.py:249
+#: app/orion.py:253
 msgid "Successfuly delete"
 msgstr "Успешно удалено"
 
-#: app/orion.py:310
+#: app/orion.py:314
 msgid "Incorrect current password."
 msgstr "Неверный текущий пароль."
 
-#: app/orion.py:317 app/orion.py:363
+#: app/orion.py:321 app/orion.py:367
 msgid "Password mismatch"
 msgstr "Пароли не совпадают"
 
-#: app/orion.py:332 app/orion.py:373
+#: app/orion.py:336 app/orion.py:377
 msgid "Password successfuly changed"
 msgstr "Пароль успешно изменен."
 
-#: app/orion.py:352
+#: app/orion.py:356
 msgid "Invalid or expired link. Contact your system administrator"
 msgstr "Неверная или просроченная ссылка. Свяжитесь с системным администратором"
 
@@ -341,7 +341,7 @@ msgstr "использовать безопасное соединение"
 msgid "User Accounts"
 msgstr "Учетные записи пользователей"
 
-#: app/templates/admin/users.html:23 app/templates/orion/mailing.html:25
+#: app/templates/admin/users.html:23 app/templates/orion/mailing.html:26
 msgid "New"
 msgstr "Создать"
 
@@ -385,7 +385,7 @@ msgid "No"
 msgstr "Нет"
 
 #: app/templates/admin/users.html:82 app/templates/admin/users.html:194
-#: app/templates/admin/users.html:248 app/templates/orion/mailing.html:158
+#: app/templates/admin/users.html:248 app/templates/orion/mailing.html:169
 #: app/templates/reports/savedreports.html:107
 msgid "Yes"
 msgstr "Да"
@@ -415,7 +415,7 @@ msgstr "заблокарована"
 msgid "Send user a link to reset their password?"
 msgstr "Действительно хотите отправить письмо пользователю для сброса пароля?"
 
-#: app/templates/admin/users.html:245 app/templates/orion/mailing.html:157
+#: app/templates/admin/users.html:245 app/templates/orion/mailing.html:168
 #: app/templates/reports/savedreports.html:106
 #: app/templates/reports/savedreports.html:139
 msgid "Cancel"
@@ -453,71 +453,71 @@ msgstr "Рассылки"
 msgid "Mailing Lists"
 msgstr "Рассылки"
 
-#: app/templates/orion/mailing.html:36
+#: app/templates/orion/mailing.html:39
 msgid "Report name"
 msgstr "Название отчета"
 
-#: app/templates/orion/mailing.html:39 app/templates/orion/mailing.html:56
-#: app/templates/orion/mailing.html:67 app/templates/reports/accessp.html:224
+#: app/templates/orion/mailing.html:42 app/templates/orion/mailing.html:59
+#: app/templates/orion/mailing.html:70 app/templates/reports/accessp.html:224
 #: app/templates/reports/firstlast.html:196
 #: app/templates/reports/person.html:180
 #: app/templates/reports/violations.html:144
 msgid "Choose..."
 msgstr "Выбрать..."
 
-#: app/templates/orion/mailing.html:47
+#: app/templates/orion/mailing.html:50
 msgid "Recipient(s)"
 msgstr "Получатель(и)"
 
-#: app/templates/orion/mailing.html:53
+#: app/templates/orion/mailing.html:56
 msgid "Periodicity"
 msgstr "Периодичность"
 
-#: app/templates/orion/mailing.html:57
+#: app/templates/orion/mailing.html:60
 msgid "daily"
 msgstr "ежедневно"
 
-#: app/templates/orion/mailing.html:58
+#: app/templates/orion/mailing.html:61
 msgid "weekly"
 msgstr "еженедельно"
 
-#: app/templates/orion/mailing.html:59
+#: app/templates/orion/mailing.html:62
 msgid "monthly"
 msgstr "ежемесячно"
 
-#: app/templates/orion/mailing.html:68
+#: app/templates/orion/mailing.html:71
 msgid "Monday"
 msgstr "Понедельник"
 
-#: app/templates/orion/mailing.html:69
+#: app/templates/orion/mailing.html:72
 msgid "Tuesday"
 msgstr "Вторник"
 
-#: app/templates/orion/mailing.html:70
+#: app/templates/orion/mailing.html:73
 msgid "Wednesday"
 msgstr "Среда"
 
-#: app/templates/orion/mailing.html:71
+#: app/templates/orion/mailing.html:74
 msgid "Thursday"
 msgstr "Четверг"
 
-#: app/templates/orion/mailing.html:72
+#: app/templates/orion/mailing.html:75
 msgid "Friday"
 msgstr "Пятница"
 
-#: app/templates/orion/mailing.html:73
+#: app/templates/orion/mailing.html:76
 msgid "Saturday"
 msgstr "Суббота"
 
-#: app/templates/orion/mailing.html:74
+#: app/templates/orion/mailing.html:77
 msgid "Sunday"
 msgstr "Воскресенье"
 
-#: app/templates/orion/mailing.html:76
+#: app/templates/orion/mailing.html:79
 msgid "Weekday"
 msgstr "День недели"
 
-#: app/templates/orion/mailing.html:82 app/templates/reports/accessp.html:69
+#: app/templates/orion/mailing.html:85 app/templates/reports/accessp.html:69
 #: app/templates/reports/accessp.html:88
 #: app/templates/reports/firstlast.html:121
 #: app/templates/reports/firstlast.html:131
@@ -527,7 +527,7 @@ msgstr "День недели"
 msgid "Date"
 msgstr "Дата"
 
-#: app/templates/orion/mailing.html:87 app/templates/reports/accessp.html:75
+#: app/templates/orion/mailing.html:90 app/templates/reports/accessp.html:75
 #: app/templates/reports/accessp.html:93
 #: app/templates/reports/firstlast.html:124
 #: app/templates/reports/firstlast.html:134
@@ -537,16 +537,24 @@ msgstr "Дата"
 msgid "Time"
 msgstr "Время"
 
-#: app/templates/orion/mailing.html:92
+#: app/templates/orion/mailing.html:95
 msgid "Enter message text"
 msgstr "Введите текст сообщения"
 
-#: app/templates/orion/mailing.html:144
+#: app/templates/orion/mailing.html:109
+msgid ""
+"The SMTP server is not configured.\n"
+"        The administrator must specify the server parameters in the "
+"settings\n"
+"        for correct operation."
+msgstr "SMTP-сервер не настроен. Администратор должен указать в настройках параметры сервера для правильной работы."
+
+#: app/templates/orion/mailing.html:155
 #: app/templates/reports/savedreports.html:93
 msgid "Delete"
 msgstr "Удалить"
 
-#: app/templates/orion/mailing.html:151
+#: app/templates/orion/mailing.html:162
 #: app/templates/reports/savedreports.html:100
 msgid "Are you sure you want to delete?"
 msgstr "Действительно хотите удалить?"
@@ -765,16 +773,4 @@ msgstr "Сохранить файл"
 #: app/templates/reports/violations.html:19
 msgid "Violations report"
 msgstr "Нарушения"
-
-#~ msgid "Username {username} already taken"
-#~ msgstr "Имя пользователя {username} уже занято"
-
-#~ msgid "Username %s already taken"
-#~ msgstr "Имя пользователя %s уже занято"
-
-#~ msgid "Success. %s"
-#~ msgstr "Успешно. %s"
-
-#~ msgid "Faled. %s"
-#~ msgstr "Ошибка. %s"
 

@@ -3,11 +3,10 @@ import logging
 import time
 
 from flask import Flask, redirect, render_template, request, session, url_for
-from . import (db, auth, orion, reports, reports_sql, xlsx_, admin,
-                sendemail, celery_utils, tasks
-              )
+from . import db, auth, orion, reports,  admin
 
 from flask_babel import Babel
+from app import config_module
 
 
 def create_app(test_config=None):
@@ -15,13 +14,13 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY=b'^SD$%1D<<L^Ggn97d5c3@!b94',
-        DWNLD_FOLDER=os.path.join(app.instance_path, 'xlsx'),
         LOGS_FOLDER=os.path.join(app.instance_path, 'logs'),
+        DWNLD_FOLDER=os.path.join(app.instance_path, 'xlsx'),
         TEXTFILE_FOLDER=os.path.join(app.instance_path, 'textmsg'),
         MAIL_SENDER='orion@localhost'
 
     )
-    app.config.from_object('config_module.ProductionConfig')
+    app.config.from_object('config_module.DevelopmentConfig')
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -30,11 +29,15 @@ def create_app(test_config=None):
         # load the test config if passed in
         app.config.from_mapping(test_config)
 
-    # ensure the instance folder exists
-    try:
+    # Ensure the instance folder exists
+    if not os.path.exists(app.instance_path):
         os.makedirs(app.instance_path)
-    except OSError:
-        pass
+    if not os.path.exists(app.config['LOGS_FOLDER']):
+        os.makedirs(app.config['LOGS_FOLDER'])
+    if not os.path.exists(app.config['DWNLD_FOLDER']):
+        os.makedirs(app.config['DWNLD_FOLDER'])
+    if not os.path.exists(app.config['TEXTFILE_FOLDER']):
+        os.makedirs(app.config['TEXTFILE_FOLDER'])
 
     # Register DB access
     db.init_app(app)
@@ -55,25 +58,22 @@ def create_app(test_config=None):
     babel = Babel(app)
 
     # Logging config
-    logger = logging.getLogger(__name__)
-    logfile = f"{app.config['LOGS_FOLDER']}/app-{time.strftime('%Y%m%d')}.log"
-    logging.basicConfig(filename=logfile, level=logging.INFO)
-    logger.setLevel(logging.INFO)
-    # create file handler which logs even debug messages
-    fh = logging.FileHandler(logfile)
-    fh.setLevel(logging.INFO)
-    # create console handler with a higher log level
-    # ch = logging.StreamHandler()
-    # ch.setLevel(logging.ERROR)
-    # create formatter and add it to the handlers
+    logdir = app.config['LOGS_FOLDER']
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    # ch.setFormatter(formatter)
-    fh.setFormatter(formatter)
-    # add the handlers to logger
-    # logger.addHandler(ch)
-    logger.addHandler(fh)
+    log_level = logging.INFO
+    for logger in (
+        app.logger,
+        logging.getLogger('app.admin'),
+        logging.getLogger('app.orion'),
+        logging.getLogger('app.sendemail'),
+        logging.getLogger('app.auth')
 
-    logger.info('App started')
+    ):
+        log_file = os.path.join(logdir,  f"{logger.name}-{time.strftime('%Y%m%d')}.log")
+        handler = logging.FileHandler(log_file)
+        handler.setLevel(log_level)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
 
 
     @app.route('/language/<language>')
@@ -103,6 +103,6 @@ def create_app(test_config=None):
                     CURRENT_LANGUAGE=session.get('language',
                     request.accept_languages.best_match(app.config['LANGUAGES'].keys())))
 
-
+    app.logger.info('App started')
 
     return app

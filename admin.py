@@ -1,6 +1,6 @@
 from flask import (Blueprint, render_template, request,
         flash, redirect, url_for, g, current_app)
-from app.auth import login_required, user_role
+from app.auth import login_required, user_role, user_first_logon
 from app.sendemail import test_smtp, SendMailResetPassword
 from app.db import get_db, test_mssql
 from werkzeug.security import generate_password_hash
@@ -28,6 +28,7 @@ bp = Blueprint('admin', __name__, url_prefix='/admin')
 @bp.route('/')
 @login_required
 @user_role
+@user_first_logon
 def index():
     return render_template('admin/admin.html')
 
@@ -35,6 +36,7 @@ def index():
 @bp.route('/smtpconf', methods=('GET', 'POST'))
 @login_required
 @user_role
+@user_first_logon
 def smtpconf():
 
     db = get_db()
@@ -85,6 +87,7 @@ def smtpconf():
 @bp.route('/users', methods=('GET', 'POST'))
 @login_required
 @user_role
+@user_first_logon
 def users():
 
     try:
@@ -161,7 +164,7 @@ def users():
 
                 if username == 'Admin':
                     error = _("Name 'Admin' already taken. Select another USERNAME")
-                else:
+                elif users:
                     for user in users:
                         if username == user[0]:
                             error = _("Username %(u)s already taken", u = username)
@@ -223,6 +226,7 @@ def users():
 @bp.route('/mssqlconf', methods=('GET', 'POST'))
 @login_required
 @user_role
+@user_first_logon
 def mssqlconf():
 
     db = get_db()

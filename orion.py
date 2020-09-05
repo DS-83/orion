@@ -8,7 +8,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from app.auth import login_required, user_is_auth
+from app.auth import login_required, user_is_auth, user_first_logon
 from app.db import get_db
 from app.tasks import send_mail_task, dt_tw
 
@@ -37,6 +37,7 @@ bp = Blueprint('orion', __name__)
 @bp.route('/')
 @bp.route('/<page>')
 @login_required
+@user_first_logon
 def index(page=None):
 
     #Calculate date and time
@@ -89,6 +90,7 @@ def index(page=None):
 
 @bp.route('/mailing', methods=('GET', 'POST'))
 @login_required
+@user_first_logon
 def mailing():
 
     db = get_db()
@@ -195,6 +197,7 @@ def mailing():
 # Delete task
 @bp.route('/mailing/delete', methods=['POST'])
 @login_required
+@user_first_logon
 def delete():
 
     from .celery_utils import celery_app
@@ -313,7 +316,9 @@ def changepass():
                 new_pass = generate_password_hash(new_pass)
 
                 try:
-                    db.execute(f"UPDATE {table_name} SET password = ? WHERE id = ?",
+                    db.execute(f"UPDATE {table_name}\
+                                 SET password = ?, first_logon = 0\
+                                 WHERE id = ?",
                                 (new_pass, g.user['id']))
                     db.commit()
 
@@ -324,7 +329,6 @@ def changepass():
                     flash(error, 'warning')
 
         flash(error, 'warning')
-
 
     return render_template('orion/changepass.html')
 

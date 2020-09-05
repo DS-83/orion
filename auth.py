@@ -28,12 +28,13 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
-        # verification for built-in administrator account
+        # Verification for built-in administrator account
         if username == 'Admin':
             user = db.execute(
                 "SELECT * FROM admin WHERE username = 'Admin';"
             ).fetchone()
         else:
+            # Other users
             user = db.execute(
                 'SELECT * FROM user WHERE username = ?', (username,)
             ).fetchone()
@@ -76,6 +77,7 @@ def load_logged_in_user():
             'SELECT * FROM user WHERE id = ?', (user_id,)
         ).fetchone()
 
+
 # Logout route
 @bp.route('/logout')
 def logout():
@@ -95,6 +97,19 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+
+# User first logon check
+def user_first_logon(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user['first_logon'] == 1:
+            return redirect(url_for('orion.changepass'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
 
 # User already auth
 def user_is_auth(view):

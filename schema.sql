@@ -8,7 +8,8 @@ CREATE TABLE user (
   company TEXT,
   password TEXT NOT NULL,
   IsAdmin INT DEFAULT 0,
-  status TEXT DEFAULT 'active'
+  status TEXT DEFAULT 'active',
+  first_logon INT DEFAULT 1
 );
 
 DROP TABLE IF EXISTS admin;
@@ -17,7 +18,8 @@ CREATE TABLE admin (
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   IsAdmin INT DEFAULT 1,
-  status TEXT DEFAULT 'active'
+  status TEXT DEFAULT 'active',
+  first_logon INT DEFAULT 1
 );
 -- Create Administrator
 INSERT INTO admin (id, username, password)

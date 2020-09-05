@@ -20,7 +20,7 @@ def create_app(test_config=None):
         MAIL_SENDER='orion@localhost'
 
     )
-    app.config.from_object('config_module.DevelopmentConfig')
+    app.config.from_object('config_module.ProductionConfig')
 
     if test_config is None:
         # load the instance config, if it exists, when not testing

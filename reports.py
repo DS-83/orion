@@ -8,7 +8,7 @@ from app.reports_sql import (
     UnpackData, OrionQueryPersons, OrionReportWalkwaysPerson,
     OrionReportFirtsLast, OrionReportViolations
 )
-from app.auth import login_required
+from app.auth import login_required, user_first_logon
 from app.xlsx_ import SaveReport
 from datetime import date, timedelta, datetime
 from dateutil.relativedelta import relativedelta
@@ -39,6 +39,7 @@ def dt_tw(wday):
 # Reports index
 @bp.route('/')
 @login_required
+@user_first_logon
 def index():
     return render_template('reports/reports.html')
 
@@ -440,7 +441,7 @@ def violations(page):
         access_p = UnpackData(OrionQueryAccessPoints())
     except:
         access_p = None
-        
+
     return render_template('reports/violations.html', access_p=access_p)
 
 
@@ -449,6 +450,7 @@ def violations(page):
 @bp.route('/savedreports', defaults={'page': 'savedreports.html'})
 @bp.route('/savedreports/<page>', methods=['POST'])
 @login_required
+@user_first_logon
 def savedreports(page):
 
     def report(action):

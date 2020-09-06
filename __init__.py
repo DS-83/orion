@@ -72,6 +72,7 @@ def create_app(test_config=None):
         log_file = os.path.join(logdir,  f"{logger.name}-{time.strftime('%Y%m%d')}.log")
         handler = logging.FileHandler(log_file)
         handler.setLevel(log_level)
+        logger.setLevel(log_level)
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 

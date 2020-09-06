@@ -149,6 +149,11 @@ def mailing():
         elif periodicity == 'weekly':
             weekday = request.form.get('weekday')
         time = request.form['time']
+        # Check time format
+        try:
+            datetime.strptime(time, '%H:%M:%S')
+        except:
+            time += ':00'
         # Create text file with text message`
         textmsg = request.form['text_message']
         if not textmsg:

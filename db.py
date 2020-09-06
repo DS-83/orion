@@ -51,11 +51,12 @@ def close_db(e=None):
 
 # Without context
 def get_db_no_g():
-    db = sqlite3.connect(
-        os.path.join('./instance', 'app.sqlite'),
-        detect_types=sqlite3.PARSE_DECLTYPES
-    )
-    db.row_factory = sqlite3.Row
+    with current_app.app_context():
+        db = sqlite3.connect(
+            current_app.config['DATABASE'],
+            detect_types=sqlite3.PARSE_DECLTYPES
+        )
+        db.row_factory = sqlite3.Row
 
     return db
 
